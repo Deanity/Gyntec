@@ -51,10 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Gradient dibuat sekali di sini, tidak perlu LayoutBuilder/IntrinsicHeight
     return Scaffold(
-      // resizeToAvoidBottomInset: true memungkinkan Scaffold mengatur sendiri
-      // ruang saat keyboard muncul, tanpa kita perlu membaca viewInsets sama sekali
       resizeToAvoidBottomInset: true,
       body: DecoratedBox(
         decoration: const BoxDecoration(
@@ -70,68 +67,60 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SafeArea(
           child: DismissKeyboard(
             child: CustomScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            slivers: [
-              // SliverFillRemaining: mengisi sisa ruang layar tanpa menggunakan
-              // IntrinsicHeight atau LayoutBuilder, sehingga tidak ada multi-pass
-              // layout dan tidak ada rebuild saat keyboard animasi berjalan.
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                    vertical: 20.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Illustration — const agar tidak di-rebuild ulang
-                      const Center(
-                        child: SvgPicture(
-                          SvgAssetLoader('assets/oc-thinking.svg'),
-                          height: 220,
-                          fit: BoxFit.contain,
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              slivers: [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 20.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Center(
+                          child: SvgPicture(
+                            SvgAssetLoader('assets/oc-thinking.svg'),
+                            height: 220,
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Header
-                      const Text(
-                        'Welcome back',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF0F172A),
-                          letterSpacing: -0.5,
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Welcome back',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0F172A),
+                            letterSpacing: -0.5,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        'Sign in to your account to start teaching',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Color(0xFF64748B),
-                          height: 1.3,
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Sign in to your account to start teaching',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Color(0xFF64748B),
+                            height: 1.3,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Form — dipisah ke widget sendiri agar rebuild terisolasi
-                      _LoginForm(
-                        formKey: _formKey,
-                        emailController: _emailController,
-                        passwordController: _passwordController,
-                        isLoading: _isLoading,
-                        onLogin: _handleLogin,
-                        onForgotPassword: _handleForgotPassword,
-                      ),
-                    ],
+                        const SizedBox(height: 24),
+                        _LoginForm(
+                          formKey: _formKey,
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                          isLoading: _isLoading,
+                          onLogin: _handleLogin,
+                          onForgotPassword: _handleForgotPassword,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
           ),
         ),
       ),
@@ -139,8 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// Form diekstrak ke StatelessWidget terpisah sehingga ketika _isLoading
-// berubah, hanya subtree ini yang rebuild — bukan seluruh halaman.
+/// Extracted into a separate StatelessWidget so only this subtree
+/// rebuilds when [isLoading] changes, not the entire screen.
 class _LoginForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
@@ -165,7 +154,6 @@ class _LoginForm extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Email Field
           CustomFormInput(
             label: 'Email Address',
             hintText: 'you@example.com',
@@ -185,8 +173,6 @@ class _LoginForm extends StatelessWidget {
             },
           ),
           const SizedBox(height: 16),
-
-          // Password Field
           CustomFormInput(
             label: 'Password',
             hintText: 'Enter Your Password',
@@ -205,8 +191,6 @@ class _LoginForm extends StatelessWidget {
             },
           ),
           const SizedBox(height: 12),
-
-          // Forgot Password
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
@@ -225,8 +209,6 @@ class _LoginForm extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-
-          // Login Button
           CustomButton(
             label: 'Login',
             isLoading: isLoading,
