@@ -52,20 +52,16 @@ class _ParticipantScreenState extends State<ParticipantScreen> {
   }
 
   void _openAddParticipantSheet() {
-    showModalBottomSheet<void>(
+    showAddParticipantDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => AddParticipantBottomSheet(
-        allStudents: _allStudents,
-        currentSelected: _participants,
-        onSave: (updated) {
-          setState(() {
-            _participants.clear();
-            _participants.addAll(updated);
-          });
-        },
-      ),
+      allStudents: _allStudents,
+      currentSelected: _participants,
+      onSave: (updated) {
+        setState(() {
+          _participants.clear();
+          _participants.addAll(updated);
+        });
+      },
     );
   }
 
