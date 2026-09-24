@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../components/button.dart';
-import '../components/form_input.dart';
 import '../utils/keyboard_utils.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,39 +13,75 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  /// Passkey yang valid — ubah sesuai kebutuhan production
+  static const String _validPasskey = '123456';
+
+  final List<TextEditingController> _controllers =
+      List.generate(6, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    for (final f in _focusNodes) {
+      f.dispose();
+    }
     super.dispose();
   }
 
-  void _handleLogin() {
-    if (_formKey.currentState?.validate() ?? false) {
-      setState(() => _isLoading = true);
+  String get _enteredPasskey =>
+      _controllers.map((c) => c.text).join();
 
-      Future.delayed(const Duration(seconds: 1), () {
-        if (mounted) {
-          setState(() => _isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Login successful!'),
-              backgroundColor: Color(0xFF0066FF),
-            ),
-          );
-        }
-      });
+  bool get _isComplete => _enteredPasskey.length == 6;
+
+  void _handleLogin() {
+    if (!_isComplete) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Masukkan 6 digit passkey Anda terlebih dahulu'),
+          backgroundColor: Color(0xFFEF4444),
+        ),
+      );
+      return;
     }
+
+    if (_enteredPasskey != _validPasskey) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passkey tidak valid. Silakan coba lagi.'),
+          backgroundColor: Color(0xFFEF4444),
+        ),
+      );
+      // Kosongkan semua field & kembali ke digit pertama
+      for (final c in _controllers) {
+        c.clear();
+      }
+      _focusNodes.first.requestFocus();
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    });
   }
 
-  void _handleForgotPassword() {
+  void _handleForgotPasskey() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Forgot password tapped')),
+      const SnackBar(content: Text('Lupa Passkey tapped')),
     );
   }
 
@@ -67,7 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SafeArea(
           child: DismissKeyboard(
             child: CustomScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              keyboardDismissBehavior:
+                  ScrollViewKeyboardDismissBehavior.onDrag,
               slivers: [
                 SliverFillRemaining(
                   hasScrollBody: false,
@@ -80,6 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        // ── Ilustrasi ──
                         const Center(
                           child: SvgPicture(
                             SvgAssetLoader('assets/oc-thinking.svg'),
@@ -88,8 +126,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
+
+                        // ── Judul ──
                         const Text(
-                          'Welcome back',
+                          'Selamat datang kembali',
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -99,21 +139,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 6),
                         const Text(
-                          'Sign in to your account to start teaching',
+                          'Masuk ke akun Anda untuk mulai mengajar',
                           style: TextStyle(
                             fontSize: 15,
                             color: Color(0xFF64748B),
                             height: 1.3,
                           ),
                         ),
-                        const SizedBox(height: 24),
-                        _LoginForm(
-                          formKey: _formKey,
-                          emailController: _emailController,
-                          passwordController: _passwordController,
+                        const SizedBox(height: 32),
+
+                        // ── Form Passkey ──
+                        _PasskeyForm(
+                          controllers: _controllers,
+                          focusNodes: _focusNodes,
                           isLoading: _isLoading,
                           onLogin: _handleLogin,
-                          onForgotPassword: _handleForgotPassword,
+                          onForgotPasskey: _handleForgotPasskey,
+                          onChanged: () => setState(() {}),
                         ),
                       ],
                     ),
@@ -128,96 +170,206 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-/// Extracted into a separate StatelessWidget so only this subtree
-/// rebuilds when [isLoading] changes, not the entire screen.
-class _LoginForm extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
+// ─────────────────────────────────────────────────────────────────────────────
+// Widget form passkey terpisah agar rebuild lebih efisien
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _PasskeyForm extends StatelessWidget {
+  final List<TextEditingController> controllers;
+  final List<FocusNode> focusNodes;
   final bool isLoading;
   final VoidCallback onLogin;
-  final VoidCallback onForgotPassword;
+  final VoidCallback onForgotPasskey;
+  final VoidCallback onChanged;
 
-  const _LoginForm({
-    required this.formKey,
-    required this.emailController,
-    required this.passwordController,
+  const _PasskeyForm({
+    required this.controllers,
+    required this.focusNodes,
     required this.isLoading,
     required this.onLogin,
-    required this.onForgotPassword,
+    required this.onForgotPasskey,
+    required this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomFormInput(
-            label: 'Email Address',
-            hintText: 'you@example.com',
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            prefixIcon: LucideIcons.mail,
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Please enter your email';
-              }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                  .hasMatch(value.trim())) {
-                return 'Please enter a valid email address';
-              }
-              return null;
-            },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label
+        const Text(
+          'Kode Passkey',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF0F172A),
           ),
-          const SizedBox(height: 16),
-          CustomFormInput(
-            label: 'Password',
-            hintText: 'Enter Your Password',
-            controller: passwordController,
-            isPassword: true,
-            prefixIcon: LucideIcons.lock,
-            textInputAction: TextInputAction.done,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your password';
-              }
-              if (value.length < 6) {
-                return 'Password must be at least 6 characters';
-              }
-              return null;
-            },
+        ),
+        const SizedBox(height: 14),
+
+        // 6 digit input circles
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(6, (index) {
+            return _PasskeyDigitField(
+              controller: controllers[index],
+              focusNode: focusNodes[index],
+              nextFocus: index < 5 ? focusNodes[index + 1] : null,
+              prevFocus: index > 0 ? focusNodes[index - 1] : null,
+              onChanged: onChanged,
+            );
+          }),
+        ),
+        const SizedBox(height: 10),
+
+        // Hint text
+        const Text(
+          'Masukkan 6 digit passkey Anda',
+          style: TextStyle(
+            fontSize: 12,
+            color: Color(0xFF94A3B8),
           ),
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              onTap: onForgotPassword,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 4.0),
-                child: Text(
-                  'Forgot Password?',
-                  style: TextStyle(
-                    color: Color(0xFF0066FF),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+        ),
+        const SizedBox(height: 12),
+
+        // Lupa Passkey
+        Align(
+          alignment: Alignment.centerRight,
+          child: GestureDetector(
+            onTap: onForgotPasskey,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 4.0),
+              child: Text(
+                'Lupa Passkey?',
+                style: TextStyle(
+                  color: Color(0xFF0066FF),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 24),
-          CustomButton(
-            label: 'Login',
-            isLoading: isLoading,
-            onPressed: onLogin,
-            backgroundColor: const Color(0xFF0066FF),
-            borderRadius: 28,
-            height: 52,
+        ),
+        const SizedBox(height: 24),
+
+        // Tombol Masuk
+        CustomButton(
+          label: 'Masuk',
+          isLoading: isLoading,
+          onPressed: onLogin,
+          backgroundColor: const Color(0xFF0066FF),
+          borderRadius: 28,
+          height: 52,
+        ),
+      ],
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Satu digit circle field
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _PasskeyDigitField extends StatefulWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final FocusNode? nextFocus;
+  final FocusNode? prevFocus;
+  final VoidCallback onChanged;
+
+  const _PasskeyDigitField({
+    required this.controller,
+    required this.focusNode,
+    required this.nextFocus,
+    required this.prevFocus,
+    required this.onChanged,
+  });
+
+  @override
+  State<_PasskeyDigitField> createState() => _PasskeyDigitFieldState();
+}
+
+class _PasskeyDigitFieldState extends State<_PasskeyDigitField> {
+  bool _hasFocus = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.focusNode.addListener(_onFocusChange);
+  }
+
+  @override
+  void dispose() {
+    widget.focusNode.removeListener(_onFocusChange);
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    setState(() => _hasFocus = widget.focusNode.hasFocus);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isFilled = widget.controller.text.isNotEmpty;
+
+    return SizedBox(
+      width: 48,
+      height: 48,
+      child: KeyboardListener(
+        focusNode: FocusNode(skipTraversal: true),
+        onKeyEvent: (event) {
+          if (event is KeyDownEvent &&
+              event.logicalKey == LogicalKeyboardKey.backspace &&
+              widget.controller.text.isEmpty &&
+              widget.prevFocus != null) {
+            widget.prevFocus!.requestFocus();
+          }
+        },
+        child: TextFormField(
+          controller: widget.controller,
+          focusNode: widget.focusNode,
+          keyboardType: TextInputType.number,
+          textAlign: TextAlign.center,
+          maxLength: 1,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF0F172A),
           ),
-        ],
+          decoration: InputDecoration(
+            counterText: '',
+            filled: true,
+            fillColor: _hasFocus
+                ? const Color(0xFFEFF6FF)
+                : isFilled
+                    ? const Color(0xFFF1F5F9)
+                    : Colors.white,
+            contentPadding: EdgeInsets.zero,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50),
+              borderSide: BorderSide(
+                color: isFilled
+                    ? const Color(0xFF0066FF)
+                    : const Color(0xFFE2E8F0),
+                width: 1.5,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50),
+              borderSide: const BorderSide(
+                color: Color(0xFF0066FF),
+                width: 2,
+              ),
+            ),
+          ),
+          onChanged: (value) {
+            if (value.isNotEmpty && widget.nextFocus != null) {
+              widget.nextFocus!.requestFocus();
+            }
+            widget.onChanged();
+          },
+        ),
       ),
     );
   }

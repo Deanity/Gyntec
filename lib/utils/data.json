@@ -1,0 +1,66 @@
+{
+  "user": {
+    "name": "Gisa",
+    "greeting": "Selamat datang"
+  },
+  "offlineBanner": {
+    "title": "Anda sedang dalam mode luring",
+    "description": "Data Anda tersimpan secara lokal. Bagikan modul kepada tutor di sekitar Anda melalui Bluetooth.",
+    "savedModules": 8
+  },
+  "recentSessions": [
+    {
+      "id": "s1",
+      "date": "Senin, 16/12/2022",
+      "level": "SMA",
+      "title": "Ekosistem Hutan & Hewan",
+      "studentCount": 8,
+      "subject": "IPA",
+      "durationMinutes": 45
+    },
+    {
+      "id": "s2",
+      "date": "Senin, 09/12/2022",
+      "level": "SMP",
+      "title": "Sistem Pencernaan Manusia",
+      "studentCount": 12,
+      "subject": "IPA",
+      "durationMinutes": 60
+    },
+    {
+      "id": "s3",
+      "date": "Rabu, 04/12/2022",
+      "level": "SMK",
+      "title": "Elektronika Dasar",
+      "studentCount": 20,
+      "subject": "TKJ",
+      "durationMinutes": 90
+    }
+  ],
+  "modules": [
+    {
+      "id": "m1",
+      "level": "SMA",
+      "title": "Anggota Tubuh Manusia",
+      "description": "Pelajari anggota tubuh manusia dan fungsinya secara lengkap."
+    },
+    {
+      "id": "m2",
+      "level": "SMP",
+      "title": "Sistem Pencernaan Manusia",
+      "description": "Jelajahi sistem pencernaan melalui materi interaktif yang menarik."
+    },
+    {
+      "id": "m3",
+      "level": "SMA",
+      "title": "Sistem Peredaran Darah",
+      "description": "Pelajari sistem peredaran darah melalui penjelasan visual yang mudah dipahami."
+    },
+    {
+      "id": "m4",
+      "level": "SMK",
+      "title": "Sistem Saraf",
+      "description": "Pelajari sistem saraf dengan teknologi interaktif yang inovatif."
+    }
+  ]
+}
