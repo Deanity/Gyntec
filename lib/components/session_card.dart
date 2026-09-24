@@ -19,7 +19,7 @@ class SessionCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 230,
+        width: 310,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -63,11 +63,23 @@ class SessionCard extends StatelessWidget {
             // Stat row: siswa | mapel | menit
             Row(
               children: [
-                _StatChip(value: '${session.studentCount}', label: 'Siswa hadir'),
+                Expanded(
+                  child: _StatChip(
+                    value: '${session.studentCount}',
+                    label: 'Siswa hadir',
+                  ),
+                ),
                 const SizedBox(width: 8),
-                _StatChip(value: session.subject, label: 'Mapel'),
+                Expanded(
+                  child: _StatChip(value: session.subject, label: 'Mapel'),
+                ),
                 const SizedBox(width: 8),
-                _StatChip(value: '${session.durationMinutes}', label: 'Menit'),
+                Expanded(
+                  child: _StatChip(
+                    value: '${session.durationMinutes}',
+                    label: 'Menit',
+                  ),
+                ),
               ],
             ),
           ],
