@@ -7,6 +7,7 @@ import '../components/offline_banner_card.dart';
 import '../components/session_card.dart';
 import '../components/module_list_item.dart';
 import '../components/bottom_nav_bar.dart';
+import 'modul_materi_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -158,7 +159,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     separatorBuilder: (_, _) => const SizedBox(height: 10),
                     itemBuilder: (context, index) => ModuleListItem(
                       module: _modules[index],
-                      onTap: () {},
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const ModulMateriScreen(),
+                        ),
+                      ),
                     ),
                   ),
                 ),

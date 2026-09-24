@@ -62,5 +62,66 @@
       "title": "Sistem Saraf",
       "description": "Pelajari sistem saraf dengan teknologi interaktif yang inovatif."
     }
-  ]
+  ],
+  "modulDetail": {
+    "id": "m1",
+    "title": "Anggota Tubuh Manusia",
+    "level": "SMA",
+    "subject": "IPA",
+    "materi": [
+      {
+        "id": "bag1",
+        "heading": "Bagian 1 : Kenapa ada Organ Tubuh?",
+        "body": "Organ tubuh manusia adalah kumpulan jaringan yang bekerja bersama untuk menjalankan fungsi tertentu dalam tubuh. Setiap organ memiliki peran unik yang saling mendukung agar tubuh dapat berfungsi dengan baik. Tanpa organ-organ ini, manusia tidak dapat bertahan hidup karena setiap sistem dalam tubuh saling bergantung satu sama lain.",
+        "imageAsset": "assets/MateriImage/Materi1.png"
+      },
+      {
+        "id": "bag2",
+        "heading": "Bagian 2 : Kenapa ada Organ Tubuh?",
+        "body": "Organ-organ dalam tubuh manusia dibagi menjadi beberapa sistem utama seperti sistem pernapasan, sistem pencernaan, sistem peredaran darah, dan sistem saraf. Setiap sistem bekerja secara harmonis untuk menjaga keseimbangan tubuh. Memahami fungsi masing-masing organ sangat penting agar kita dapat menjaga kesehatan dengan baik dan mengenali gejala penyakit lebih awal.",
+        "imageAsset": "assets/MateriImage/Materi2.png"
+      }
+    ],
+    "groupQuestion": {
+      "title": "Apa yang membuat manusia memerlukan organ?",
+      "instructions": [
+        "Diskusikan pertanyaan di atas bersama seluruh anggota kelompok.",
+        "Tuliskan minimal 2–3 alasan mendasar beserta contoh fungsi organ tubuh (misalnya: jantung, paru-paru, lambung) yang mendukung kelangsungan hidup manusia.",
+        "Rangkum hasil diskusi dalam bentuk poin-poin ringkas pada lembar jawaban dan presentasikan."
+      ],
+      "indicators": [
+        "Peserta didik mampu menjelaskan hubungan antara fungsi organ dengan kelangsungan hidup manusia secara tepat.",
+        "Argumen yang disampaikan runtut, logis, dan didukung dengan contoh organ yang relevan.",
+        "Seluruh anggota kelompok berpartisipasi aktif dalam proses diskusi dan penyusunan jawaban."
+      ]
+    },
+    "quiz": [
+      {
+        "id": "q1",
+        "number": 1,
+        "totalQuestions": 30,
+        "question": "Apa yang di sebut dengan kaki?",
+        "options": [
+          "Yang Menopang Tubuh Kita",
+          "Yang mikir",
+          "Yang htsan tapi berharap awokwkw",
+          "Di malang"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "q2",
+        "number": 2,
+        "totalQuestions": 30,
+        "question": "Apa yang di sebut dengan kaki?",
+        "options": [
+          "Yang Menopang Tubuh Kita",
+          "Yang mikir",
+          "Yang htsan tapi berharap awokwkw",
+          "Di malang"
+        ],
+        "correctIndex": 2
+      }
+    ]
+  }
 }

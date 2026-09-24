@@ -81,3 +81,114 @@ class ModuleModel {
         description: json['description'] as String,
       );
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Modul Detail Models
+// ─────────────────────────────────────────────────────────────────────────────
+
+class MateriBlockModel {
+  final String id;
+  final String heading;
+  final String body;
+  final String? imageAsset;
+
+  const MateriBlockModel({
+    required this.id,
+    required this.heading,
+    required this.body,
+    this.imageAsset,
+  });
+
+  factory MateriBlockModel.fromJson(Map<String, dynamic> json) =>
+      MateriBlockModel(
+        id: json['id'] as String,
+        heading: json['heading'] as String,
+        body: json['body'] as String,
+        imageAsset: json['imageAsset'] as String?,
+      );
+}
+
+class GroupQuestionModel {
+  final String title;
+  final List<String> instructions;
+  final List<String> indicators;
+
+  const GroupQuestionModel({
+    required this.title,
+    required this.instructions,
+    required this.indicators,
+  });
+
+  factory GroupQuestionModel.fromJson(Map<String, dynamic> json) =>
+      GroupQuestionModel(
+        title: json['title'] as String,
+        instructions:
+            (json['instructions'] as List).map((e) => e as String).toList(),
+        indicators:
+            (json['indicators'] as List).map((e) => e as String).toList(),
+      );
+}
+
+class QuizQuestionModel {
+  final String id;
+  final int number;
+  final int totalQuestions;
+  final String question;
+  final List<String> options;
+  final int correctIndex;
+
+  const QuizQuestionModel({
+    required this.id,
+    required this.number,
+    required this.totalQuestions,
+    required this.question,
+    required this.options,
+    required this.correctIndex,
+  });
+
+  factory QuizQuestionModel.fromJson(Map<String, dynamic> json) =>
+      QuizQuestionModel(
+        id: json['id'] as String,
+        number: json['number'] as int,
+        totalQuestions: json['totalQuestions'] as int,
+        question: json['question'] as String,
+        options: (json['options'] as List).map((e) => e as String).toList(),
+        correctIndex: json['correctIndex'] as int,
+      );
+}
+
+class ModulDetailModel {
+  final String id;
+  final String title;
+  final String level;
+  final String subject;
+  final List<MateriBlockModel> materi;
+  final GroupQuestionModel groupQuestion;
+  final List<QuizQuestionModel> quiz;
+
+  const ModulDetailModel({
+    required this.id,
+    required this.title,
+    required this.level,
+    required this.subject,
+    required this.materi,
+    required this.groupQuestion,
+    required this.quiz,
+  });
+
+  factory ModulDetailModel.fromJson(Map<String, dynamic> json) =>
+      ModulDetailModel(
+        id: json['id'] as String,
+        title: json['title'] as String,
+        level: json['level'] as String,
+        subject: json['subject'] as String,
+        materi: (json['materi'] as List)
+            .map((e) => MateriBlockModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        groupQuestion: GroupQuestionModel.fromJson(
+            json['groupQuestion'] as Map<String, dynamic>),
+        quiz: (json['quiz'] as List)
+            .map((e) => QuizQuestionModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+}

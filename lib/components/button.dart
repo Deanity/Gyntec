@@ -11,6 +11,7 @@ class CustomButton extends StatelessWidget {
   final double height;
   final double borderRadius;
   final double fontSize;
+  final BorderSide? border;
 
   const CustomButton({
     super.key,
@@ -24,6 +25,7 @@ class CustomButton extends StatelessWidget {
     this.height = 52,
     this.borderRadius = 28,
     this.fontSize = 16,
+    this.border,
   });
 
   @override
@@ -79,6 +81,7 @@ class CustomButton extends StatelessWidget {
         minimumSize: Size(isFullWidth ? double.infinity : 0, height),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
+          side: border ?? BorderSide.none,
         ),
         elevation: 0,
         shadowColor: Colors.transparent,
