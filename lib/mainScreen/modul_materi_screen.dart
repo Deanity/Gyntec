@@ -1,12 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../components/components.dart';
 import '../utils/models.dart';
-
-/// Tab yang tersedia di Modul Materi Screen
-enum MateriTab { materi, diskusi, quiz }
 
 class ModulMateriScreen extends StatefulWidget {
   const ModulMateriScreen({super.key});
@@ -53,67 +49,45 @@ class _ModulMateriScreenState extends State<ModulMateriScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // ── Konten scrollable ──
+          // ── 1. Custom Top Bar (SafeArea -> Container -> Stack) ──
+          const CustomTopBar(
+            title: 'Module Materi',
+          ),
+
+          // ── 2. Konten Scrollable ──
           Expanded(
-            child: CustomScrollView(
-              slivers: [
-                // ── App Bar ──
-                SliverAppBar(
-                  backgroundColor: Colors.white,
-                  surfaceTintColor: Colors.white,
-                  pinned: true,
-                  elevation: 0,
-                  leading: IconButton(
-                    icon: const Icon(
-                      LucideIcons.chevronLeft,
-                      color: Color(0xFF0F172A),
-                    ),
-                    onPressed: () => Navigator.of(context).pop(),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Banner offline
+                  OfflineBannerCard(
+                    title: _banner!.title,
+                    description: _banner!.description,
+                    savedModules: _banner!.savedModules,
                   ),
-                  title: const Text(
-                    'Module Materi',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF0F172A),
-                    ),
-                  ),
-                  centerTitle: true,
-                  bottom: PreferredSize(
-                    preferredSize: const Size.fromHeight(1),
-                    child: Divider(
-                      height: 1,
-                      color: const Color(0xFFE2E8F0),
-                    ),
-                  ),
-                ),
+                  const SizedBox(height: 24),
 
-                // ── Body konten berdasarkan tab ──
-                SliverPadding(
-                  padding: const EdgeInsets.all(20),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate([
-                      // Banner offline
-                      OfflineBannerCard(
-                        title: _banner!.title,
-                        description: _banner!.description,
-                        savedModules: _banner!.savedModules,
-                      ),
-                      const SizedBox(height: 24),
-
-                      // Konten tab
-                      _buildTabContent(modul),
-                    ]),
-                  ),
-                ),
-              ],
+                  // Konten Tab
+                  _buildTabContent(modul),
+                ],
+              ),
             ),
           ),
 
-          // ── Tab Bar + Tombol Mulai Sesi (sticky di bawah) ──
-          _BottomActionBar(
+          // ── 3. Custom Bottom Action Bar (Pill Tabs + Mulai Sesi) ──
+          ModulBottomAction(
             activeTab: _activeTab,
             onTabChanged: (tab) => setState(() => _activeTab = tab),
+            onStartSession: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Sesi dimulai!'),
+                  backgroundColor: Color(0xFF0066FF),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -236,103 +210,6 @@ class _QuizTabContent extends StatelessWidget {
         ),
         const SizedBox(height: 8),
       ],
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Bottom Action Bar: Tab switcher + Mulai Sesi button
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _BottomActionBar extends StatelessWidget {
-  final MateriTab activeTab;
-  final ValueChanged<MateriTab> onTabChanged;
-
-  const _BottomActionBar({
-    required this.activeTab,
-    required this.onTabChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
-      ),
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-      child: SafeArea(
-        top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Tab switcher
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFF1F5F9),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                children: MateriTab.values.map((tab) {
-                  final isActive = tab == activeTab;
-                  final label = switch (tab) {
-                    MateriTab.materi => 'Materi',
-                    MateriTab.diskusi => 'Diskusi',
-                    MateriTab.quiz => 'Quiz',
-                  };
-                  return Expanded(
-                    child: GestureDetector(
-                      onTap: () => onTabChanged(tab),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          color: isActive ? Colors.white : Colors.transparent,
-                          borderRadius: BorderRadius.circular(9),
-                          boxShadow: isActive
-                              ? [
-                                  const BoxShadow(
-                                    color: Color(0x14000000),
-                                    blurRadius: 8,
-                                    offset: Offset(0, 2),
-                                  )
-                                ]
-                              : null,
-                        ),
-                        child: Text(
-                          label,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: isActive
-                                ? FontWeight.w700
-                                : FontWeight.w500,
-                            color: isActive
-                                ? const Color(0xFF0F172A)
-                                : const Color(0xFF94A3B8),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            // Tombol Mulai Sesi
-            CustomButton(
-              label: 'Mulai Sesi',
-              onPressed: () {},
-              backgroundColor: const Color(0xFF0066FF),
-              borderRadius: 14,
-              height: 52,
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
     );
   }
 }
