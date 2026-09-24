@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../components/components.dart';
 import '../utils/models.dart';
+import 'participant_screen.dart';
 
 class ModulMateriScreen extends StatefulWidget {
   const ModulMateriScreen({super.key});
@@ -81,10 +82,9 @@ class _ModulMateriScreenState extends State<ModulMateriScreen> {
             activeTab: _activeTab,
             onTabChanged: (tab) => setState(() => _activeTab = tab),
             onStartSession: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Sesi dimulai!'),
-                  backgroundColor: Color(0xFF0066FF),
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ParticipantScreen(modul: modul),
                 ),
               );
             },

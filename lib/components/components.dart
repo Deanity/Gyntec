@@ -18,3 +18,10 @@ export 'materi/group_question_card.dart';
 export 'materi/quiz_option_item.dart';
 export 'materi/quiz_question_card.dart';
 export 'materi/modul_bottom_action.dart';
+
+// Peserta Feature Components
+export 'peserta/participant_badge.dart';
+export 'peserta/empty_participant_view.dart';
+export 'peserta/participant_card.dart';
+export 'peserta/add_participant_bottom_sheet.dart';
+
