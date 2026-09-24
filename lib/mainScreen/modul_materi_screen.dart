@@ -116,11 +116,11 @@ class _MateriTabContent extends StatelessWidget {
     final List<Widget> blocks = [];
 
     for (final item in modul.materi) {
-      blocks.add(MateriContentBlock(heading: item.heading, body: item.body));
       if (item.imageAsset != null) {
-        blocks.add(const SizedBox(height: 16));
         blocks.add(MateriImageBlock(assetPath: item.imageAsset!));
+        blocks.add(const SizedBox(height: 16));
       }
+      blocks.add(MateriContentBlock(heading: item.heading, body: item.body));
       blocks.add(const SizedBox(height: 24));
     }
 

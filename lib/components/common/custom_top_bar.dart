@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-/// Custom Top App Bar menggunakan Stack agar judul benar-benar di tengah layar,
-/// dan tombol back di kiri tidak menggeser posisi judul.
+/// Custom Top App Bar dengan tombol back (arrow) di sebelah kiri dan teks navbar di sampingnya (rata kiri).
 class CustomTopBar extends StatelessWidget {
   final String title;
   final VoidCallback? onBack;
+  final bool showBackButton;
 
   const CustomTopBar({
     super.key,
     required this.title,
     this.onBack,
+    this.showBackButton = true,
   });
 
   @override
@@ -21,27 +22,11 @@ class CustomTopBar extends StatelessWidget {
         bottom: false,
         child: Container(
           height: 54,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Stack(
-            alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
             children: [
-              // 1. Judul persis di tengah layar
-              Center(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF0F172A),
-                    letterSpacing: -0.3,
-                  ),
-                ),
-              ),
-
-              // 2. Tombol Back di kiri tanpa mengganggu center
-              Positioned(
-                left: 0,
-                child: GestureDetector(
+              if (showBackButton) ...[
+                GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: onBack ?? () => Navigator.of(context).maybePop(),
                   child: Container(
@@ -52,6 +37,20 @@ class CustomTopBar extends StatelessWidget {
                       color: Color(0xFF0F172A),
                     ),
                   ),
+                ),
+                const SizedBox(width: 4),
+              ],
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF0F172A),
+                    letterSpacing: -0.3,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

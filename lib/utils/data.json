@@ -100,12 +100,12 @@
         "id": "q1",
         "number": 1,
         "totalQuestions": 30,
-        "question": "Apa yang di sebut dengan kaki?",
+        "question": "Apa fungsi utama dari anggota gerak bawah (kaki) pada tubuh manusia?",
         "options": [
-          "Yang Menopang Tubuh Kita",
-          "Yang mikir",
-          "Yang htsan tapi berharap awokwkw",
-          "Di malang"
+          "Menopang berat tubuh dan membantu lokomosi (berpindah tempat)",
+          "Mengatur sistem pernapasan dan pertukaran gas",
+          "Mencerna makanan dan menyerap nutrisi",
+          "Menyaring zat sisa metabolisme dari darah"
         ],
         "correctIndex": 0
       },
@@ -113,14 +113,14 @@
         "id": "q2",
         "number": 2,
         "totalQuestions": 30,
-        "question": "Apa yang di sebut dengan kaki?",
+        "question": "Organ tubuh yang berfungsi sebagai pusat kendali sistem saraf dan aktivitas tubuh adalah...",
         "options": [
-          "Yang Menopang Tubuh Kita",
-          "Yang mikir",
-          "Yang htsan tapi berharap awokwkw",
-          "Di malang"
+          "Jantung",
+          "Otak",
+          "Paru-paru",
+          "Hati"
         ],
-        "correctIndex": 2
+        "correctIndex": 1
       }
     ]
   }
