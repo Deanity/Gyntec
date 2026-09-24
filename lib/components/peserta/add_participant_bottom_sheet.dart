@@ -2,59 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../utils/models.dart';
 
-/// Menampilkan modal popup "Tambah Peserta" sesuai desain Figma.
-/// Dipanggil via [showAddParticipantDialog].
-void showAddParticipantDialog({
-  required BuildContext context,
-  required List<StudentModel> allStudents,
-  required List<StudentModel> currentSelected,
-  required ValueChanged<List<StudentModel>> onSave,
-}) {
-  showGeneralDialog<void>(
-    context: context,
-    barrierDismissible: true,
-    barrierLabel: 'Tutup',
-    barrierColor: const Color(0x80CBD5E1), // abu-abu semi-transparan
-    transitionDuration: const Duration(milliseconds: 220),
-    transitionBuilder: (context, animation, _, child) {
-      return FadeTransition(
-        opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
-        child: SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, 0.08),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
-          child: child,
-        ),
-      );
-    },
-    pageBuilder: (context, _, __) => _AddParticipantModal(
-      allStudents: allStudents,
-      currentSelected: currentSelected,
-      onSave: onSave,
-    ),
-  );
-}
-
-/// Widget modal popup utama.
-class _AddParticipantModal extends StatefulWidget {
+/// Bottom sheet interaktif untuk memilih peserta didik dari data yang tersedia
+/// atau menambahkan peserta baru secara manual.
+class AddParticipantBottomSheet extends StatefulWidget {
   final List<StudentModel> allStudents;
   final List<StudentModel> currentSelected;
   final ValueChanged<List<StudentModel>> onSave;
 
-  const _AddParticipantModal({
+  const AddParticipantBottomSheet({
+    super.key,
     required this.allStudents,
     required this.currentSelected,
     required this.onSave,
   });
 
   @override
-  State<_AddParticipantModal> createState() => _AddParticipantModalState();
+  State<AddParticipantBottomSheet> createState() =>
+      _AddParticipantBottomSheetState();
 }
 
-class _AddParticipantModalState extends State<_AddParticipantModal> {
+class _AddParticipantBottomSheetState extends State<AddParticipantBottomSheet> {
   late List<StudentModel> _selected;
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _manualNameController = TextEditingController();
+  final TextEditingController _manualNisController = TextEditingController();
+  bool _isManualMode = false;
   String _searchQuery = '';
 
   @override
@@ -66,415 +38,294 @@ class _AddParticipantModalState extends State<_AddParticipantModal> {
   @override
   void dispose() {
     _searchController.dispose();
+    _manualNameController.dispose();
+    _manualNisController.dispose();
     super.dispose();
   }
 
-  // ── Filter siswa berdasarkan query ──
   List<StudentModel> get _filteredStudents {
-    final q = _searchQuery.trim().toLowerCase();
-    if (q.isEmpty) return [];
+    if (_searchQuery.trim().isEmpty) {
+      return widget.allStudents;
+    }
+    final q = _searchQuery.toLowerCase();
     return widget.allStudents
-        .where(
-          (s) =>
-              s.name.toLowerCase().contains(q) ||
-              s.nis.toLowerCase().contains(q) ||
-              s.schoolClass.toLowerCase().contains(q),
-        )
+        .where((s) =>
+            s.name.toLowerCase().contains(q) ||
+            s.nis.toLowerCase().contains(q) ||
+            s.schoolClass.toLowerCase().contains(q))
         .toList();
   }
 
-  // ── Siswa yang belum ada di daftar & cocok pencarian ──
-  bool get _canAddManual {
-    final q = _searchQuery.trim();
-    if (q.isEmpty) return false;
-    final exactMatch = widget.allStudents.any(
-      (s) => s.name.toLowerCase() == q.toLowerCase(),
-    );
-    return !exactMatch;
-  }
-
-  void _addStudent(StudentModel student) {
-    final already = _selected.any((s) => s.id == student.id);
-    if (already) return;
+  void _toggleSelection(StudentModel student) {
     setState(() {
-      _selected.add(student);
-      _searchController.clear();
-      _searchQuery = '';
+      final exists = _selected.any((s) => s.id == student.id);
+      if (exists) {
+        _selected.removeWhere((s) => s.id == student.id);
+      } else {
+        _selected.add(student);
+      }
     });
   }
 
-  void _addManual() {
-    final name = _searchQuery.trim();
+  void _addManualStudent() {
+    final name = _manualNameController.text.trim();
     if (name.isEmpty) return;
+
+    final nis = _manualNisController.text.trim().isEmpty
+        ? '${DateTime.now().millisecondsSinceEpoch % 100000}'
+        : _manualNisController.text.trim();
+
     final newStudent = StudentModel(
       id: 'custom_${DateTime.now().millisecondsSinceEpoch}',
       name: name,
-      nis: '${DateTime.now().millisecondsSinceEpoch % 100000}',
+      nis: nis,
       schoolClass: 'Peserta Baru',
     );
+
     setState(() {
       _selected.add(newStudent);
-      _searchController.clear();
-      _searchQuery = '';
+      _manualNameController.clear();
+      _manualNisController.clear();
+      _isManualMode = false;
     });
   }
 
-  void _removeStudent(StudentModel student) {
-    setState(() => _selected.removeWhere((s) => s.id == student.id));
-  }
-
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-    final filtered = _filteredStudents;
-
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Column(
-        children: [
-          // ── Area kosong atas (klik untuk tutup) ──
-          Expanded(
-            child: GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              behavior: HitTestBehavior.opaque,
-              child: const SizedBox.expand(),
-            ),
-          ),
-
-          // ── Konten modal ──
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: screenHeight * 0.65,
-            ),
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(22),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x18000000),
-                  blurRadius: 24,
-                  offset: Offset(0, 8),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ── Judul Kartu ──
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
-                  child: Text(
-                    'Peserta Sebelumnya',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF0F172A),
-                    ),
-                  ),
-                ),
-
-                // ── List peserta terpilih + hasil pencarian ──
-                Flexible(
-                  child: ListView(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.only(bottom: 8),
-                    children: [
-                      // Peserta yang sudah dipilih
-                      if (_selected.isEmpty && _searchQuery.trim().isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 8,
-                          ),
-                          child: Text(
-                            'Belum ada peserta. Cari di bawah.',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Color(0xFF94A3B8),
-                            ),
-                          ),
-                        )
-                      else ...[
-                        ..._selected.map(
-                          (student) => _ParticipantRow(
-                            student: student,
-                            onRemove: () => _removeStudent(student),
-                          ),
-                        ),
-                      ],
-
-                      // Hasil pencarian (bukan yang sudah dipilih)
-                      if (filtered.isNotEmpty) ...[
-                        if (_selected.isNotEmpty)
-                          const Divider(
-                            height: 1,
-                            color: Color(0xFFF1F5F9),
-                            indent: 20,
-                            endIndent: 20,
-                          ),
-                        ...filtered
-                            .where(
-                              (s) => !_selected.any((sel) => sel.id == s.id),
-                            )
-                            .map(
-                              (student) => _SearchResultRow(
-                                student: student,
-                                onAdd: () => _addStudent(student),
-                              ),
-                            ),
-                      ],
-
-                      // Tombol "Tambah [nama]" jika tidak ada di daftar
-                      if (_canAddManual && filtered.isEmpty)
-                        _TambahManualButton(
-                          name: _searchQuery.trim(),
-                          onTap: _addManual,
-                        ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-              ],
-            ),
-          ),
-
-          // ── Sticky Bottom: Search + Selesai ──
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 16, 20, bottomInset + 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Search bar
-                Container(
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: const Color(0xFFE2E8F0)),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x0A000000),
-                        blurRadius: 8,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 16),
-                      const Icon(
-                        LucideIcons.search,
-                        size: 18,
-                        color: Color(0xFF94A3B8),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: TextField(
-                          controller: _searchController,
-                          onChanged: (v) =>
-                              setState(() => _searchQuery = v),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF0F172A),
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: 'Cari atau tambah peserta',
-                            hintStyle: TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFFCBD5E1),
-                            ),
-                            isDense: true,
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // Tombol Selesai
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      widget.onSave(_selected);
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0066FF),
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    child: const Text(
-                      'Selesai',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.85,
       ),
-    );
-  }
-}
-
-// ── Row peserta yang sudah dipilih (dengan icon hapus) ──
-class _ParticipantRow extends StatelessWidget {
-  final StudentModel student;
-  final VoidCallback onRemove;
-
-  const _ParticipantRow({required this.student, required this.onRemove});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 9),
-      child: Row(
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        top: 20,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+      ),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            LucideIcons.userRound,
-            size: 20,
-            color: Color(0xFF64748B),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              student.name,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF0F172A),
+          // ── Handle Bar ──
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFCBD5E1),
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
           ),
-          GestureDetector(
-            onTap: onRemove,
-            child: const Icon(
-              LucideIcons.x,
-              size: 16,
-              color: Color(0xFFCBD5E1),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+          const SizedBox(height: 16),
 
-// ── Row hasil pencarian (bisa di-tap untuk tambah) ──
-class _SearchResultRow extends StatelessWidget {
-  final StudentModel student;
-  final VoidCallback onAdd;
-
-  const _SearchResultRow({required this.student, required this.onAdd});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onAdd,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 9),
-        child: Row(
-          children: [
-            const Icon(
-              LucideIcons.userRound,
-              size: 20,
-              color: Color(0xFF64748B),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    student.name,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF0F172A),
-                    ),
-                  ),
-                  Text(
-                    '${student.schoolClass} • NIS ${student.nis}',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF94A3B8),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(
-              LucideIcons.plus,
-              size: 18,
-              color: Color(0xFF0066FF),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── Tombol "Tambah [nama]" untuk input manual ──
-class _TambahManualButton extends StatelessWidget {
-  final String name;
-  final VoidCallback onTap;
-
-  const _TambahManualButton({required this.name, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-        ),
-        child: Row(
-          children: [
-            const Icon(
-              LucideIcons.userRoundPlus,
-              size: 20,
-              color: Color(0xFF64748B),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                'Tambah $name',
+          // ── Header Title & Toggle Mode ──
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _isManualMode ? 'Tambah Peserta Manual' : 'Pilih Peserta Didik',
                 style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
                   color: Color(0xFF0F172A),
                 ),
               ),
+              TextButton.icon(
+                onPressed: () {
+                  setState(() => _isManualMode = !_isManualMode);
+                },
+                icon: Icon(
+                  _isManualMode ? LucideIcons.list : LucideIcons.userPlus,
+                  size: 16,
+                  color: const Color(0xFF0066FF),
+                ),
+                label: Text(
+                  _isManualMode ? 'Dari Daftar' : 'Input Baru',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF0066FF),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          if (_isManualMode) ...[
+            // ── Input Manual Form ──
+            TextField(
+              controller: _manualNameController,
+              decoration: InputDecoration(
+                labelText: 'Nama Lengkap Peserta',
+                hintText: 'Contoh: Rian Anggoro',
+                prefixIcon: const Icon(LucideIcons.user, size: 18),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                ),
+              ),
             ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _manualNisController,
+              decoration: InputDecoration(
+                labelText: 'Nomor Induk Siswa (NIS)',
+                hintText: 'Contoh: 20240109',
+                prefixIcon: const Icon(LucideIcons.hash, size: 18),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFFCBD5E1)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            ElevatedButton(
+              onPressed: _addManualStudent,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0066FF),
+                foregroundColor: Colors.white,
+                minimumSize: const Size(double.infinity, 44),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+              ),
+              child: const Text(
+                'Tambahkan ke Daftar',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+            const SizedBox(height: 14),
+          ] else ...[
+            // ── Search Bar ──
+            TextField(
+              controller: _searchController,
+              onChanged: (val) => setState(() => _searchQuery = val),
+              decoration: InputDecoration(
+                hintText: 'Cari nama atau NIS siswa...',
+                hintStyle:
+                    const TextStyle(fontSize: 13, color: Color(0xFF94A3B8)),
+                prefixIcon:
+                    const Icon(LucideIcons.search, size: 18, color: Color(0xFF94A3B8)),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                filled: true,
+                fillColor: const Color(0xFFF8FAFC),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // ── Daftar Siswa ──
+            Flexible(
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: _filteredStudents.length,
+                separatorBuilder: (_, _) => const Divider(
+                  height: 1,
+                  color: Color(0xFFF1F5F9),
+                ),
+                itemBuilder: (context, index) {
+                  final student = _filteredStudents[index];
+                  final isSelected =
+                      _selected.any((s) => s.id == student.id);
+
+                  return CheckboxListTile(
+                    value: isSelected,
+                    onChanged: (_) => _toggleSelection(student),
+                    contentPadding: EdgeInsets.zero,
+                    activeColor: const Color(0xFF0066FF),
+                    title: Text(
+                      student.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF0F172A),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'NIS: ${student.nis} • ${student.schoolClass}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 12),
           ],
-        ),
+
+          // ── Bottom Action Button ──
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(0, 48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    side: const BorderSide(color: Color(0xFFCBD5E1)),
+                  ),
+                  child: const Text(
+                    'Batal',
+                    style: TextStyle(
+                      color: Color(0xFF64748B),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                flex: 2,
+                child: ElevatedButton(
+                  onPressed: () {
+                    widget.onSave(_selected);
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0066FF),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(0, 48),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                  child: Text(
+                    'Simpan (${_selected.length} Peserta)',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
-
-// ── Backward-compat alias (tidak dipakai, tapi jaga export tetap valid) ──
-typedef AddParticipantBottomSheet = _AddParticipantModal;
