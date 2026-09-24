@@ -71,103 +71,115 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      bottomNavigationBar: HomeBottomNavBar(
-        currentIndex: _navIndex,
-        onTap: (i) => setState(() => _navIndex = i),
-      ),
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            // ── Header: salam & tanggal ──
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${_user!.greeting}, ${_user!.name}',
-                      style: const TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF0F172A),
-                        letterSpacing: -0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _currentDateTime(),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Color(0xFF94A3B8),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
+      body: Stack(
+        children: [
+          // ── Konten utama ──
+          SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                // ── Header: salam & tanggal ──
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${_user!.greeting}, ${_user!.name}',
+                          style: const TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0F172A),
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _currentDateTime(),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Color(0xFF94A3B8),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
 
-                    // ── Banner offline ──
-                    OfflineBannerCard(
-                      title: _banner!.title,
-                      description: _banner!.description,
-                      savedModules: _banner!.savedModules,
-                    ),
-                    const SizedBox(height: 28),
+                        // ── Banner offline ──
+                        OfflineBannerCard(
+                          title: _banner!.title,
+                          description: _banner!.description,
+                          savedModules: _banner!.savedModules,
+                        ),
+                        const SizedBox(height: 28),
 
-                    // ── Sesi Belajar Terakhir header ──
-                    SectionHeader(
-                      title: 'Sesi Belajar Terakhir',
-                      onActionTap: () {},
+                        // ── Sesi Belajar Terakhir header ──
+                        SectionHeader(
+                          title: 'Sesi Belajar Terakhir',
+                          onActionTap: () {},
+                        ),
+                        const SizedBox(height: 14),
+                      ],
                     ),
-                    const SizedBox(height: 14),
-                  ],
-                ),
-              ),
-            ),
-
-            // ── Horizontal scroll: SessionCard ──
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 170,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: _sessions.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: 12),
-                  itemBuilder: (context, index) => SessionCard(
-                    session: _sessions[index],
-                    onTap: () {},
                   ),
                 ),
-              ),
-            ),
 
-            // ── Modul Pembelajaran header ──
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 28, 20, 14),
-                child: SectionHeader(
-                  title: 'Modul Pembelajaran',
-                  onActionTap: () {},
+                // ── Horizontal scroll: SessionCard ──
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 170,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: _sessions.length,
+                      separatorBuilder: (_, _) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) => SessionCard(
+                        session: _sessions[index],
+                        onTap: () {},
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
 
-            // ── Vertical list: ModuleListItem ──
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverList.separated(
-                itemCount: _modules.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 10),
-                itemBuilder: (context, index) => ModuleListItem(
-                  module: _modules[index],
-                  onTap: () {},
+                // ── Modul Pembelajaran header ──
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 28, 20, 14),
+                    child: SectionHeader(
+                      title: 'Modul Pembelajaran',
+                      onActionTap: () {},
+                    ),
+                  ),
                 ),
-              ),
-            ),
 
-            // Bottom padding
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-          ],
-        ),
+                // ── Vertical list: ModuleListItem ──
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  sliver: SliverList.separated(
+                    itemCount: _modules.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) => ModuleListItem(
+                      module: _modules[index],
+                      onTap: () {},
+                    ),
+                  ),
+                ),
+
+                // Bottom padding — beri ruang agar konten tidak tertutup navbar
+                const SliverToBoxAdapter(child: SizedBox(height: 100)),
+              ],
+            ),
+          ),
+
+          // ── Floating Pill NavBar — mengambang di bawah layar ──
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: HomeBottomNavBar(
+              currentIndex: _navIndex,
+              onTap: (i) => setState(() => _navIndex = i),
+            ),
+          ),
+        ],
       ),
     );
   }
