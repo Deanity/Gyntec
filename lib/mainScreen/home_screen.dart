@@ -1,12 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../components/components.dart';
 import '../utils/models.dart';
-import '../components/section_header.dart';
-import '../components/offline_banner_card.dart';
-import '../components/session_card.dart';
-import '../components/module_list_item.dart';
-import '../components/bottom_nav_bar.dart';
 import 'modul_materi_screen.dart';
 
 class HomeScreen extends StatefulWidget {

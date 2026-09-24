@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/models.dart';
+import '../../utils/models.dart';
 import 'quiz_option_item.dart';
 
 /// Kartu satu pertanyaan quiz dengan nomor, pertanyaan, dan daftar pilihan.

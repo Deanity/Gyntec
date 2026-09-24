@@ -2,13 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import '../components/components.dart';
 import '../utils/models.dart';
-import '../components/offline_banner_card.dart';
-import '../components/materi_content_block.dart';
-import '../components/materi_image_block.dart';
-import '../components/group_question_card.dart';
-import '../components/quiz_question_card.dart';
-import '../components/button.dart';
 
 /// Tab yang tersedia di Modul Materi Screen
 enum MateriTab { materi, diskusi, quiz }

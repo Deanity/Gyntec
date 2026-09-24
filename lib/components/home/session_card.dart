@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../utils/models.dart';
-import 'level_badge.dart';
+import '../../utils/models.dart';
+import '../common/level_badge.dart';
 
 /// Kartu sesi belajar untuk horizontal scroll list di Home Screen.
 /// Menampilkan tanggal, level, judul, jumlah siswa, mapel, dan durasi.

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../utils/models.dart';
-import 'level_badge.dart';
+import '../../utils/models.dart';
+import '../common/level_badge.dart';
 
 /// Item list modul pembelajaran dengan badge level, judul, dan deskripsi singkat.
 /// Digunakan di daftar vertikal Modul Pembelajaran di Home Screen.
