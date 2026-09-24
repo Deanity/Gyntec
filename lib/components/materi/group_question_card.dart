@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Kartu pertanyaan kelompok dengan judul, petunjuk pengerjaan, dan indikator penilaian.
-/// Reusable untuk berbagai modul yang memiliki aktivitas diskusi kelompok.
+/// Reusable untuk berbagai modul yang memiliki aktivitas diskusi kelompok
 class GroupQuestionCard extends StatelessWidget {
   final String title;
   final List<String> instructions;

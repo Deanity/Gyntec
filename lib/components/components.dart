@@ -23,5 +23,4 @@ export 'materi/modul_bottom_action.dart';
 export 'peserta/participant_badge.dart';
 export 'peserta/empty_participant_view.dart';
 export 'peserta/participant_card.dart';
-export 'peserta/add_participant_bottom_sheet.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Blok konten materi: heading judul bagian + paragraf teks.
-/// Reusable untuk setiap bagian materi dalam modul.
+/// Reusable untuk setiap bagian materi dalam modul
 class MateriContentBlock extends StatelessWidget {
   final String heading;
   final String body;

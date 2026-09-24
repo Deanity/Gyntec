@@ -206,28 +206,20 @@ class ModulDetailModel {
 class StudentModel {
   final String id;
   final String name;
-  final String nis;
-  final String schoolClass;
 
   const StudentModel({
     required this.id,
     required this.name,
-    required this.nis,
-    required this.schoolClass,
   });
 
   factory StudentModel.fromJson(Map<String, dynamic> json) => StudentModel(
         id: json['id'] as String,
         name: json['name'] as String,
-        nis: json['nis'] as String,
-        schoolClass: json['schoolClass'] as String? ?? '',
       );
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
-        'nis': nis,
-        'schoolClass': schoolClass,
       };
 }
 

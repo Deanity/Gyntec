@@ -127,53 +127,13 @@
     ]
   },
   "students": [
-    {
-      "id": "std_1",
-      "name": "Ahmad Fauzi",
-      "nis": "20240101",
-      "schoolClass": "XII IPA 1"
-    },
-    {
-      "id": "std_2",
-      "name": "Bella Safira",
-      "nis": "20240102",
-      "schoolClass": "XII IPA 1"
-    },
-    {
-      "id": "std_3",
-      "name": "Citra Lestari",
-      "nis": "20240103",
-      "schoolClass": "XII IPA 2"
-    },
-    {
-      "id": "std_4",
-      "name": "Dimas Pratama",
-      "nis": "20240104",
-      "schoolClass": "XII IPA 2"
-    },
-    {
-      "id": "std_5",
-      "name": "Eko Prasetyo",
-      "nis": "20240105",
-      "schoolClass": "XII IPA 1"
-    },
-    {
-      "id": "std_6",
-      "name": "Farhan Kurniawan",
-      "nis": "20240106",
-      "schoolClass": "XII IPA 3"
-    },
-    {
-      "id": "std_7",
-      "name": "Gita Gutawa",
-      "nis": "20240107",
-      "schoolClass": "XII IPA 2"
-    },
-    {
-      "id": "std_8",
-      "name": "Hendra Wijaya",
-      "nis": "20240108",
-      "schoolClass": "XII IPA 3"
-    }
+    { "id": "std_1", "name": "Ahmad Fauzi" },
+    { "id": "std_2", "name": "Bella Safira" },
+    { "id": "std_3", "name": "Citra Lestari" },
+    { "id": "std_4", "name": "Dimas Pratama" },
+    { "id": "std_5", "name": "Eko Prasetyo" },
+    { "id": "std_6", "name": "Farhan Kurniawan" },
+    { "id": "std_7", "name": "Gita Gutawa" },
+    { "id": "std_8", "name": "Hendra Wijaya" }
   ]
 }
