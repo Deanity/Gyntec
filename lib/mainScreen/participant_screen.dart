@@ -52,19 +52,19 @@ class _ParticipantScreenState extends State<ParticipantScreen> {
   }
 
   void _openAddParticipantSheet() {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => AddParticipantBottomSheet(
-        allStudents: _allStudents,
-        currentSelected: _participants,
-        onSave: (updated) {
-          setState(() {
-            _participants.clear();
-            _participants.addAll(updated);
-          });
-        },
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (context) => AddParticipantBottomSheet(
+          allStudents: _allStudents,
+          currentSelected: _participants,
+          onSave: (updated) {
+            setState(() {
+              _participants.clear();
+              _participants.addAll(updated);
+            });
+          },
+        ),
       ),
     );
   }
