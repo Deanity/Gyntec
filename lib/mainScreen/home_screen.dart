@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../components/components.dart';
 import '../utils/models.dart';
+import '../utils/connectivity_service.dart';
 import 'modul_materi_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,10 +24,33 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ModuleModel> _modules = [];
   bool _isLoading = true;
 
+  // Konektivitas jaringan
+  bool _isOffline = false;
+  StreamSubscription<bool>? _connectivitySub;
+
   @override
   void initState() {
     super.initState();
     _loadData();
+    _initConnectivity();
+  }
+
+  @override
+  void dispose() {
+    _connectivitySub?.cancel();
+    super.dispose();
+  }
+
+  /// Cek status awal dan subscribe perubahan koneksi.
+  Future<void> _initConnectivity() async {
+    final online = await ConnectivityService.instance.isOnline();
+    if (mounted) setState(() => _isOffline = !online);
+
+    _connectivitySub = ConnectivityService.instance.onStatusChanged.listen(
+      (isOnline) {
+        if (mounted) setState(() => _isOffline = !isOnline);
+      },
+    );
   }
 
   /// Membaca dan mem-parse data.json dari assets.
@@ -100,13 +125,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 20),
 
-                        // ── Banner offline ──
-                        OfflineBannerCard(
-                          title: _banner!.title,
-                          description: _banner!.description,
-                          savedModules: _banner!.savedModules,
+                        // ── Banner offline (hanya tampil saat tidak ada koneksi) ──
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          transitionBuilder: (child, animation) =>
+                              SizeTransition(
+                            sizeFactor: animation,
+                            axisAlignment: -1,
+                            child: FadeTransition(
+                                opacity: animation, child: child),
+                          ),
+                          child: _isOffline
+                              ? Padding(
+                                  key: const ValueKey('offline-banner'),
+                                  padding:
+                                      const EdgeInsets.only(bottom: 20),
+                                  child: OfflineBannerCard(
+                                    title: _banner!.title,
+                                    description: _banner!.description,
+                                    savedModules: _banner!.savedModules,
+                                  ),
+                                )
+                              : const SizedBox.shrink(
+                                  key: ValueKey('no-banner')),
                         ),
-                        const SizedBox(height: 28),
 
                         // ── Sesi Belajar Terakhir header ──
                         SectionHeader(
