@@ -23,6 +23,7 @@ export 'materi/modul_bottom_action.dart';
 export 'peserta/participant_badge.dart';
 export 'peserta/empty_participant_view.dart';
 export 'peserta/participant_card.dart';
+export 'peserta/no_participant_modal.dart';
 
 // Session Feature Components
 export 'session/session_stepper_header.dart';

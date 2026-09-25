@@ -160,15 +160,7 @@ class _ParticipantScreenState extends State<ParticipantScreen>
 
   void _startSession() {
     if (_participants.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Silahkan tambahkan minimal 1 peserta untuk memulai sesi.',
-          ),
-          backgroundColor: Color(0xFFEF4444),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      NoParticipantModal.show(context);
       return;
     }
 
