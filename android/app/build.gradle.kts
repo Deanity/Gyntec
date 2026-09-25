@@ -37,22 +37,25 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-
-    applicationVariants.all {
-        val variant = this
-        variant.outputs
-            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-            .forEach { output ->
-                val buildType = variant.buildType.name
-                output.outputFileName = if (buildType == "release") {
-                    "Gyntec.apk"
-                } else {
-                    "Gyntec-$buildType.apk"
-                }
-            }
-    }
 }
 
 flutter {
     source = "../.."
+}
+
+// Rename APK output dari app-release.apk menjadi Gyntec.apk
+// setelah Flutter selesai memindahkan file ke folder flutter-apk.
+tasks.whenTaskAdded {
+    if (name == "assembleRelease") {
+        doLast {
+            val flutterApkDir = rootProject.file("build/app/outputs/flutter-apk")
+            val source = File(flutterApkDir, "app-release.apk")
+            val target = File(flutterApkDir, "Gyntec.apk")
+            if (source.exists()) {
+                target.delete()
+                source.renameTo(target)
+                println("APK renamed to Gyntec.apk")
+            }
+        }
+    }
 }
