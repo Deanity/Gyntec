@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../components/components.dart';
 import '../utils/models.dart';
+import 'session_learning_screen.dart';
 
 /// Screen "Peserta" (Add Participant Screen) yang muncul setelah user menekan
 /// tombol "Mulai Sesi" pada Module Materi Screen.
@@ -171,32 +172,12 @@ class _ParticipantScreenState extends State<ParticipantScreen>
       return;
     }
 
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: const Text(
-          'Sesi Dimulai',
-          style: TextStyle(fontWeight: FontWeight.w700),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SessionLearningScreen(
+          modul: _modul!,
+          participants: _participants,
         ),
-        content: Text(
-          'Sesi pembelajaran untuk "${_modul?.title}" berhasil dimulai dengan ${_participants.length} peserta.',
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0066FF),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Text('OK'),
-          ),
-        ],
       ),
     );
   }

@@ -223,3 +223,15 @@ class StudentModel {
       };
 }
 
+class DiscussionGroupModel {
+  final int number;
+  final String name;
+  final List<StudentModel> members;
+
+  const DiscussionGroupModel({
+    required this.number,
+    required this.name,
+    required this.members,
+  });
+}
+

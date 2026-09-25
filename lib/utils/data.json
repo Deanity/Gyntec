@@ -74,13 +74,13 @@
       {
         "id": "bag1",
         "heading": "Bagian 1 : Kenapa ada Organ Tubuh?",
-        "body": "Organ tubuh manusia adalah kumpulan jaringan yang bekerja bersama untuk menjalankan fungsi tertentu dalam tubuh. Setiap organ memiliki peran unik yang saling mendukung agar tubuh dapat berfungsi dengan baik. Tanpa organ-organ ini, manusia tidak dapat bertahan hidup karena setiap sistem dalam tubuh saling bergantung satu sama lain.",
+        "body": "Calculator commitment dear marketing should dangerous. Member company view no-brainer well synergy. Tent protocol algorithm scope work pulling. All didn't not globalize expectations. Overflow lunch box be stands regroup die every. Market eow hit web customer ladder stronger big. Optimize member die you eco-system meeting deck strategy. Uat revision churning company break discussions we've not goto.\n\nComms turn three mindfulness developing reach policy. Tent high sexy involved knowledge inclusion options space. Too don't sandwich policy every loss board 30,000ft squad. Managing already engagement first-order hammer also strategic marginalised scope squad. Spaces business jumping pants us the decisions win-win-win obviously relaxation. Pee businesses lunch take catching company back. Market including i'm space last live please bed interim exploratory.",
         "imageAsset": "assets/MateriImage/Materi1.png"
       },
       {
         "id": "bag2",
         "heading": "Bagian 2 : Kenapa ada Organ Tubuh?",
-        "body": "Organ-organ dalam tubuh manusia dibagi menjadi beberapa sistem utama seperti sistem pernapasan, sistem pencernaan, sistem peredaran darah, dan sistem saraf. Setiap sistem bekerja secara harmonis untuk menjaga keseimbangan tubuh. Memahami fungsi masing-masing organ sangat penting agar kita dapat menjaga kesehatan dengan baik dan mengenali gejala penyakit lebih awal.",
+        "body": "Calculator commitment dear marketing should dangerous. Member company view no-brainer well synergy. Tent protocol algorithm scope work pulling. All didn't not globalize expectations. Overflow lunch box be stands regroup die every. Market eow hit web customer ladder stronger big. Optimize member die you eco-system meeting deck strategy. Uat revision churning company break discussions we've not goto.\n\nComms turn three mindfulness developing reach policy. Tent high sexy involved knowledge inclusion options space. Too don't sandwich policy every loss board 30,000ft squad. Managing already engagement first-order hammer also strategic marginalised scope squad. Spaces business jumping pants us the decisions win-win-win obviously relaxation. Pee businesses lunch take catching company back. Market including i'm space last live please bed interim exploratory.",
         "imageAsset": "assets/MateriImage/Materi2.png"
       }
     ],
@@ -102,12 +102,12 @@
         "id": "q1",
         "number": 1,
         "totalQuestions": 30,
-        "question": "Apa fungsi utama dari anggota gerak bawah (kaki) pada tubuh manusia?",
+        "question": "Apa fungsi utama dari sistem muskuloskeletal (rangka dan otot) pada tubuh manusia?",
         "options": [
-          "Menopang berat tubuh dan membantu lokomosi (berpindah tempat)",
-          "Mengatur sistem pernapasan dan pertukaran gas",
-          "Mencerna makanan dan menyerap nutrisi",
-          "Menyaring zat sisa metabolisme dari darah"
+          "Menopang struktur tubuh dan memfasilitasi pergerakan aktif",
+          "Memompa darah dan mengedarkan oksigen ke seluruh sel tubuh",
+          "Mengatur produksi hormon serta metabolisme tubuh",
+          "Menyaring racun dan zat sisa hasil metabolisme dari darah"
         ],
         "correctIndex": 0
       },
@@ -115,25 +115,68 @@
         "id": "q2",
         "number": 2,
         "totalQuestions": 30,
-        "question": "Organ tubuh yang berfungsi sebagai pusat kendali sistem saraf dan aktivitas tubuh adalah...",
+        "question": "Organ tubuh yang berfungsi sebagai pusat kendali utama sistem saraf dan mengoordinasikan seluruh aktivitas tubuh adalah...",
         "options": [
           "Jantung",
           "Otak",
           "Paru-paru",
-          "Hati"
+          "Sumsum tulang belakang"
         ],
         "correctIndex": 1
+      },
+      {
+        "id": "q3",
+        "number": 3,
+        "totalQuestions": 30,
+        "question": "Organ pernapasan utama manusia tempat terjadinya pertukaran gas oksigen (O2) dan karbon dioksida (CO2) adalah...",
+        "options": [
+          "Trakea",
+          "Bronkus",
+          "Paru-paru (Alveolus)",
+          "Laring"
+        ],
+        "correctIndex": 2
+      },
+      {
+        "id": "q4",
+        "number": 4,
+        "totalQuestions": 30,
+        "question": "Bagian jantung yang memompa darah beroksigen ke seluruh jaringan tubuh melalui peredaran darah besar adalah...",
+        "options": [
+          "Ventrikel Kiri (Bilik Kiri)",
+          "Atrium Kanan (Serambi Kanan)",
+          "Ventrikel Kanan (Bilik Kanan)",
+          "Atrium Kiri (Serambi Kiri)"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "id": "q5",
+        "number": 5,
+        "totalQuestions": 30,
+        "question": "Organ yang memproduksi enzim pencernaan serta menghasilkan hormon insulin untuk mengatur kadar gula darah adalah...",
+        "options": [
+          "Lambung",
+          "Hati",
+          "Pankreas",
+          "Kandung Empedu"
+        ],
+        "correctIndex": 2
       }
     ]
   },
   "students": [
-    { "id": "std_1", "name": "Ahmad Fauzi" },
-    { "id": "std_2", "name": "Bella Safira" },
-    { "id": "std_3", "name": "Citra Lestari" },
-    { "id": "std_4", "name": "Dimas Pratama" },
-    { "id": "std_5", "name": "Eko Prasetyo" },
-    { "id": "std_6", "name": "Farhan Kurniawan" },
-    { "id": "std_7", "name": "Gita Gutawa" },
-    { "id": "std_8", "name": "Hendra Wijaya" }
+    { "id": "std_1", "name": "Reza Oktovian" },
+    { "id": "std_2", "name": "Reza Ismail" },
+    { "id": "std_3", "name": "Reza Supri" },
+    { "id": "std_4", "name": "Reza Kecap" },
+    { "id": "std_5", "name": "Dian Prasetya" },
+    { "id": "std_6", "name": "Fajar Nugroho" },
+    { "id": "std_7", "name": "Siti Amalia" },
+    { "id": "std_8", "name": "Andi Saputra" },
+    { "id": "std_9", "name": "Lina Marlina" },
+    { "id": "std_10", "name": "Rizky Hidayat" },
+    { "id": "std_11", "name": "Putri Wulandari" },
+    { "id": "std_12", "name": "Budi Santoso" }
   ]
 }
