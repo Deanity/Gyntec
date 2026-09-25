@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Konektivitas jaringan
   bool _isOffline = false;
   StreamSubscription<bool>? _connectivitySub;
+  Timer? _pollTimer;
 
   @override
   void initState() {
@@ -38,19 +39,34 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _connectivitySub?.cancel();
+    _pollTimer?.cancel();
     super.dispose();
   }
 
-  /// Cek status awal dan subscribe perubahan koneksi.
+  /// Cek status awal, subscribe stream, dan mulai polling fallback tiap 4 detik.
+  /// Polling diperlukan karena beberapa HP Android tidak fire stream dengan reliable.
   Future<void> _initConnectivity() async {
     final online = await ConnectivityService.instance.isOnline();
     if (mounted) setState(() => _isOffline = !online);
 
+    // Subscribe stream perubahan
     _connectivitySub = ConnectivityService.instance.onStatusChanged.listen(
       (isOnline) {
         if (mounted) setState(() => _isOffline = !isOnline);
       },
     );
+
+    // Polling fallback setiap 4 detik
+    _pollTimer = Timer.periodic(const Duration(seconds: 4), (_) async {
+      final online = await ConnectivityService.instance.isOnline();
+      if (mounted) setState(() => _isOffline = !online);
+    });
+  }
+
+  /// Dipanggil saat user pull-to-refresh — cek koneksi secara manual.
+  Future<void> _refreshConnectivity() async {
+    final online = await ConnectivityService.instance.isOnline();
+    if (mounted) setState(() => _isOffline = !online);
   }
 
   /// Membaca dan mem-parse data.json dari assets.
@@ -97,7 +113,10 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           // ── Konten utama ──
           SafeArea(
-            child: CustomScrollView(
+            child: RefreshIndicator(
+              onRefresh: _refreshConnectivity,
+              color: const Color(0xFF0066FF),
+              child: CustomScrollView(
               slivers: [
                 // ── Header: salam & tanggal ──
                 SliverToBoxAdapter(
@@ -209,8 +228,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Bottom padding — beri ruang agar konten tidak tertutup navbar
                 const SliverToBoxAdapter(child: SizedBox(height: 100)),
               ],
-            ),
-          ),
+            ),          // CustomScrollView
+          ),            // RefreshIndicator
+        ),              // SafeArea
 
           // ── Floating Pill NavBar — mengambang di bawah layar ──
           Positioned(

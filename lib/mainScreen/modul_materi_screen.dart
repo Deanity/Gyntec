@@ -23,6 +23,7 @@ class _ModulMateriScreenState extends State<ModulMateriScreen> {
   // Konektivitas jaringan
   bool _isOffline = false;
   StreamSubscription<bool>? _connectivitySub;
+  Timer? _pollTimer;
 
   @override
   void initState() {
@@ -34,10 +35,11 @@ class _ModulMateriScreenState extends State<ModulMateriScreen> {
   @override
   void dispose() {
     _connectivitySub?.cancel();
+    _pollTimer?.cancel();
     super.dispose();
   }
 
-  /// Cek status awal dan subscribe perubahan koneksi.
+  /// Cek status awal, subscribe stream, dan mulai polling fallback tiap 4 detik.
   Future<void> _initConnectivity() async {
     final online = await ConnectivityService.instance.isOnline();
     if (mounted) setState(() => _isOffline = !online);
@@ -47,6 +49,18 @@ class _ModulMateriScreenState extends State<ModulMateriScreen> {
         if (mounted) setState(() => _isOffline = !isOnline);
       },
     );
+
+    // Polling fallback setiap 4 detik
+    _pollTimer = Timer.periodic(const Duration(seconds: 4), (_) async {
+      final online = await ConnectivityService.instance.isOnline();
+      if (mounted) setState(() => _isOffline = !online);
+    });
+  }
+
+  /// Dipanggil saat user pull-to-refresh.
+  Future<void> _refreshConnectivity() async {
+    final online = await ConnectivityService.instance.isOnline();
+    if (mounted) setState(() => _isOffline = !online);
   }
 
   Future<void> _loadData() async {
@@ -82,8 +96,12 @@ class _ModulMateriScreenState extends State<ModulMateriScreen> {
 
           // ── 2. Konten Scrollable ──
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: RefreshIndicator(
+              onRefresh: _refreshConnectivity,
+              color: const Color(0xFF0066FF),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -114,8 +132,9 @@ class _ModulMateriScreenState extends State<ModulMateriScreen> {
                   _buildTabContent(modul),
                 ],
               ),
-            ),
-          ),
+            ),            // SingleChildScrollView
+          ),            // RefreshIndicator
+        ),              // Expanded
 
           // ── 3. Custom Bottom Action Bar (Pill Tabs + Mulai Sesi) ──
           ModulBottomAction(
