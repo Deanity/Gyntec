@@ -11,11 +11,13 @@ import '../../utils/models.dart';
 class ModulePreviewCard extends StatelessWidget {
   final ModuleModel module;
   final String subtitle;
+  final bool showDiscussionBadge;
 
   const ModulePreviewCard({
     super.key,
     required this.module,
     this.subtitle = 'Dokumen pilihan Anda',
+    this.showDiscussionBadge = false,
   });
 
   @override
@@ -38,7 +40,7 @@ class ModulePreviewCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Subtitle atas ("Dokumen pilihan Anda")
+          // Subtitle atas ("Dokumen pilihan Anda" atau "Dibagikan oleh...")
           Text(
             subtitle,
             style: const TextStyle(
@@ -74,7 +76,7 @@ class ModulePreviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
 
-          // Badge row: Level, Subject, Soal
+          // Badge row: Level, Subject, Soal, (+ Diskusi jika showDiscussionBadge)
           Wrap(
             spacing: 6,
             runSpacing: 6,
@@ -82,6 +84,8 @@ class ModulePreviewCard extends StatelessWidget {
               _PreviewBadge(label: module.level),
               _PreviewBadge(label: module.subject),
               _PreviewBadge(label: '${module.totalQuestions} Soal'),
+              if (showDiscussionBadge)
+                _PreviewBadge(label: '${module.discussionCount} Diskusi'),
             ],
           ),
         ],
