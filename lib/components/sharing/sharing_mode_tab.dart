@@ -32,8 +32,20 @@ class SharingModeTab extends StatelessWidget {
         child: Container(
           height: 52,
           decoration: BoxDecoration(
-            color: const Color(0xFFF1F5F9),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF000000).withValues(alpha: 0.10),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+              ),
+              BoxShadow(
+                color: const Color(0xFF000000).withValues(alpha: 0.04),
+                blurRadius: 6,
+                offset: const Offset(0, 1),
+              ),
+            ],
           ),
           padding: const EdgeInsets.all(4),
           child: Row(
@@ -95,9 +107,8 @@ class _TabItem extends StatelessWidget {
             duration: const Duration(milliseconds: 220),
             style: TextStyle(
               fontSize: 14,
-              fontWeight:
-                  isActive ? FontWeight.w700 : FontWeight.w500,
-              color: isActive ? Colors.white : const Color(0xFF64748B),
+              fontWeight: isActive ? FontWeight.w700 : FontWeight.w600,
+              color: isActive ? Colors.white : const Color(0xFF0F172A),
             ),
             child: Text(label),
           ),
