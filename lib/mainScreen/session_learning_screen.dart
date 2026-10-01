@@ -188,29 +188,44 @@ class _SessionLearningScreenState extends State<SessionLearningScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
+      body: Stack(
         children: [
-          // ── 1. Top Header dengan Stepper ──
-          SessionStepperHeader(
-            currentStep: _currentStep,
-            title: _headerTitle,
-            onBack: _handleBackNavigation,
+          // ── Konten utama (scrollable) ──
+          Column(
+            children: [
+              // ── 1. Top Header dengan Stepper ──
+              SessionStepperHeader(
+                currentStep: _currentStep,
+                title: _headerTitle,
+                onBack: _handleBackNavigation,
+              ),
+
+              // ── 2. Konten Dinamis Sesuai Step ──
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 16,
+                    bottom: 136, // ruang agar konten tidak tertutup floating nav
+                  ),
+                  child: _buildStepContent(),
+                ),
+              ),
+            ],
           ),
 
-          // ── 2. Konten Dinamis Sesuai Step ──
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: _buildStepContent(),
+          // ── 3. Floating Bottom Navigation (Pill Tabs + Tombol Aksi) ──
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: SessionBottomNav(
+              currentStep: _currentStep,
+              onStepChanged: (step) => setState(() => _currentStep = step),
+              onActionPressed: _onBottomActionPressed,
+              actionLabel: _actionButtonLabel,
             ),
-          ),
-
-          // ── 3. Bottom Navigation (Pill Tabs + Tombol Aksi) ──
-          SessionBottomNav(
-            currentStep: _currentStep,
-            onStepChanged: (step) => setState(() => _currentStep = step),
-            onActionPressed: _onBottomActionPressed,
-            actionLabel: _actionButtonLabel,
           ),
         ],
       ),

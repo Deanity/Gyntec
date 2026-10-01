@@ -257,88 +257,99 @@ class _ParticipantScreenState extends State<ParticipantScreen>
                           ),
               ),
 
-              // ── 4. Bottom Controls (mode normal) ──
-
-              if (!_isAddMode)
-                SafeArea(
-                  top: false,
-                  child: Container(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      bottom: 16,
-                      top: 8,
-                    ),
-                    decoration: const BoxDecoration(color: Colors.white),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Tombol "Tambah Peserta"
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: InkWell(
-                            onTap: _enterAddMode,
-                            borderRadius: BorderRadius.circular(24),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(24),
-                                border: Border.all(
-                                  color: const Color(0xFFCBD5E1),
-                                  width: 1.2,
-                                ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Color(0x06000000),
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: const Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    LucideIcons.userRoundPlus,
-                                    size: 18,
-                                    color: Color(0xFF1E293B),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Tambah Peserta',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF1E293B),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-
-                        // Tombol "Mulai Sesi"
-                        CustomButton(
-                          label: 'Mulai Sesi',
-                          onPressed: _startSession,
-                          backgroundColor: const Color(0xFF0066FF),
-                          textColor: Colors.white,
-                          borderRadius: 26,
-                          height: 52,
-                          fontSize: 16,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              // ── 4. Spacer agar konten tidak tertutup floating buttons ──
+              if (!_isAddMode) const SizedBox(height: 136),
             ],
           ),
+
+          // ── Layer floating: Bottom Controls (mode normal) ──
+          if (!_isAddMode)
+            Positioned(
+              left: 20,
+              right: 20,
+              bottom: 0,
+              child: SafeArea(
+                top: false,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Tombol "Tambah Peserta" — floating pill di kanan
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        onTap: _enterAddMode,
+                        borderRadius: BorderRadius.circular(24),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: const Color(0xFFCBD5E1),
+                              width: 1.2,
+                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color(0x18000000),
+                                blurRadius: 12,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                LucideIcons.userRoundPlus,
+                                size: 18,
+                                color: Color(0xFF1E293B),
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Tambah Peserta',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF1E293B),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Tombol "Mulai Sesi" — floating full-width
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(26),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x330066FF),
+                            blurRadius: 16,
+                            offset: Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: CustomButton(
+                        label: 'Mulai Sesi',
+                        onPressed: _startSession,
+                        backgroundColor: const Color(0xFF0066FF),
+                        textColor: Colors.white,
+                        borderRadius: 26,
+                        height: 52,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ),
+              ),
+            ),
 
           // ── Layer 2: Overlay Add Mode (muncul di atas konten) ──
           if (_isAddMode)

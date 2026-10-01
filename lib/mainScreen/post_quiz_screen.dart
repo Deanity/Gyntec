@@ -55,178 +55,194 @@ class _PostQuizScreenState extends State<PostQuizScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            // ── Top Navigation Bar ("< Post Quiz") ──
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      child: const Icon(
-                        LucideIcons.chevronLeft,
-                        size: 22,
-                        color: Color(0xFF0F172A),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Post Quiz',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF0F172A),
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // ── Scrollable Body Content ──
-            Expanded(
-              child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Judul Modul
-                    Text(
-                      modul.title,
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF0F172A),
-                        letterSpacing: -0.4,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-
-                    // Badges Tag Row (SMA, IPA, 30 Soal, 1 Diskusi)
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        _buildBadge(modul.level),
-                        _buildBadge(modul.subject),
-                        _buildBadge('${modul.totalQuestions} Soal'),
-                        _buildBadge('${modul.discussionCount} Diskusi'),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Section: Kelompok
-                    const Text(
-                      'Kelompok',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF0F172A),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Accordion List Kelompok
-                    ...widget.groups.map((group) {
-                      final isExpanded =
-                          _expandedGroupNumbers.contains(group.number);
-                      final score = _groupScores[group.number] ?? 1;
-
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: _buildGroupAccordionCard(
-                          group: group,
-                          score: score,
-                          isExpanded: isExpanded,
-                          onToggle: () => _toggleGroupExpansion(group.number),
-                        ),
-                      );
-                    }),
-                    const SizedBox(height: 16),
-
-                    // Section: Anggota
-                    const Text(
-                      'Anggota',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF0F172A),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
-                    // List Anggota Pill Cards
-                    ...individualMembers.map(
-                      (student) => Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
+            // ── Konten utama (scrollable) ──
+            Column(
+              children: [
+                // ── Top Navigation Bar ("< Post Quiz") ──
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Navigator.of(context).maybePop(),
                         child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 14,
+                          padding: const EdgeInsets.all(4),
+                          child: const Icon(
+                            LucideIcons.chevronLeft,
+                            size: 22,
+                            color: Color(0xFF0F172A),
                           ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFAFAFA),
-                            borderRadius: BorderRadius.circular(28),
-                            border: Border.all(
-                              color: const Color(0xFFE2E8F0),
-                              width: 1.2,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Post Quiz',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF0F172A),
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // ── Scrollable Body Content ──
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      top: 8,
+                      bottom: 96, // ruang agar konten tidak tertutup floating button
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Judul Modul
+                        Text(
+                          modul.title,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF0F172A),
+                            letterSpacing: -0.4,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+
+                        // Badges Tag Row (SMA, IPA, 30 Soal, 1 Diskusi)
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            _buildBadge(modul.level),
+                            _buildBadge(modul.subject),
+                            _buildBadge('${modul.totalQuestions} Soal'),
+                            _buildBadge('${modul.discussionCount} Diskusi'),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Section: Kelompok
+                        const Text(
+                          'Kelompok',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF0F172A),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Accordion List Kelompok
+                        ...widget.groups.map((group) {
+                          final isExpanded =
+                              _expandedGroupNumbers.contains(group.number);
+                          final score = _groupScores[group.number] ?? 1;
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: _buildGroupAccordionCard(
+                              group: group,
+                              score: score,
+                              isExpanded: isExpanded,
+                              onToggle: () =>
+                                  _toggleGroupExpansion(group.number),
                             ),
+                          );
+                        }),
+                        const SizedBox(height: 16),
+
+                        // Section: Anggota
+                        const Text(
+                          'Anggota',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF0F172A),
                           ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                LucideIcons.userRound,
-                                size: 18,
-                                color: Color(0xFF475569),
+                        ),
+                        const SizedBox(height: 12),
+
+                        // List Anggota Pill Cards
+                        ...individualMembers.map(
+                          (student) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
                               ),
-                              const SizedBox(width: 12),
-                              Text(
-                                student.name,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFF1E293B),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFAFAFA),
+                                borderRadius: BorderRadius.circular(28),
+                                border: Border.all(
+                                  color: const Color(0xFFE2E8F0),
+                                  width: 1.2,
                                 ),
                               ),
-                            ],
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    LucideIcons.userRound,
+                                    size: 18,
+                                    color: Color(0xFF475569),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    student.name,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF1E293B),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 20),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ),
-
-            // ── Bottom Action Button ("Kembali ke Beranda") ──
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  top: BorderSide(
-                    color: Color(0xFFF1F5F9),
-                    width: 1,
                   ),
                 ),
-              ),
-              child: CustomButton(
-                label: 'Kembali ke Beranda',
-                onPressed: () {
-                  // Kembali ke halaman Home / Screen awal
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                },
-                backgroundColor: const Color(0xFF0066FF),
-                borderRadius: 28,
-                height: 52,
+              ],
+            ),
+
+            // ── Floating Bottom Action Button ("Kembali ke Beranda") ──
+            Positioned(
+              left: 20,
+              right: 20,
+              bottom: 8,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x330066FF),
+                      blurRadius: 16,
+                      offset: Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: CustomButton(
+                  label: 'Kembali ke Beranda',
+                  onPressed: () {
+                    // Kembali ke halaman Home / Screen awal
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
+                  backgroundColor: const Color(0xFF0066FF),
+                  borderRadius: 28,
+                  height: 52,
+                ),
               ),
             ),
           ],

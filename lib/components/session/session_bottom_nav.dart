@@ -22,23 +22,14 @@ class SessionBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: Color(0xFFF1F5F9),
-            width: 1,
-          ),
-        ),
-      ),
-      padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
-      child: SafeArea(
-        top: false,
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Pill capsule tab switcher di tengah
+            // Pill capsule tab switcher — floating, no background container
             Center(
               child: Container(
                 decoration: BoxDecoration(
@@ -47,9 +38,9 @@ class SessionBottomNav extends StatelessWidget {
                   border: Border.all(color: const Color(0xFFE2E8F0)),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF000000).withValues(alpha: 0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                      color: const Color(0xFF000000).withValues(alpha: 0.08),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
@@ -64,16 +55,28 @@ class SessionBottomNav extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 12),
 
-            // Tombol Aksi Utama
-            CustomButton(
-              label: actionLabel,
-              onPressed: onActionPressed,
-              isLoading: isLoading,
-              backgroundColor: const Color(0xFF0066FF),
-              borderRadius: 28,
-              height: 52,
+            // Tombol Aksi Utama — floating dengan blue glow shadow
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x330066FF),
+                    blurRadius: 16,
+                    offset: Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: CustomButton(
+                label: actionLabel,
+                onPressed: onActionPressed,
+                isLoading: isLoading,
+                backgroundColor: const Color(0xFF0066FF),
+                borderRadius: 28,
+                height: 52,
+              ),
             ),
           ],
         ),
