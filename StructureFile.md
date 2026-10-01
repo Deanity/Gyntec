@@ -28,22 +28,28 @@ lib/
 │   ├── auth/                    # Fitur Autentikasi
 │   │   └── screens/
 │   │       └── login_screen.dart      # Halaman login tutor
-│   └── home/                    # Fitur Beranda Dasbor
+│   ├── home/                    # Fitur Beranda Dasbor
+│   │   ├── screens/
+│   │   │   └── home_screen.dart       # Halaman utama (IndexedStack 4 tab)
+│   │   └── widgets/
+│   │       ├── home_widgets.dart      # Barrel export widget home
+│   │       ├── module_list_item.dart  # Baris modul di beranda
+│   │       └── session_card.dart      # Kartu sesi belajar terakhir
+│   └── module/                  # Fitur Katalog & Pembelajaran Modul
+│       ├── module.dart                # Barrel export modul fitur
 │       ├── screens/
-│       │   └── home_screen.dart       # Halaman utama (IndexedStack 4 tab)
+│       │   ├── module_list_screen.dart   # Tab katalog modul & pencarian real-time
+│       │   └── module_detail_screen.dart # Pratinjau isi materi, soal, & indikator
 │       └── widgets/
-│           ├── home_widgets.dart      # Barrel export widget home
-│           ├── module_list_item.dart  # Baris modul di beranda
-│           └── session_card.dart      # Kartu sesi belajar terakhir
+│           ├── module_widgets.dart       # Barrel export widget modul
+│           ├── group_question_card.dart  # Card pertanyaan kelompok
+│           ├── materi_content_block.dart # Blok teks materi pembelajaran
+│           ├── materi_image_block.dart   # Blok ilustrasi gambar materi
+│           ├── modul_bottom_action.dart  # Floating action button "Mulai Sesi"
+│           ├── quiz_option_item.dart     # Pilihan ganda kuis
+│           └── quiz_question_card.dart   # Card butir pertanyaan kuis
 ├── components/                  # Komponen UI spesifik domain pembelajaran
 │   ├── components.dart          # Barrel export komponen
-│   ├── materi/                  # Widget detail materi & latihan soal
-│   │   ├── group_question_card.dart
-│   │   ├── materi_content_block.dart
-│   │   ├── materi_image_block.dart
-│   │   ├── modul_bottom_action.dart
-│   │   ├── quiz_option_item.dart
-│   │   └── quiz_question_card.dart
 │   ├── peserta/                 # Widget pemilihan & penambahan peserta
 │   │   ├── empty_participant_view.dart
 │   │   ├── no_participant_modal.dart
@@ -63,9 +69,7 @@ lib/
 │       ├── scanning_pulse_animation.dart
 │       ├── scanning_status_view.dart
 │       └── sharing_mode_tab.dart
-├── mainScreen/                  # Halaman alur pembelajaran & sharing
-│   ├── modul_screen.dart              # Tab katalog modul & pencarian
-│   ├── modul_materi_screen.dart       # Pratinjau detail isi modul
+├── mainScreen/                  # Halaman alur sesi kelas & sharing
 │   ├── participant_screen.dart        # Pengelolaan peserta sesi belajar
 │   ├── session_learning_screen.dart   # Sesi kelas 3 langkah (Materi, Diskusi, Quiz)
 │   ├── discussion_timer_screen.dart   # Countdown timer diskusi kelompok
@@ -88,10 +92,10 @@ flowchart TD
     
     subgraph Tab Navigation
         Home --> TabHome[Tab 0: Beranda]
-        Home --> TabModul[Tab 1: ModulScreen]
+        Home --> TabModul[Tab 1: ModuleListScreen]
     end
 
-    TabHome --> DetailMateri[ModulMateriScreen]
+    TabHome --> DetailMateri[ModuleDetailScreen]
     TabModul --> DetailMateri
     
     subgraph Sesi Belajar Flow
@@ -124,7 +128,7 @@ flowchart TD
 ### 1. Root & Core (`lib/core/`)
 
 * **`main.dart`**  
-  Entry point utama aplikasi. Mengatur orientasi vertikal (portrait), tema aplikasi (warna primer `#0066FF`), serta route awal ke `HomeScreen`.
+  Entry point utama aplikasi. Mengatur orientasi portrait, tema aplikasi (`#0066FF`), serta route awal ke `HomeScreen`.
 * **`core/services/connectivity_service.dart`**  
   Service singleton untuk memeriksa status koneksi internet (online/offline) secara real-time via stream dan interval polling fallback.
 * **`core/utils/keyboard_utils.dart`**  
@@ -148,44 +152,40 @@ flowchart TD
 
 ### 2. Features (`lib/features/`)
 
-* **`features/auth/screens/login_screen.dart`**  
-  Halaman autentikasi login tutor/pengajar.
-* **`features/home/screens/home_screen.dart`**  
-  Halaman dasbor utama aplikasi. Menggunakan `IndexedStack` untuk navigasi 4 tab bawah (Beranda, Modul, Sesi Belajar, Murid).
-* **`features/home/widgets/module_list_item.dart`**  
-  Card baris modul pada daftar vertikal di halaman Beranda.
-* **`features/home/widgets/session_card.dart`**  
-  Card horizontal sesi belajar terakhir (tanggal, jenjang, mata pelajaran, jumlah murid, durasi).
+#### A. Auth (`lib/features/auth/`)
+* **`screens/login_screen.dart`**: Halaman login tutor pengajar.
+
+#### B. Home (`lib/features/home/`)
+* **`screens/home_screen.dart`**: Halaman dasbor utama (IndexedStack 4 tab).
+* **`widgets/module_list_item.dart`**: Card baris modul di daftar vertikal Beranda.
+* **`widgets/session_card.dart`**: Card horizontal sesi belajar terakhir.
+
+#### C. Module (`lib/features/module/`)
+* **`screens/module_list_screen.dart`**: Tab katalog modul, pencarian real-time, dan FAB (+) berbagi modul.
+* **`screens/module_detail_screen.dart`**: Pratinjau isi materi modul, ilustrasi, contoh kuis, dan tombol "Mulai Sesi".
+* **`widgets/group_question_card.dart`**: Card indikator dan pertanyaan diskusi kelompok.
+* **`widgets/materi_content_block.dart`**: Komponen blok judul bab dan teks materi.
+* **`widgets/materi_image_block.dart`**: Komponen penampil gambar materi pembelajaran.
+* **`widgets/modul_bottom_action.dart`**: Floating action button bawah di layar detail modul ("Mulai Sesi").
+* **`widgets/quiz_option_item.dart`**: Pilihan ganda interaktif soal kuis.
+* **`widgets/quiz_question_card.dart`**: Card butir pertanyaan kuis.
 
 ---
 
 ### 3. Main Screens (`lib/mainScreen/`)
 
-* **`modul_screen.dart`**  
-  Halaman tab "Modul" berisi search bar real-time, card modul lengkap dengan tag, dan FAB (+) untuk berbagi modul.
-* **`modul_materi_screen.dart`**  
-  Halaman pratinjau isi materi modul, gambar penunjang, indikator diskusi, contoh soal kuis, dan tombol "Mulai Sesi".
-* **`participant_screen.dart`**  
-  Halaman pemilihan & penambahan siswa/peserta didik sebelum sesi kelas dimulai.
-* **`session_learning_screen.dart`**  
-  Halaman inti pelaksanaan sesi belajar kelas (Materi, Diskusi Kelompok, Quiz Interaktif).
-* **`discussion_timer_screen.dart`**  
-  Halaman timer countdown fullscreen untuk sesi diskusi kelompok.
-* **`post_quiz_screen.dart`**  
-  Halaman rekapitulasi skor akhir tiap kelompok kuis dalam format accordion card.
-* **`berbagi_modul_screen.dart`**  
-  Halaman berbagi modul (mencari perangkat, permintaan kiriman masuk, progress penerimaan, selesai terima).
-* **`pilih_modul_screen.dart`**  
-  Halaman pemilihan modul yang akan dikirim ke perangkat tujuan dengan checkbox multi-select.
-* **`kirim_modul_screen.dart`**  
-  Halaman alur pengiriman modul (mencari perangkat, seleksi perangkat penerima, progress bar upload, selesai kirim).
+* **`participant_screen.dart`**: Pemilihan dan penambahan peserta didik sebelum sesi kelas dimulai.
+* **`session_learning_screen.dart`**: Sesi belajar kelas 3 langkah (Materi, Diskusi Kelompok, Quiz Interaktif).
+* **`discussion_timer_screen.dart`**: Countdown timer countdown fullscreen untuk sesi diskusi kelompok.
+* **`post_quiz_screen.dart`**: Rekapitulasi skor akhir tiap kelompok kuis dalam format accordion card.
+* **`berbagi_modul_screen.dart`**: Alur terima modul (mencari perangkat, permintaan masuk, progress penerimaan, selesai terima).
+* **`pilih_modul_screen.dart`**: Pemilihan modul untuk dikirim dengan checkbox multi-select.
+* **`kirim_modul_screen.dart`**: Alur pengiriman modul (mencari perangkat tujuan, seleksi device, progress upload, selesai kirim).
 
 ---
 
 ### 4. Components Domain (`lib/components/`)
 
-* **Materi (`lib/components/materi/`)**:
-  - `group_question_card.dart`, `materi_content_block.dart`, `materi_image_block.dart`, `modul_bottom_action.dart`, `quiz_option_item.dart`, `quiz_question_card.dart`.
 * **Peserta (`lib/components/peserta/`)**:
   - `empty_participant_view.dart`, `no_participant_modal.dart`, `participant_badge.dart`, `participant_card.dart`.
 * **Session (`lib/components/session/`)**:

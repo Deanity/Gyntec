@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import '../../../core/core.dart';
 import '../../../utils/models.dart';
 import '../widgets/home_widgets.dart';
-import '../../../mainScreen/modul_materi_screen.dart';
-import '../../../mainScreen/modul_screen.dart';
+import '../../module/screens/module_detail_screen.dart';
+import '../../module/screens/module_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

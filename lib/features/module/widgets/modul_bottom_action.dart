@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/widgets/app_button.dart';
+import '../../../core/core.dart';
 
 enum MateriTab { materi, diskusi, quiz }
 
@@ -89,7 +89,7 @@ class ModulBottomAction extends StatelessWidget {
             const SizedBox(height: 14),
 
             // Tombol Mulai Sesi
-            CustomButton(
+            AppButton(
               label: 'Mulai Sesi',
               onPressed: onStartSession,
               backgroundColor: const Color(0xFF0066FF),

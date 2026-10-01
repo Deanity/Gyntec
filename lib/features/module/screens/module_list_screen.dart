@@ -2,20 +2,20 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../utils/models.dart';
-import 'berbagi_modul_screen.dart';
-import 'modul_materi_screen.dart';
+import '../../../utils/models.dart';
+import '../../../mainScreen/berbagi_modul_screen.dart';
+import 'module_detail_screen.dart';
 
 /// Screen tab "Modul" — menampilkan daftar semua modul yang tersedia,
 /// lengkap dengan search bar untuk filter, dan FAB (+) untuk tambah modul baru.
-class ModulScreen extends StatefulWidget {
-  const ModulScreen({super.key});
+class ModuleListScreen extends StatefulWidget {
+  const ModuleListScreen({super.key});
 
   @override
-  State<ModulScreen> createState() => _ModulScreenState();
+  State<ModuleListScreen> createState() => _ModuleListScreenState();
 }
 
-class _ModulScreenState extends State<ModulScreen> {
+class _ModuleListScreenState extends State<ModuleListScreen> {
   List<ModuleModel> _allModules = [];
   List<ModuleModel> _filteredModules = [];
   bool _isLoading = true;
@@ -131,7 +131,7 @@ class _ModulScreenState extends State<ModulScreen> {
                               module: module,
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (_) => const ModulMateriScreen(),
+                                  builder: (_) => const ModuleDetailScreen(),
                                 ),
                               ),
                             );
@@ -159,6 +159,9 @@ class _ModulScreenState extends State<ModulScreen> {
     );
   }
 }
+
+/// Alias untuk backward compatibility
+typedef ModulScreen = ModuleListScreen;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Search Bar

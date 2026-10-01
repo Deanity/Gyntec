@@ -2,19 +2,19 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../components/components.dart';
-import '../utils/models.dart';
-import '../core/services/connectivity_service.dart';
-import 'participant_screen.dart';
+import '../../../core/core.dart';
+import '../../../utils/models.dart';
+import '../widgets/module_widgets.dart';
+import '../../../mainScreen/participant_screen.dart';
 
-class ModulMateriScreen extends StatefulWidget {
-  const ModulMateriScreen({super.key});
+class ModuleDetailScreen extends StatefulWidget {
+  const ModuleDetailScreen({super.key});
 
   @override
-  State<ModulMateriScreen> createState() => _ModulMateriScreenState();
+  State<ModuleDetailScreen> createState() => _ModuleDetailScreenState();
 }
 
-class _ModulMateriScreenState extends State<ModulMateriScreen> {
+class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
   MateriTab _activeTab = MateriTab.materi;
   ModulDetailModel? _modul;
   OfflineBannerModel? _banner;
@@ -90,7 +90,7 @@ class _ModulMateriScreenState extends State<ModulMateriScreen> {
       body: Column(
         children: [
           // ── 1. Custom Top Bar (SafeArea -> Container -> Stack) ──
-          const CustomTopBar(
+          const AppTopBar(
             title: 'Module Materi',
           ),
 
@@ -102,39 +102,39 @@ class _ModulMateriScreenState extends State<ModulMateriScreen> {
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Banner offline (hanya tampil saat tidak ada koneksi)
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder: (child, animation) => SizeTransition(
-                      sizeFactor: animation,
-                      axisAlignment: -1,
-                      child:
-                          FadeTransition(opacity: animation, child: child),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Banner offline (hanya tampil saat tidak ada koneksi)
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) => SizeTransition(
+                        sizeFactor: animation,
+                        axisAlignment: -1,
+                        child:
+                            FadeTransition(opacity: animation, child: child),
+                      ),
+                      child: _isOffline
+                          ? Padding(
+                              key: const ValueKey('offline-banner'),
+                              padding: const EdgeInsets.only(bottom: 20),
+                              child: OfflineBannerCard(
+                                title: _banner!.title,
+                                description: _banner!.description,
+                                savedModules: _banner!.savedModules,
+                              ),
+                            )
+                          : const SizedBox.shrink(
+                              key: ValueKey('no-banner')),
                     ),
-                    child: _isOffline
-                        ? Padding(
-                            key: const ValueKey('offline-banner'),
-                            padding: const EdgeInsets.only(bottom: 20),
-                            child: OfflineBannerCard(
-                              title: _banner!.title,
-                              description: _banner!.description,
-                              savedModules: _banner!.savedModules,
-                            ),
-                          )
-                        : const SizedBox.shrink(
-                            key: ValueKey('no-banner')),
-                  ),
 
-                  // Konten Tab
-                  _buildTabContent(modul),
-                ],
+                    // Konten Tab
+                    _buildTabContent(modul),
+                  ],
+                ),
               ),
-            ),            // SingleChildScrollView
-          ),            // RefreshIndicator
-        ),              // Expanded
+            ),
+          ),
 
           // ── 3. Custom Bottom Action Bar (Pill Tabs + Mulai Sesi) ──
           ModulBottomAction(
@@ -161,6 +161,9 @@ class _ModulMateriScreenState extends State<ModulMateriScreen> {
     };
   }
 }
+
+/// Alias untuk backward compatibility
+typedef ModulMateriScreen = ModuleDetailScreen;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Tab: Materi
@@ -258,7 +261,7 @@ class _QuizTabContent extends StatelessWidget {
         ),
 
         // Tombol semua pertanyaan
-        CustomButton(
+        AppButton(
           label: 'Semua Pertanyaan',
           onPressed: () {},
           backgroundColor: Colors.white,

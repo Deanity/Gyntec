@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../components/materi/group_question_card.dart';
-import '../components/materi/materi_content_block.dart';
-import '../components/materi/materi_image_block.dart';
+import '../features/module/widgets/module_widgets.dart';
 import '../components/session/discussion_group_card.dart';
 import '../components/session/quiz_group_select_card.dart';
 import '../components/session/quiz_interactive_card.dart';

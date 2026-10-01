@@ -62,7 +62,7 @@ class GroupQuestionCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Petunjuk Pengerjaan
-          _SectionLabel(label: 'Petunjuk Pengerjaan'),
+          const _SectionLabel(label: 'Petunjuk Pengerjaan'),
           const SizedBox(height: 8),
           ...instructions.asMap().entries.map(
                 (e) => _NumberedItem(
@@ -73,7 +73,7 @@ class GroupQuestionCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Indikator Penilaian
-          _SectionLabel(label: 'Indikator Penilaian'),
+          const _SectionLabel(label: 'Indikator Penilaian'),
           const SizedBox(height: 8),
           ...indicators.asMap().entries.map(
                 (e) => _NumberedItem(

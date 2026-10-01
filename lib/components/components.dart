@@ -2,13 +2,6 @@
 export '../core/widgets/core_widgets.dart';
 
 
-// Materi Feature Components
-export 'materi/materi_content_block.dart';
-export 'materi/materi_image_block.dart';
-export 'materi/group_question_card.dart';
-export 'materi/quiz_option_item.dart';
-export 'materi/quiz_question_card.dart';
-export 'materi/modul_bottom_action.dart';
 
 // Peserta Feature Components
 export 'peserta/participant_badge.dart';
