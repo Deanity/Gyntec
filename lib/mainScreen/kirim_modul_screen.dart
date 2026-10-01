@@ -31,6 +31,7 @@ class _KirimModulScreenState extends State<KirimModulScreen> {
 
   // Status proses pengiriman
   bool _isSending = false;
+  bool _isSuccess = false;
   double _sendProgress = 0.0;
   Timer? _progressTimer;
   Timer? _discoveryTimer;
@@ -80,6 +81,7 @@ class _KirimModulScreenState extends State<KirimModulScreen> {
 
     setState(() {
       _isSending = true;
+      _isSuccess = false;
       _sendProgress = 0.0;
     });
 
@@ -105,35 +107,15 @@ class _KirimModulScreenState extends State<KirimModulScreen> {
     _progressTimer?.cancel();
     setState(() {
       _isSending = false;
+      _isSuccess = false;
       _sendProgress = 0.0;
     });
   }
 
   void _onSendingComplete() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Row(
-          children: [
-            Icon(LucideIcons.circleCheck, color: Colors.white, size: 20),
-            SizedBox(width: 10),
-            Text(
-              'Modul berhasil dikirim!',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFF0066FF),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        margin: const EdgeInsets.all(16),
-      ),
-    );
-
-    // Kembali ke beranda setelah selesai
-    Future.delayed(const Duration(milliseconds: 1200), () {
-      if (mounted) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-      }
+    setState(() {
+      _isSending = false;
+      _isSuccess = true;
     });
   }
 
@@ -186,8 +168,12 @@ class _KirimModulScreenState extends State<KirimModulScreen> {
                   onBack: () {
                     if (_isSending) {
                       _cancelSending();
+                      Navigator.of(context).maybePop();
+                    } else if (_isSuccess) {
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    } else {
+                      Navigator.of(context).maybePop();
                     }
-                    Navigator.of(context).maybePop();
                   },
                 ),
 
@@ -206,15 +192,19 @@ class _KirimModulScreenState extends State<KirimModulScreen> {
                         Center(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 350),
-                            child: _isSending
-                                ? _buildSendingHeader()
-                                : _buildScanningHeader(),
+                            child: _isSuccess
+                                ? _buildSuccessHeader()
+                                : _isSending
+                                    ? _buildSendingHeader()
+                                    : _buildScanningHeader(),
                           ),
                         ),
                         const SizedBox(height: 28),
 
                         // ── Pilihan Perangkat Penerima (hanya saat mode pemilihan & ada device) ──
-                        if (!_isSending && _discoveredDevices.isNotEmpty) ...[
+                        if (!_isSending &&
+                            !_isSuccess &&
+                            _discoveredDevices.isNotEmpty) ...[
                           const Text(
                             'Pilih Perangkat Penerima',
                             style: TextStyle(
@@ -381,8 +371,60 @@ class _KirimModulScreenState extends State<KirimModulScreen> {
     );
   }
 
+  // ── Header saat pengiriman berhasil (sending-done.png) ──
+  Widget _buildSuccessHeader() {
+    return Column(
+      key: const ValueKey('success_header'),
+      children: [
+        ScanningPulseAnimation(
+          color: const Color(0xFF0066FF),
+          ringCount: 3,
+          size: 210,
+          centerSize: 68,
+          child: const Icon(
+            Icons.check,
+            size: 36,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 24),
+        const Text(
+          'Pengiriman Module Sukses',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF0F172A),
+            letterSpacing: -0.2,
+          ),
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          'Module pembelajaran berhasil terkirim ke perangkat tujuan',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 13,
+            color: Color(0xFF64748B),
+          ),
+        ),
+      ],
+    );
+  }
+
   // ── Bottom Action Button ──
   Widget _buildBottomButton() {
+    if (_isSuccess) {
+      // Tombol "Kembali" sesuai sending-done.png
+      return _ActionButton(
+        label: 'Kembali',
+        backgroundColor: const Color(0xFF0066FF),
+        textColor: Colors.white,
+        onPressed: () {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        },
+      );
+    }
+
     if (_isSending) {
       // Tombol "Batal"
       return _ActionButton(
