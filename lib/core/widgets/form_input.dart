@@ -162,3 +162,6 @@ class _CustomFormInputState extends State<CustomFormInput> {
     );
   }
 }
+
+/// Alias for CustomFormInput
+typedef AppFormInput = CustomFormInput;

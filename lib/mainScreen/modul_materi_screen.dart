@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../components/components.dart';
 import '../utils/models.dart';
-import '../utils/connectivity_service.dart';
+import '../core/services/connectivity_service.dart';
 import 'participant_screen.dart';
 
 class ModulMateriScreen extends StatefulWidget {

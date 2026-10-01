@@ -22,5 +22,3 @@ class DismissKeyboard extends StatelessWidget {
     );
   }
 }
-
-

@@ -111,3 +111,6 @@ class HomeBottomNavBar extends StatelessWidget {
     );
   }
 }
+
+/// Alias for HomeBottomNavBar
+typedef AppBottomNavBar = HomeBottomNavBar;

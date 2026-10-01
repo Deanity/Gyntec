@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../components/components.dart';
-import '../utils/models.dart';
-import '../utils/connectivity_service.dart';
-import 'modul_materi_screen.dart';
-import 'modul_screen.dart';
+import '../../../core/core.dart';
+import '../../../utils/models.dart';
+import '../widgets/home_widgets.dart';
+import '../../../mainScreen/modul_materi_screen.dart';
+import '../../../mainScreen/modul_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

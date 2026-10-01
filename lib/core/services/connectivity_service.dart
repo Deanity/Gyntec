@@ -18,8 +18,6 @@ class ConnectivityService {
   final Connectivity _connectivity = Connectivity();
 
   /// Stream yang emit `true` saat online, `false` saat offline.
-  /// Catatan: tidak semua HP Android fire ini secara reliable.
-  /// Gunakan kombinasi stream + polling/pull-to-refresh untuk hasil terbaik.
   Stream<bool> get onStatusChanged => _connectivity.onConnectivityChanged
       .map((results) => _isConnected(results));
 

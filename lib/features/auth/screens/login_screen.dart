@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../components/components.dart';
-import '../utils/keyboard_utils.dart';
-import 'home_screen.dart';
+import '../../../core/core.dart';
+import '../../home/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -253,7 +252,7 @@ class _PasskeyForm extends StatelessWidget {
         const SizedBox(height: 24),
 
         // Tombol Masuk
-        CustomButton(
+        AppButton(
           label: 'Masuk',
           isLoading: isLoading,
           onPressed: onLogin,

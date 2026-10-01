@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../components/common/button.dart';
+import '../core/widgets/app_button.dart';
 import '../utils/models.dart';
 
 /// Screen "Post Quiz" yang muncul setelah user menyelesaikan kuis.

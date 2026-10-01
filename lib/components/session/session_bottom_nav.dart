@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../common/button.dart';
+import '../../core/widgets/app_button.dart';
 
 /// Bottom bar navigasi untuk alur Sesi Pembelajaran:
 /// - Pill segment tab switcher (Materi, Diskusi, Quiz) di tengah

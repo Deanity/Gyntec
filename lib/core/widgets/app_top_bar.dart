@@ -60,3 +60,6 @@ class CustomTopBar extends StatelessWidget {
     );
   }
 }
+
+/// Alias for CustomTopBar
+typedef AppTopBar = CustomTopBar;

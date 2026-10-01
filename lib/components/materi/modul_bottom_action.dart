@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../common/button.dart';
+import '../../core/widgets/app_button.dart';
 
 enum MateriTab { materi, diskusi, quiz }
 

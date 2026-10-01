@@ -94,3 +94,6 @@ class CustomButton extends StatelessWidget {
         : SizedBox(height: height, child: buttonWidget);
   }
 }
+
+/// Alias for CustomButton to follow core naming convention
+typedef AppButton = CustomButton;
