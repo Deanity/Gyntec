@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../utils/models.dart';
+import 'berbagi_modul_screen.dart';
 import 'modul_materi_screen.dart';
 
 /// Screen tab "Modul" — menampilkan daftar semua modul yang tersedia,
@@ -144,11 +145,13 @@ class _ModulScreenState extends State<ModulScreen> {
           // ── Floating Action Button (+) ──
           Positioned(
             right: 20,
-            bottom: 100, // di atas navbar
+            bottom: 120, // jarak aman di atas navbar
             child: _FloatingAddButton(
-              onTap: () {
-                // TODO: navigasi ke screen tambah modul baru
-              },
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const BerbagiModulScreen(),
+                ),
+              ),
             ),
           ),
         ],
