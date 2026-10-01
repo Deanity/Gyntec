@@ -6,6 +6,7 @@ import '../components/components.dart';
 import '../utils/models.dart';
 import '../utils/connectivity_service.dart';
 import 'modul_materi_screen.dart';
+import 'modul_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -111,128 +112,147 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: const Color(0xFFF8FAFC),
       body: Stack(
         children: [
-          // ── Konten utama ──
-          SafeArea(
-            child: RefreshIndicator(
-              onRefresh: _refreshConnectivity,
-              color: const Color(0xFF0066FF),
-              child: CustomScrollView(
-              slivers: [
-                // ── Header: salam & tanggal ──
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${_user!.greeting}, ${_user!.name}',
-                          style: const TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF0F172A),
-                            letterSpacing: -0.5,
+          // ── IndexedStack: render semua tab, tampilkan yang aktif ──
+          IndexedStack(
+            index: _navIndex,
+            children: [
+              // ── Tab 0: Beranda ──
+              SafeArea(
+                child: RefreshIndicator(
+                  onRefresh: _refreshConnectivity,
+                  color: const Color(0xFF0066FF),
+                  child: CustomScrollView(
+                    slivers: [
+                      // ── Header: salam & tanggal ──
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${_user!.greeting}, ${_user!.name}',
+                                style: const TextStyle(
+                                  fontSize: 26,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF0F172A),
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                _currentDateTime(),
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Color(0xFF94A3B8),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+
+                              // ── Banner offline ──
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                transitionBuilder: (child, animation) =>
+                                    SizeTransition(
+                                  sizeFactor: animation,
+                                  axisAlignment: -1,
+                                  child: FadeTransition(
+                                      opacity: animation, child: child),
+                                ),
+                                child: _isOffline
+                                    ? Padding(
+                                        key: const ValueKey('offline-banner'),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20),
+                                        child: OfflineBannerCard(
+                                          title: _banner!.title,
+                                          description: _banner!.description,
+                                          savedModules: _banner!.savedModules,
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(
+                                        key: ValueKey('no-banner')),
+                              ),
+
+                              // ── Sesi Belajar Terakhir header ──
+                              SectionHeader(
+                                title: 'Sesi Belajar Terakhir',
+                                onActionTap: () {},
+                              ),
+                              const SizedBox(height: 14),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _currentDateTime(),
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF94A3B8),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // ── Banner offline (hanya tampil saat tidak ada koneksi) ──
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          transitionBuilder: (child, animation) =>
-                              SizeTransition(
-                            sizeFactor: animation,
-                            axisAlignment: -1,
-                            child: FadeTransition(
-                                opacity: animation, child: child),
-                          ),
-                          child: _isOffline
-                              ? Padding(
-                                  key: const ValueKey('offline-banner'),
-                                  padding:
-                                      const EdgeInsets.only(bottom: 20),
-                                  child: OfflineBannerCard(
-                                    title: _banner!.title,
-                                    description: _banner!.description,
-                                    savedModules: _banner!.savedModules,
-                                  ),
-                                )
-                              : const SizedBox.shrink(
-                                  key: ValueKey('no-banner')),
-                        ),
-
-                        // ── Sesi Belajar Terakhir header ──
-                        SectionHeader(
-                          title: 'Sesi Belajar Terakhir',
-                          onActionTap: () {},
-                        ),
-                        const SizedBox(height: 14),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // ── Horizontal scroll: SessionCard ──
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 170,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: _sessions.length,
-                      separatorBuilder: (_, _) => const SizedBox(width: 12),
-                      itemBuilder: (context, index) => SessionCard(
-                        session: _sessions[index],
-                        onTap: () {},
-                      ),
-                    ),
-                  ),
-                ),
-
-                // ── Modul Pembelajaran header ──
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 28, 20, 14),
-                    child: SectionHeader(
-                      title: 'Modul Pembelajaran',
-                      onActionTap: () {},
-                    ),
-                  ),
-                ),
-
-                // ── Vertical list: ModuleListItem ──
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  sliver: SliverList.separated(
-                    itemCount: _modules.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) => ModuleListItem(
-                      module: _modules[index],
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const ModulMateriScreen(),
                         ),
                       ),
-                    ),
+
+                      // ── Horizontal scroll: SessionCard ──
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 170,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20),
+                            itemCount: _sessions.length,
+                            separatorBuilder: (a, b) =>
+                                const SizedBox(width: 12),
+                            itemBuilder: (context, index) => SessionCard(
+                              session: _sessions[index],
+                              onTap: () {},
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // ── Modul Pembelajaran header ──
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 28, 20, 14),
+                          child: SectionHeader(
+                            title: 'Modul Pembelajaran',
+                            onActionTap: () {},
+                          ),
+                        ),
+                      ),
+
+                      // ── Vertical list: ModuleListItem ──
+                      SliverPadding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 20),
+                        sliver: SliverList.separated(
+                          itemCount: _modules.length,
+                          separatorBuilder: (a, b) =>
+                              const SizedBox(height: 10),
+                          itemBuilder: (context, index) => ModuleListItem(
+                            module: _modules[index],
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const ModulMateriScreen(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Bottom padding
+                      const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                    ],
                   ),
                 ),
+              ),
 
-                // Bottom padding — beri ruang agar konten tidak tertutup navbar
-                const SliverToBoxAdapter(child: SizedBox(height: 100)),
-              ],
-            ),          // CustomScrollView
-          ),            // RefreshIndicator
-        ),              // SafeArea
+              // ── Tab 1: Modul ──
+              const ModulScreen(),
 
-          // ── Floating Pill NavBar — mengambang di bawah layar ──
+              // ── Tab 2: Sesi Belajar (placeholder) ──
+              const _PlaceholderTab(label: 'Sesi Belajar'),
+
+              // ── Tab 3: Murid (placeholder) ──
+              const _PlaceholderTab(label: 'Murid'),
+            ],
+          ),
+
+          // ── Floating Pill NavBar ──
           Positioned(
             left: 0,
             right: 0,
@@ -243,6 +263,26 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Placeholder sederhana untuk tab yang belum diimplementasi
+class _PlaceholderTab extends StatelessWidget {
+  final String label;
+  const _PlaceholderTab({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 16,
+          color: Color(0xFF94A3B8),
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

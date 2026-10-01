@@ -41,28 +41,41 @@
     {
       "id": "m1",
       "level": "SMA",
+      "subject": "IPA",
       "title": "Anggota Tubuh Manusia",
-      "description": "Pelajari anggota tubuh manusia dan fungsinya secara lengkap."
+      "description": "Pelajari anggota tubuh manusia dan fungsinya secara lengkap.",
+      "totalQuestions": 30,
+      "discussionCount": 1
     },
     {
       "id": "m2",
       "level": "SMP",
+      "subject": "IPA",
       "title": "Sistem Pencernaan Manusia",
-      "description": "Jelajahi sistem pencernaan melalui materi interaktif yang menarik."
+      "description": "Jelajahi sistem pencernaan melalui materi interaktif yang menarik.",
+      "totalQuestions": 25,
+      "discussionCount": 1
     },
     {
       "id": "m3",
       "level": "SMA",
+      "subject": "IPA",
       "title": "Sistem Peredaran Darah",
-      "description": "Pelajari sistem peredaran darah melalui penjelasan visual yang mudah dipahami."
+      "description": "Pelajari sistem peredaran darah melalui penjelasan visual yang mudah dipahami.",
+      "totalQuestions": 30,
+      "discussionCount": 2
     },
     {
       "id": "m4",
       "level": "SMK",
+      "subject": "TKJ",
       "title": "Sistem Saraf",
-      "description": "Pelajari sistem saraf dengan teknologi interaktif yang inovatif."
+      "description": "Pelajari sistem saraf dengan teknologi interaktif yang inovatif.",
+      "totalQuestions": 20,
+      "discussionCount": 1
     }
   ],
+
   "modulDetail": {
     "id": "m1",
     "title": "Anggota Tubuh Manusia",
