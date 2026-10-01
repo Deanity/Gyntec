@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../core/widgets/app_button.dart';
-import '../utils/models.dart';
+import '../../../core/core.dart';
+import '../../../utils/models.dart';
 
 /// Screen "Post Quiz" yang muncul setelah user menyelesaikan kuis.
 /// Menampilkan rekap modul, perolehan poin per kelompok, daftar anggota,
@@ -153,7 +153,7 @@ class _PostQuizScreenState extends State<PostQuizScreen> {
                               score: score,
                               isExpanded: isExpanded,
                               onToggle: () =>
-                                  _toggleGroupExpansion(group.number),
+                                   _toggleGroupExpansion(group.number),
                             ),
                           );
                         }),
@@ -233,7 +233,7 @@ class _PostQuizScreenState extends State<PostQuizScreen> {
                     ),
                   ],
                 ),
-                child: CustomButton(
+                child: AppButton(
                   label: 'Kembali ke Beranda',
                   onPressed: () {
                     // Kembali ke halaman Home / Screen awal

@@ -35,33 +35,40 @@ lib/
 │   │       ├── home_widgets.dart      # Barrel export widget home
 │   │       ├── module_list_item.dart  # Baris modul di beranda
 │   │       └── session_card.dart      # Kartu sesi belajar terakhir
-│   └── module/                  # Fitur Katalog & Pembelajaran Modul
-│       ├── module.dart                # Barrel export modul fitur
+│   ├── module/                  # Fitur Katalog & Pembelajaran Modul
+│   │   ├── module.dart                # Barrel export modul fitur
+│   │   ├── screens/
+│   │   │   ├── module_list_screen.dart   # Tab katalog modul & pencarian real-time
+│   │   │   └── module_detail_screen.dart # Pratinjau isi materi, soal, & indikator
+│   │   └── widgets/
+│   │       ├── module_widgets.dart       # Barrel export widget modul
+│   │       ├── group_question_card.dart  # Card pertanyaan kelompok
+│   │       ├── materi_content_block.dart # Blok teks materi pembelajaran
+│   │       ├── materi_image_block.dart   # Blok ilustrasi gambar materi
+│   │       ├── modul_bottom_action.dart  # Floating action button "Mulai Sesi"
+│   │       ├── quiz_option_item.dart     # Pilihan ganda kuis
+│   │       └── quiz_question_card.dart   # Card butir pertanyaan kuis
+│   └── session/                 # Fitur Sesi Pembelajaran Kelas
+│       ├── session.dart               # Barrel export modul sesi
 │       ├── screens/
-│       │   ├── module_list_screen.dart   # Tab katalog modul & pencarian real-time
-│       │   └── module_detail_screen.dart # Pratinjau isi materi, soal, & indikator
+│       │   ├── participant_screen.dart      # Pemilihan & penambahan peserta kelas
+│       │   ├── session_learning_screen.dart # Sesi kelas 3 langkah (Materi, Diskusi, Quiz)
+│       │   ├── discussion_timer_screen.dart # Countdown timer diskusi kelompok
+│       │   └── post_quiz_screen.dart        # Rekap skor akhir kuis kelompok
 │       └── widgets/
-│           ├── module_widgets.dart       # Barrel export widget modul
-│           ├── group_question_card.dart  # Card pertanyaan kelompok
-│           ├── materi_content_block.dart # Blok teks materi pembelajaran
-│           ├── materi_image_block.dart   # Blok ilustrasi gambar materi
-│           ├── modul_bottom_action.dart  # Floating action button "Mulai Sesi"
-│           ├── quiz_option_item.dart     # Pilihan ganda kuis
-│           └── quiz_question_card.dart   # Card butir pertanyaan kuis
-├── components/                  # Komponen UI spesifik domain pembelajaran
+│           ├── session_widgets.dart         # Barrel export widget sesi
+│           ├── discussion_group_card.dart   # Card pembagian kelompok
+│           ├── empty_participant_view.dart  # Tampilan kosong peserta
+│           ├── no_participant_modal.dart    # Dialog peringatan tanpa peserta
+│           ├── participant_badge.dart       # Badge info modul pada peserta
+│           ├── participant_card.dart        # Card ringkasan data murid
+│           ├── quiz_finish_modal.dart       # Modal konfirmasi selesai kuis
+│           ├── quiz_group_select_card.dart  # Seleksi kelompok penjawab benar
+│           ├── quiz_interactive_card.dart   # Card kuis interaktif
+│           ├── session_bottom_nav.dart      # Floating bottom navbar sesi
+│           └── session_stepper_header.dart  # Stepper header 3 langkah sesi
+├── components/                  # Komponen spesifik domain
 │   ├── components.dart          # Barrel export komponen
-│   ├── peserta/                 # Widget pemilihan & penambahan peserta
-│   │   ├── empty_participant_view.dart
-│   │   ├── no_participant_modal.dart
-│   │   ├── participant_badge.dart
-│   │   └── participant_card.dart
-│   ├── session/                 # Widget sesi belajar kelas (Materi, Diskusi, Quiz)
-│   │   ├── discussion_group_card.dart
-│   │   ├── quiz_finish_modal.dart
-│   │   ├── quiz_group_select_card.dart
-│   │   ├── quiz_interactive_card.dart
-│   │   ├── session_bottom_nav.dart
-│   │   └── session_stepper_header.dart
 │   └── sharing/                 # Widget fitur Berbagi Modul (Bluetooth / Wi-Fi)
 │       ├── device_select_card.dart
 │       ├── module_preview_card.dart
@@ -69,11 +76,7 @@ lib/
 │       ├── scanning_pulse_animation.dart
 │       ├── scanning_status_view.dart
 │       └── sharing_mode_tab.dart
-├── mainScreen/                  # Halaman alur sesi kelas & sharing
-│   ├── participant_screen.dart        # Pengelolaan peserta sesi belajar
-│   ├── session_learning_screen.dart   # Sesi kelas 3 langkah (Materi, Diskusi, Quiz)
-│   ├── discussion_timer_screen.dart   # Countdown timer diskusi kelompok
-│   ├── post_quiz_screen.dart          # Rekap skor akhir kuis kelompok
+├── mainScreen/                  # Halaman alur sharing modul
 │   ├── berbagi_modul_screen.dart      # Alur terima modul & radar scan
 │   ├── pilih_modul_screen.dart        # Multi-select modul untuk dikirim
 │   └── kirim_modul_screen.dart        # Alur kirim modul ke perangkat tujuan
@@ -170,14 +173,26 @@ flowchart TD
 * **`widgets/quiz_option_item.dart`**: Pilihan ganda interaktif soal kuis.
 * **`widgets/quiz_question_card.dart`**: Card butir pertanyaan kuis.
 
+#### D. Session (`lib/features/session/`)
+* **`screens/participant_screen.dart`**: Pemilihan dan penambahan peserta didik sebelum sesi kelas dimulai.
+* **`screens/session_learning_screen.dart`**: Sesi belajar kelas 3 langkah (Materi, Diskusi Kelompok, Quiz Interaktif).
+* **`screens/discussion_timer_screen.dart`**: Countdown timer countdown fullscreen untuk sesi diskusi kelompok.
+* **`screens/post_quiz_screen.dart`**: Rekapitulasi skor akhir tiap kelompok kuis dalam format accordion card.
+* **`widgets/discussion_group_card.dart`**: Card pembagian kelompok siswa dan anggotanya.
+* **`widgets/empty_participant_view.dart`**: Tampilan kosong saat belum ada peserta.
+* **`widgets/no_participant_modal.dart`**: Modal dialog konfirmasi jika peserta masih kosong.
+* **`widgets/participant_badge.dart`**: Badge informasi modul di layar peserta.
+* **`widgets/participant_card.dart`**: Card item data peserta didik.
+* **`widgets/quiz_finish_modal.dart`**: Modal dialog sebelum menyelesaikan kuis.
+* **`widgets/quiz_group_select_card.dart`**: Card penentu kelompok yang menjawab benar pada kuis.
+* **`widgets/quiz_interactive_card.dart`**: Card navigasi soal kuis interaktif.
+* **`widgets/session_bottom_nav.dart`**: Floating bottom nav untuk navigasi 3 langkah sesi.
+* **`widgets/session_stepper_header.dart`**: Stepper header di atas layar sesi belajar.
+
 ---
 
-### 3. Main Screens (`lib/mainScreen/`)
+### 3. Sharing Screens (`lib/mainScreen/`)
 
-* **`participant_screen.dart`**: Pemilihan dan penambahan peserta didik sebelum sesi kelas dimulai.
-* **`session_learning_screen.dart`**: Sesi belajar kelas 3 langkah (Materi, Diskusi Kelompok, Quiz Interaktif).
-* **`discussion_timer_screen.dart`**: Countdown timer countdown fullscreen untuk sesi diskusi kelompok.
-* **`post_quiz_screen.dart`**: Rekapitulasi skor akhir tiap kelompok kuis dalam format accordion card.
 * **`berbagi_modul_screen.dart`**: Alur terima modul (mencari perangkat, permintaan masuk, progress penerimaan, selesai terima).
 * **`pilih_modul_screen.dart`**: Pemilihan modul untuk dikirim dengan checkbox multi-select.
 * **`kirim_modul_screen.dart`**: Alur pengiriman modul (mencari perangkat tujuan, seleksi device, progress upload, selesai kirim).
@@ -186,10 +201,6 @@ flowchart TD
 
 ### 4. Components Domain (`lib/components/`)
 
-* **Peserta (`lib/components/peserta/`)**:
-  - `empty_participant_view.dart`, `no_participant_modal.dart`, `participant_badge.dart`, `participant_card.dart`.
-* **Session (`lib/components/session/`)**:
-  - `discussion_group_card.dart`, `quiz_finish_modal.dart`, `quiz_group_select_card.dart`, `quiz_interactive_card.dart`, `session_bottom_nav.dart`, `session_stepper_header.dart`.
 * **Sharing (`lib/components/sharing/`)**:
   - `device_select_card.dart`, `module_preview_card.dart`, `module_select_card.dart`, `scanning_pulse_animation.dart`, `scanning_status_view.dart`, `sharing_mode_tab.dart`.
 

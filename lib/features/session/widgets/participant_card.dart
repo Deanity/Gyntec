@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../../utils/models.dart';
+import '../../../utils/models.dart';
 
 /// Kartu tampilan peserta didik dalam daftar peserta.
 class ParticipantCard extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../../utils/models.dart';
+import '../../../utils/models.dart';
 
 /// Card untuk menampilkan satu kelompok hasil pembagian otomatis
 /// beserta daftar anggota kelompok dengan icon profil.

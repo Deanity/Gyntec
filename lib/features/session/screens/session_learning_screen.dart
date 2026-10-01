@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import '../features/module/widgets/module_widgets.dart';
-import '../components/session/discussion_group_card.dart';
-import '../components/session/quiz_group_select_card.dart';
-import '../components/session/quiz_interactive_card.dart';
-import '../components/session/session_bottom_nav.dart';
-import '../components/session/session_stepper_header.dart';
-import '../components/session/quiz_finish_modal.dart';
-import '../utils/models.dart';
+import '../../module/widgets/module_widgets.dart';
+import '../widgets/session_widgets.dart';
+import '../../../utils/models.dart';
 import 'discussion_timer_screen.dart';
 import 'post_quiz_screen.dart';
 

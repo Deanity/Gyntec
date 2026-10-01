@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import '../../../core/core.dart';
 import '../../../utils/models.dart';
 import '../widgets/module_widgets.dart';
-import '../../../mainScreen/participant_screen.dart';
+import '../../session/screens/participant_screen.dart';
 
 class ModuleDetailScreen extends StatefulWidget {
   const ModuleDetailScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/widgets/app_button.dart';
+import '../../../core/core.dart';
 
 /// Bottom bar navigasi untuk alur Sesi Pembelajaran:
 /// - Pill segment tab switcher (Materi, Diskusi, Quiz) di tengah
@@ -69,7 +69,7 @@ class SessionBottomNav extends StatelessWidget {
                   ),
                 ],
               ),
-              child: CustomButton(
+              child: AppButton(
                 label: actionLabel,
                 onPressed: onActionPressed,
                 isLoading: isLoading,

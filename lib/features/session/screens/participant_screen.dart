@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../components/components.dart';
-import '../utils/models.dart';
+import '../../../core/core.dart';
+import '../../../utils/models.dart';
+import '../widgets/session_widgets.dart';
 import 'session_learning_screen.dart';
 
 /// Screen "Peserta" (Add Participant Screen) yang muncul setelah user menekan
