@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-/// Blok gambar materi full-width dengan border radius dan shadow tipis.
+/// Blok gambar materi full-width dengan border radius dan shadow tipis (ImageBlockView).
 /// Menerima path asset lokal.
-class MateriImageBlock extends StatelessWidget {
+class ImageBlockView extends StatelessWidget {
   final String assetPath;
 
-  const MateriImageBlock({super.key, required this.assetPath});
+  const ImageBlockView({super.key, required this.assetPath});
 
   @override
   Widget build(BuildContext context) {
@@ -50,3 +50,6 @@ class MateriImageBlock extends StatelessWidget {
     );
   }
 }
+
+/// Backward compatibility alias
+typedef MateriImageBlock = ImageBlockView;

@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Membaca dan mem-parse data.json dari assets.
   Future<void> _loadData() async {
-    final raw = await rootBundle.loadString('lib/utils/data.json');
+    final raw = await rootBundle.loadString('assets/data/mock_data.json');
     final json = jsonDecode(raw) as Map<String, dynamic>;
 
     setState(() {
@@ -196,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: _sessions.length,
                             separatorBuilder: (a, b) =>
                                 const SizedBox(width: 12),
-                            itemBuilder: (context, index) => SessionCard(
+                            itemBuilder: (context, index) => RecentSessionCard(
                               session: _sessions[index],
                               onTap: () {},
                             ),

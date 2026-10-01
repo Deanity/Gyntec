@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import '../../../utils/models.dart';
 import '../../../core/core.dart';
 
-/// Kartu sesi belajar untuk horizontal scroll list di Home Screen.
+/// Kartu sesi belajar terakhir untuk horizontal scroll list di Home Screen.
 /// Menampilkan tanggal, level, judul, jumlah siswa, mapel, dan durasi.
-class SessionCard extends StatelessWidget {
+class RecentSessionCard extends StatelessWidget {
   final SessionModel session;
   final VoidCallback? onTap;
 
-  const SessionCard({
+  const RecentSessionCard({
     super.key,
     required this.session,
     this.onTap,
@@ -129,3 +129,6 @@ class _StatChip extends StatelessWidget {
     );
   }
 }
+
+/// Backward compatibility alias
+typedef SessionCard = RecentSessionCard;

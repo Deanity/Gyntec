@@ -4,7 +4,7 @@ export 'participant_badge.dart';
 export 'participant_card.dart';
 export 'discussion_group_card.dart';
 export 'quiz_finish_modal.dart';
-export 'quiz_group_select_card.dart';
+export 'quiz_group_selector.dart';
 export 'quiz_interactive_card.dart';
 export 'session_bottom_nav.dart';
 export 'session_stepper_header.dart';

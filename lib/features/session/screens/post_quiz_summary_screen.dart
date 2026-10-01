@@ -3,15 +3,15 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/core.dart';
 import '../../../utils/models.dart';
 
-/// Screen "Post Quiz" yang muncul setelah user menyelesaikan kuis.
+/// Screen "Post Quiz" (PostQuizSummaryScreen) yang muncul setelah user menyelesaikan kuis.
 /// Menampilkan rekap modul, perolehan poin per kelompok, daftar anggota,
 /// dan tombol "Kembali ke Beranda".
-class PostQuizScreen extends StatefulWidget {
+class PostQuizSummaryScreen extends StatefulWidget {
   final ModulDetailModel modul;
   final List<DiscussionGroupModel> groups;
   final List<StudentModel> participants;
 
-  const PostQuizScreen({
+  const PostQuizSummaryScreen({
     super.key,
     required this.modul,
     required this.groups,
@@ -19,10 +19,10 @@ class PostQuizScreen extends StatefulWidget {
   });
 
   @override
-  State<PostQuizScreen> createState() => _PostQuizScreenState();
+  State<PostQuizSummaryScreen> createState() => _PostQuizSummaryScreenState();
 }
 
-class _PostQuizScreenState extends State<PostQuizScreen> {
+class _PostQuizSummaryScreenState extends State<PostQuizSummaryScreen> {
   // Track status ekspansi masing-masing kelompok (default kelompok 1 terbuka)
   final Set<int> _expandedGroupNumbers = {1};
 
@@ -372,3 +372,6 @@ class _PostQuizScreenState extends State<PostQuizScreen> {
     );
   }
 }
+
+/// Backward compatibility alias
+typedef PostQuizScreen = PostQuizSummaryScreen;

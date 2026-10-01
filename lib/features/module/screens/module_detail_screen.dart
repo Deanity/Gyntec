@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import '../../../core/core.dart';
 import '../../../utils/models.dart';
 import '../widgets/module_widgets.dart';
-import '../../session/screens/participant_screen.dart';
+import '../../session/screens/participant_selection_screen.dart';
 
 class ModuleDetailScreen extends StatefulWidget {
   const ModuleDetailScreen({super.key});
@@ -64,7 +64,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
   }
 
   Future<void> _loadData() async {
-    final raw = await rootBundle.loadString('lib/utils/data.json');
+    final raw = await rootBundle.loadString('assets/data/mock_data.json');
     final json = jsonDecode(raw) as Map<String, dynamic>;
     setState(() {
       _banner = OfflineBannerModel.fromJson(
@@ -143,7 +143,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
             onStartSession: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ParticipantScreen(modul: modul),
+                  builder: (context) => ParticipantSelectionScreen(modul: modul),
                 ),
               );
             },

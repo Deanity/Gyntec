@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-/// Card pilihan untuk menentukan kelompok mana saja yang menjawab benar pada Quiz.
-class QuizGroupSelectCard extends StatelessWidget {
+/// Card pilihan untuk menentukan kelompok mana saja yang menjawab benar pada Quiz (QuizGroupSelector).
+class QuizGroupSelector extends StatelessWidget {
   final int groupNumber;
   final String groupName;
   final bool isSelected;
   final VoidCallback onTap;
 
-  const QuizGroupSelectCard({
+  const QuizGroupSelector({
     super.key,
     required this.groupNumber,
     required this.groupName,
@@ -86,3 +86,6 @@ class QuizGroupSelectCard extends StatelessWidget {
     );
   }
 }
+
+/// Backward compatibility alias
+typedef QuizGroupSelectCard = QuizGroupSelector;

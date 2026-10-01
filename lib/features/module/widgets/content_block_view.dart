@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 /// Blok konten materi: heading judul bagian + paragraf teks.
-/// Reusable untuk setiap bagian materi dalam modul
-class MateriContentBlock extends StatelessWidget {
+/// Reusable untuk setiap bagian materi dalam modul (ContentBlockView)
+class ContentBlockView extends StatelessWidget {
   final String heading;
   final String body;
 
-  const MateriContentBlock({
+  const ContentBlockView({
     super.key,
     required this.heading,
     required this.body,
@@ -39,3 +39,7 @@ class MateriContentBlock extends StatelessWidget {
     );
   }
 }
+
+/// Backward compatibility alias
+typedef MateriContentBlock = ContentBlockView;
+

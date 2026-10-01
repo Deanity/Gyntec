@@ -5,20 +5,20 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/core.dart';
 import '../../../utils/models.dart';
 import '../widgets/session_widgets.dart';
-import 'session_learning_screen.dart';
+import 'learning_session_screen.dart';
 
-/// Screen "Peserta" (Add Participant Screen) yang muncul setelah user menekan
-/// tombol "Mulai Sesi" pada Module Materi Screen.
-class ParticipantScreen extends StatefulWidget {
+/// Screen "Peserta" (Participant Selection Screen) yang muncul setelah user menekan
+/// tombol "Mulai Sesi" pada Module Detail Screen.
+class ParticipantSelectionScreen extends StatefulWidget {
   final ModulDetailModel? modul;
 
-  const ParticipantScreen({super.key, this.modul});
+  const ParticipantSelectionScreen({super.key, this.modul});
 
   @override
-  State<ParticipantScreen> createState() => _ParticipantScreenState();
+  State<ParticipantSelectionScreen> createState() => _ParticipantSelectionScreenState();
 }
 
-class _ParticipantScreenState extends State<ParticipantScreen>
+class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
     with SingleTickerProviderStateMixin {
   ModulDetailModel? _modul;
   List<StudentModel> _allStudents = [];
@@ -62,7 +62,7 @@ class _ParticipantScreenState extends State<ParticipantScreen>
   }
 
   Future<void> _initData() async {
-    final raw = await rootBundle.loadString('lib/utils/data.json');
+    final raw = await rootBundle.loadString('assets/data/mock_data.json');
     final json = jsonDecode(raw) as Map<String, dynamic>;
 
     final allStudents = (json['students'] as List? ?? [])
@@ -167,7 +167,7 @@ class _ParticipantScreenState extends State<ParticipantScreen>
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => SessionLearningScreen(
+        builder: (context) => LearningSessionScreen(
           modul: _modul!,
           participants: _participants,
         ),
@@ -912,3 +912,6 @@ class _SearchField extends StatelessWidget {
     );
   }
 }
+
+/// Backward compatibility alias
+typedef ParticipantScreen = ParticipantSelectionScreen;

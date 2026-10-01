@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../widgets/sharing_widgets.dart';
 import '../../../utils/models.dart';
-import 'select_module_screen.dart';
+import 'select_module_to_send_screen.dart';
 
 /// Tahapan alur penerimaan modul pada SharingHubScreen
 enum ReceiveStage {
@@ -55,7 +55,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
 
   Future<void> _loadIncomingModules() async {
     try {
-      final raw = await rootBundle.loadString('lib/utils/data.json');
+      final raw = await rootBundle.loadString('assets/data/mock_data.json');
       final json = jsonDecode(raw) as Map<String, dynamic>;
       final modules = (json['modules'] as List)
           .map((e) => ModuleModel.fromJson(e as Map<String, dynamic>))
@@ -441,7 +441,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
                   if (mode == SharingMode.kirim) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => const SelectModuleScreen(),
+                        builder: (_) => const SelectModuleToSendScreen(),
                       ),
                     );
                   } else {

@@ -3,27 +3,27 @@ import '../../module/widgets/module_widgets.dart';
 import '../widgets/session_widgets.dart';
 import '../../../utils/models.dart';
 import 'discussion_timer_screen.dart';
-import 'post_quiz_screen.dart';
+import 'post_quiz_summary_screen.dart';
 
 /// Screen utama untuk alur Sesi Pembelajaran:
 /// Step 1: Materi Umum
 /// Step 2: Diskusi Kelompok
 /// Step 3: Quiz Kelompok
-class SessionLearningScreen extends StatefulWidget {
+class LearningSessionScreen extends StatefulWidget {
   final ModulDetailModel modul;
   final List<StudentModel> participants;
 
-  const SessionLearningScreen({
+  const LearningSessionScreen({
     super.key,
     required this.modul,
     required this.participants,
   });
 
   @override
-  State<SessionLearningScreen> createState() => _SessionLearningScreenState();
+  State<LearningSessionScreen> createState() => _LearningSessionScreenState();
 }
 
-class _SessionLearningScreenState extends State<SessionLearningScreen> {
+class _LearningSessionScreenState extends State<LearningSessionScreen> {
   int _currentStep = 1; // 1: Materi, 2: Diskusi, 3: Quiz
 
   // State untuk Quiz
@@ -159,7 +159,7 @@ class _SessionLearningScreenState extends State<SessionLearningScreen> {
     if (shouldFinish == true && mounted) {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => PostQuizScreen(
+          builder: (context) => PostQuizSummaryScreen(
             modul: widget.modul,
             groups: _groups,
             participants: widget.participants,
@@ -394,3 +394,6 @@ class _SessionLearningScreenState extends State<SessionLearningScreen> {
     );
   }
 }
+
+/// Backward compatibility alias
+typedef SessionLearningScreen = LearningSessionScreen;

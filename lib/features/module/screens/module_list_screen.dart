@@ -36,7 +36,7 @@ class _ModuleListScreenState extends State<ModuleListScreen> {
   }
 
   Future<void> _loadData() async {
-    final raw = await rootBundle.loadString('lib/utils/data.json');
+    final raw = await rootBundle.loadString('assets/data/mock_data.json');
     final json = jsonDecode(raw) as Map<String, dynamic>;
 
     final modules = (json['modules'] as List)

@@ -6,20 +6,20 @@ import '../widgets/sharing_widgets.dart';
 import '../../../utils/models.dart';
 import 'send_module_screen.dart';
 
-/// Screen "Pilih Module" / Select Module Screen
+/// Screen "Pilih Module" / Select Module To Send Screen
 /// Muncul ketika user menekan tab "Kirim" di SharingHubScreen,
 /// lalu berpindah ke screen ini.
 ///
 /// User bisa memilih satu atau lebih modul yang akan dikirim.
 /// Tombol "Kirim Module" aktif (biru) hanya jika minimal 1 modul dipilih.
-class SelectModuleScreen extends StatefulWidget {
-  const SelectModuleScreen({super.key});
+class SelectModuleToSendScreen extends StatefulWidget {
+  const SelectModuleToSendScreen({super.key});
 
   @override
-  State<SelectModuleScreen> createState() => _SelectModuleScreenState();
+  State<SelectModuleToSendScreen> createState() => _SelectModuleToSendScreenState();
 }
 
-class _SelectModuleScreenState extends State<SelectModuleScreen> {
+class _SelectModuleToSendScreenState extends State<SelectModuleToSendScreen> {
   List<ModuleModel> _modules = [];
   final Set<String> _selectedIds = {};
   bool _isLoading = true;
@@ -31,7 +31,7 @@ class _SelectModuleScreenState extends State<SelectModuleScreen> {
   }
 
   Future<void> _loadModules() async {
-    final raw = await rootBundle.loadString('lib/utils/data.json');
+    final raw = await rootBundle.loadString('assets/data/mock_data.json');
     final json = jsonDecode(raw) as Map<String, dynamic>;
 
     final modules = (json['modules'] as List)
@@ -269,5 +269,6 @@ class _KirimButton extends StatelessWidget {
   }
 }
 
-/// Backward compatibility alias
-typedef PilihModulScreen = SelectModuleScreen;
+/// Backward compatibility aliases
+typedef SelectModuleScreen = SelectModuleToSendScreen;
+typedef PilihModulScreen = SelectModuleToSendScreen;
