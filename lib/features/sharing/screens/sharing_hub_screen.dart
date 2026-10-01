@@ -381,7 +381,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
               ringCount: 3,
               size: 210,
               centerSize: 68,
-              child: const Icon(Icons.check, size: 34, color: Colors.white),
+              child: const Icon(LucideIcons.check, size: 34, color: Colors.white),
             ),
             const SizedBox(height: 24),
             const Text(

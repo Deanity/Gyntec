@@ -63,7 +63,14 @@ class _ScanningPulseAnimationState extends State<ScanningPulseAnimation>
                 height: widget.centerSize,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: widget.color.withValues(alpha: 0.12),
+                  color: widget.color,
+                  boxShadow: [
+                    BoxShadow(
+                      color: widget.color.withValues(alpha: 0.35),
+                      blurRadius: 20,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
                 child: Center(child: widget.child),
               ),
@@ -97,12 +104,12 @@ class _PulsePainter extends CustomPainter {
     for (int i = 0; i < ringCount; i++) {
       final ringProgress = (progress + (i / ringCount)) % 1.0;
       final radius = minRadius + (maxRadius - minRadius) * ringProgress;
-      final opacity = math.sin(ringProgress * math.pi) * 0.45;
+      final opacity = math.sin(ringProgress * math.pi) * 0.50;
 
       final paint = Paint()
         ..color = color.withValues(alpha: opacity.clamp(0.0, 1.0))
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5;
+        ..strokeWidth = 1.8;
 
       canvas.drawCircle(center, radius, paint);
     }

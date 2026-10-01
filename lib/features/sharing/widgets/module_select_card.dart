@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../utils/models.dart';
 
 /// Card modul yang bisa dipilih (selectable) untuk flow pengiriman modul.
@@ -157,7 +158,7 @@ class _Checkbox extends StatelessWidget {
         ),
       ),
       child: isSelected
-          ? const Icon(Icons.check, size: 16, color: Colors.white)
+          ? const Icon(LucideIcons.check, size: 16, color: Colors.white)
           : null,
     );
   }
