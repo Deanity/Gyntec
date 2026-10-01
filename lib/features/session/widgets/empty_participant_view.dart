@@ -14,14 +14,11 @@ class EmptyParticipantView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ── Ikon person blocked khusus ──
-            const EmptyParticipantIcon(
-              size: 68,
-              color: Color(0xFF1E293B),
-            ),
+            //  Ikon person blocked khusus
+            const EmptyParticipantIcon(size: 68, color: Color(0xFF1E293B)),
             const SizedBox(height: 18),
 
-            // ── Headline ──
+            //  Headline
             const Text(
               'Belum ada Peserta',
               style: TextStyle(
@@ -34,7 +31,7 @@ class EmptyParticipantView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
 
-            // ── Subtitle / Deskripsi ──
+            //  Subtitle / Deskripsi
             const SizedBox(
               width: 270,
               child: Text(
@@ -93,11 +90,7 @@ class _EmptyParticipantPainter extends CustomPainter {
       ..strokeJoin = StrokeJoin.round;
 
     // 1. Kepala (Lingkaran di bagian atas)
-    canvas.drawCircle(
-      Offset(26 * scale, 17 * scale),
-      9.5 * scale,
-      strokePaint,
-    );
+    canvas.drawCircle(Offset(26 * scale, 17 * scale), 9.5 * scale, strokePaint);
 
     // 2. Bahu (Lengkungan tubuh dari kiri ke kanan yang berhenti sebelum tanda larangan)
     final shoulderPath = Path();

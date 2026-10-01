@@ -13,10 +13,7 @@ import '../../../utils/models.dart';
 class SendModuleScreen extends StatefulWidget {
   final List<ModuleModel> selectedModules;
 
-  const SendModuleScreen({
-    super.key,
-    required this.selectedModules,
-  });
+  const SendModuleScreen({super.key, required this.selectedModules});
 
   @override
   State<SendModuleScreen> createState() => _SendModuleScreenState();
@@ -137,7 +134,7 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
       backgroundColor: const Color(0xFFF8FAFC),
       body: Stack(
         children: [
-          // ── Background soft blue gradient di atas ──
+          //  Background soft blue gradient di atas
           Positioned(
             top: 0,
             left: 0,
@@ -148,16 +145,13 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFFE8F1FF),
-                    Color(0x00E8F1FF),
-                  ],
+                  colors: [Color(0xFFE8F1FF), Color(0x00E8F1FF)],
                 ),
               ),
             ),
           ),
 
-          // ── Konten Scrollable ──
+          //  Konten Scrollable
           SafeArea(
             child: Column(
               children: [
@@ -186,20 +180,20 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ── Bagian Atas: Animasi Radar & Status ──
+                        //  Bagian Atas: Animasi Radar & Status
                         Center(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 350),
                             child: _isSuccess
                                 ? _buildSuccessHeader()
                                 : _isSending
-                                    ? _buildSendingHeader()
-                                    : _buildScanningHeader(),
+                                ? _buildSendingHeader()
+                                : _buildScanningHeader(),
                           ),
                         ),
                         const SizedBox(height: 28),
 
-                        // ── Pilihan Perangkat Penerima (hanya saat mode pemilihan & ada device) ──
+                        //  Pilihan Perangkat Penerima (hanya saat mode pemilihan & ada device)
                         if (!_isSending &&
                             !_isSuccess &&
                             _discoveredDevices.isNotEmpty) ...[
@@ -218,8 +212,9 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
                               padding: const EdgeInsets.only(bottom: 10),
                               child: DeviceSelectCard(
                                 device: device,
-                                isSelected:
-                                    _selectedDeviceIds.contains(device.id),
+                                isSelected: _selectedDeviceIds.contains(
+                                  device.id,
+                                ),
                                 onTap: () => _toggleDevice(device.id),
                               ),
                             ),
@@ -227,7 +222,7 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
                           const SizedBox(height: 16),
                         ],
 
-                        // ── Bagian: Module yang Dikirim ──
+                        //  Bagian: Module yang Dikirim
                         const Text(
                           'Module yang Dikirim',
                           style: TextStyle(
@@ -254,7 +249,7 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
             ),
           ),
 
-          // ── Floating Action Button di bawah ──
+          //  Floating Action Button di bawah
           Positioned(
             left: 20,
             right: 20,
@@ -272,7 +267,7 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
     );
   }
 
-  // ── Header saat mencari perangkat ──
+  //  Header saat mencari perangkat
   Widget _buildScanningHeader() {
     return Column(
       key: const ValueKey('scanning_header'),
@@ -282,11 +277,7 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
           ringCount: 3,
           size: 210,
           centerSize: 68,
-          child: const Icon(
-            LucideIcons.search,
-            size: 28,
-            color: Colors.white,
-          ),
+          child: const Icon(LucideIcons.search, size: 28, color: Colors.white),
         ),
         const SizedBox(height: 24),
         const Text(
@@ -303,16 +294,13 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
         const Text(
           'Pilih satu atau beberapa perangkat tujuan di bawah',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 13,
-            color: Color(0xFF64748B),
-          ),
+          style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
         ),
       ],
     );
   }
 
-  // ── Header saat proses pengiriman berlangsung ──
+  //  Header saat proses pengiriman berlangsung
   Widget _buildSendingHeader() {
     return Column(
       key: const ValueKey('sending_header'),
@@ -322,11 +310,7 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
           ringCount: 3,
           size: 210,
           centerSize: 68,
-          child: const Icon(
-            LucideIcons.arrowUp,
-            size: 30,
-            color: Colors.white,
-          ),
+          child: const Icon(LucideIcons.arrowUp, size: 30, color: Colors.white),
         ),
         const SizedBox(height: 24),
         Text(
@@ -343,10 +327,7 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
         const Text(
           'Pastikan Wi-Fi & Bluetooth tetap aktif selama pengiriman',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 13,
-            color: Color(0xFF64748B),
-          ),
+          style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
         ),
         const SizedBox(height: 18),
 
@@ -364,7 +345,9 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
             child: LinearProgressIndicator(
               value: _sendProgress,
               backgroundColor: const Color(0xFFF1F5F9),
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0066FF)),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                Color(0xFF0066FF),
+              ),
             ),
           ),
         ),
@@ -372,7 +355,7 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
     );
   }
 
-  // ── Header saat pengiriman berhasil (sending-done.png) ──
+  //  Header saat pengiriman berhasil (sending-done.png)
   Widget _buildSuccessHeader() {
     return Column(
       key: const ValueKey('success_header'),
@@ -382,11 +365,7 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
           ringCount: 3,
           size: 210,
           centerSize: 68,
-          child: const Icon(
-            Icons.check,
-            size: 36,
-            color: Colors.white,
-          ),
+          child: const Icon(Icons.check, size: 36, color: Colors.white),
         ),
         const SizedBox(height: 24),
         const Text(
@@ -403,16 +382,13 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
         const Text(
           'Module pembelajaran berhasil terkirim ke perangkat tujuan',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 13,
-            color: Color(0xFF64748B),
-          ),
+          style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
         ),
       ],
     );
   }
 
-  // ── Bottom Action Button ──
+  //  Bottom Action Button
   Widget _buildBottomButton() {
     if (_isSuccess) {
       // Tombol "Kembali" sesuai sending-done.png
@@ -454,9 +430,9 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Komponen Tombol Aksi Reusable
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _ActionButton extends StatelessWidget {
   final String label;
@@ -511,9 +487,9 @@ class _ActionButton extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Top Bar — "< Berbagi Module"
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _TopBar extends StatelessWidget {
   final VoidCallback onBack;

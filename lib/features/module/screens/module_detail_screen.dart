@@ -44,11 +44,11 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
     final online = await ConnectivityService.instance.isOnline();
     if (mounted) setState(() => _isOffline = !online);
 
-    _connectivitySub = ConnectivityService.instance.onStatusChanged.listen(
-      (isOnline) {
-        if (mounted) setState(() => _isOffline = !isOnline);
-      },
-    );
+    _connectivitySub = ConnectivityService.instance.onStatusChanged.listen((
+      isOnline,
+    ) {
+      if (mounted) setState(() => _isOffline = !isOnline);
+    });
 
     // Polling fallback setiap 4 detik
     _pollTimer = Timer.periodic(const Duration(seconds: 4), (_) async {
@@ -68,9 +68,11 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
     final json = jsonDecode(raw) as Map<String, dynamic>;
     setState(() {
       _banner = OfflineBannerModel.fromJson(
-          json['offlineBanner'] as Map<String, dynamic>);
+        json['offlineBanner'] as Map<String, dynamic>,
+      );
       _modul = ModulDetailModel.fromJson(
-          json['modulDetail'] as Map<String, dynamic>);
+        json['modulDetail'] as Map<String, dynamic>,
+      );
       _isLoading = false;
     });
   }
@@ -78,9 +80,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final modul = _modul!;
@@ -89,19 +89,20 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // ── 1. Custom Top Bar (SafeArea -> Container -> Stack) ──
-          const AppTopBar(
-            title: 'Module Materi',
-          ),
+          //  1. Custom Top Bar (SafeArea -> Container -> Stack)
+          const AppTopBar(title: 'Module Materi'),
 
-          // ── 2. Konten Scrollable ──
+          //  2. Konten Scrollable
           Expanded(
             child: RefreshIndicator(
               onRefresh: _refreshConnectivity,
               color: const Color(0xFF0066FF),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -111,8 +112,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
                       transitionBuilder: (child, animation) => SizeTransition(
                         sizeFactor: animation,
                         axisAlignment: -1,
-                        child:
-                            FadeTransition(opacity: animation, child: child),
+                        child: FadeTransition(opacity: animation, child: child),
                       ),
                       child: _isOffline
                           ? Padding(
@@ -124,8 +124,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
                                 savedModules: _banner!.savedModules,
                               ),
                             )
-                          : const SizedBox.shrink(
-                              key: ValueKey('no-banner')),
+                          : const SizedBox.shrink(key: ValueKey('no-banner')),
                     ),
 
                     // Konten Tab
@@ -136,14 +135,15 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
             ),
           ),
 
-          // ── 3. Custom Bottom Action Bar (Pill Tabs + Mulai Sesi) ──
+          //  3. Custom Bottom Action Bar (Pill Tabs + Mulai Sesi)
           ModulBottomAction(
             activeTab: _activeTab,
             onTabChanged: (tab) => setState(() => _activeTab = tab),
             onStartSession: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ParticipantSelectionScreen(modul: modul),
+                  builder: (context) =>
+                      ParticipantSelectionScreen(modul: modul),
                 ),
               );
             },
@@ -165,9 +165,9 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
 /// Alias untuk backward compatibility
 typedef ModulMateriScreen = ModuleDetailScreen;
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Tab: Materi
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _MateriTabContent extends StatelessWidget {
   final ModulDetailModel modul;
@@ -193,9 +193,9 @@ class _MateriTabContent extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Tab: Diskusi
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _DiskusiTabContent extends StatelessWidget {
   final ModulDetailModel modul;
@@ -212,9 +212,9 @@ class _DiskusiTabContent extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Tab: Quiz
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _QuizTabContent extends StatelessWidget {
   final ModulDetailModel modul;

@@ -15,7 +15,8 @@ class ParticipantSelectionScreen extends StatefulWidget {
   const ParticipantSelectionScreen({super.key, this.modul});
 
   @override
-  State<ParticipantSelectionScreen> createState() => _ParticipantSelectionScreenState();
+  State<ParticipantSelectionScreen> createState() =>
+      _ParticipantSelectionScreenState();
 }
 
 class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
@@ -25,7 +26,7 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
   final List<StudentModel> _participants = [];
   bool _isLoading = true;
 
-  // ── Add Participant Overlay State ──
+  //  Add Participant Overlay State
   bool _isAddMode = false;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
@@ -74,7 +75,8 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
       modul = widget.modul!;
     } else {
       modul = ModulDetailModel.fromJson(
-          json['modulDetail'] as Map<String, dynamic>);
+        json['modulDetail'] as Map<String, dynamic>,
+      );
     }
 
     setState(() {
@@ -151,12 +153,15 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
   List<StudentModel> get _filteredSuggestions {
     if (_searchQuery.trim().isEmpty) return [];
     final q = _searchQuery.toLowerCase().trim();
-    return _allStudents.where((s) {
-      final nameLower = s.name.toLowerCase();
-      final nameWords = nameLower.split(' ');
-      return nameLower.startsWith(q) ||
-          nameWords.any((word) => word.startsWith(q));
-    }).take(6).toList();
+    return _allStudents
+        .where((s) {
+          final nameLower = s.name.toLowerCase();
+          final nameWords = nameLower.split(' ');
+          return nameLower.startsWith(q) ||
+              nameWords.any((word) => word.startsWith(q));
+        })
+        .take(6)
+        .toList();
   }
 
   void _startSession() {
@@ -167,10 +172,8 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => LearningSessionScreen(
-          modul: _modul!,
-          participants: _participants,
-        ),
+        builder: (context) =>
+            LearningSessionScreen(modul: _modul!, participants: _participants),
       ),
     );
   }
@@ -190,11 +193,11 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // ── Layer 1: Konten Utama ──
+          //  Layer 1: Konten Utama
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── 1. Top App Bar ("< Peserta") ──
+              //  1. Top App Bar ("< Peserta")
               CustomTopBar(
                 title: 'Peserta',
                 onBack: _isAddMode
@@ -202,7 +205,7 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
                     : () => Navigator.of(context).maybePop(),
               ),
 
-              // ── 2. Informasi Modul (hanya tampil saat BUKAN add mode) ──
+              //  2. Informasi Modul (hanya tampil saat BUKAN add mode)
               AnimatedSize(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOut,
@@ -210,7 +213,9 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
                     ? const SizedBox.shrink()
                     : Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -243,27 +248,27 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
                       ),
               ),
 
-              // ── 3. Area Tengah ──
+              //  3. Area Tengah
               Expanded(
                 child: _isAddMode
                     // Sembunyikan saat add mode — biar tidak kelihatan di balik overlay
                     ? const SizedBox.shrink()
                     : _participants.isEmpty
-                        ? const EmptyParticipantView()
-                        : Align(
-                            alignment: Alignment.topCenter,
-                            child: _ParticipantSummaryCard(
-                              participants: _participants,
-                            ),
-                          ),
+                    ? const EmptyParticipantView()
+                    : Align(
+                        alignment: Alignment.topCenter,
+                        child: _ParticipantSummaryCard(
+                          participants: _participants,
+                        ),
+                      ),
               ),
 
-              // ── 4. Spacer agar konten tidak tertutup floating buttons ──
+              //  4. Spacer agar konten tidak tertutup floating buttons
               if (!_isAddMode) const SizedBox(height: 136),
             ],
           ),
 
-          // ── Layer floating: Bottom Controls (mode normal) ──
+          //  Layer floating: Bottom Controls (mode normal)
           if (!_isAddMode)
             Positioned(
               left: 20,
@@ -352,7 +357,7 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
               ),
             ),
 
-          // ── Layer 2: Overlay Add Mode (muncul di atas konten) ──
+          //  Layer 2: Overlay Add Mode (muncul di atas konten)
           if (_isAddMode)
             FadeTransition(
               opacity: _overlayFade,
@@ -374,9 +379,9 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Card ringkasan "Peserta Sesi Ini" — tampil di area tengah setelah add mode selesai
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _ParticipantSummaryCard extends StatelessWidget {
   final List<StudentModel> participants;
@@ -462,10 +467,9 @@ class _ParticipantSummaryCard extends StatelessWidget {
   }
 }
 
-
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Widget Overlay "Tambah Peserta" — muncul ketika _isAddMode = true
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _AddParticipantOverlay extends StatelessWidget {
   final List<StudentModel> participants;
@@ -507,7 +511,7 @@ class _AddParticipantOverlay extends StatelessWidget {
             ),
           ),
 
-          // ── Card putih — 1 section, isinya berubah sesuai state ──
+          //  Card putih — 1 section, isinya berubah sesuai state
           SlideTransition(
             position: slideAnimation,
             child: Container(
@@ -528,7 +532,7 @@ class _AddParticipantOverlay extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // ── Search Bar & Tombol Selesai ──
+          //  Search Bar & Tombol Selesai
           Padding(
             padding: EdgeInsets.only(
               left: 16,
@@ -579,9 +583,9 @@ class _AddParticipantOverlay extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // _CardContent — router: pilih tampilan card berdasarkan state
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _CardContent extends StatelessWidget {
   final List<StudentModel> participants;
@@ -620,7 +624,7 @@ class _CardContent extends StatelessWidget {
   }
 }
 
-// ── Card: Empty state ──
+//  Card: Empty state
 class _EmptyStateCard extends StatelessWidget {
   const _EmptyStateCard();
 
@@ -643,11 +647,7 @@ class _EmptyStateCard extends StatelessWidget {
         SizedBox(height: 6),
         Text(
           'Silahkan tambah peserta didik untuk memulai sesi pembelajaran',
-          style: TextStyle(
-            fontSize: 13,
-            color: Color(0xFF64748B),
-            height: 1.4,
-          ),
+          style: TextStyle(fontSize: 13, color: Color(0xFF64748B), height: 1.4),
           textAlign: TextAlign.center,
         ),
       ],
@@ -655,7 +655,7 @@ class _EmptyStateCard extends StatelessWidget {
   }
 }
 
-// ── Card: Hasil search ──
+//  Card: Hasil search
 class _SearchResultContent extends StatelessWidget {
   final String query;
   final List<StudentModel> suggestions;
@@ -676,8 +676,11 @@ class _SearchResultContent extends StatelessWidget {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(LucideIcons.userRoundPlus,
-              size: 36, color: Color(0xFF94A3B8)),
+          const Icon(
+            LucideIcons.userRoundPlus,
+            size: 36,
+            color: Color(0xFF94A3B8),
+          ),
           const SizedBox(height: 12),
           Text(
             'Tidak ditemukan hasil untuk "$query"',
@@ -696,8 +699,7 @@ class _SearchResultContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: Container(
               width: double.infinity,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(10),
@@ -705,8 +707,11 @@ class _SearchResultContent extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(LucideIcons.userRoundPlus,
-                      size: 17, color: Color(0xFF0066FF)),
+                  const Icon(
+                    LucideIcons.userRoundPlus,
+                    size: 17,
+                    color: Color(0xFF0066FF),
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -790,8 +795,7 @@ class _SearchResultContent extends StatelessWidget {
   }
 }
 
-
-// ── Card: Daftar peserta yang sudah dipilih ──
+//  Card: Daftar peserta yang sudah dipilih
 class _ParticipantListCard extends StatelessWidget {
   final List<StudentModel> participants;
   final ValueChanged<StudentModel> onToggle;
@@ -855,8 +859,7 @@ class _ParticipantListCard extends StatelessWidget {
   }
 }
 
-
-// ── Search Field (tanpa dropdown — hasil tampil di card) ──
+//  Search Field (tanpa dropdown — hasil tampil di card)
 class _SearchField extends StatelessWidget {
   final TextEditingController controller;
   final String query;
@@ -880,20 +883,28 @@ class _SearchField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: 'Cari atau tambah peserta',
         hintStyle: const TextStyle(fontSize: 14, color: Color(0xFF94A3B8)),
-        prefixIcon: const Icon(LucideIcons.search,
-            size: 18, color: Color(0xFF94A3B8)),
+        prefixIcon: const Icon(
+          LucideIcons.search,
+          size: 18,
+          color: Color(0xFF94A3B8),
+        ),
         suffixIcon: query.isNotEmpty
             ? IconButton(
-                icon: const Icon(LucideIcons.x,
-                    size: 16, color: Color(0xFF94A3B8)),
+                icon: const Icon(
+                  LucideIcons.x,
+                  size: 16,
+                  color: Color(0xFF94A3B8),
+                ),
                 onPressed: () {
                   controller.clear();
                   onChanged('');
                 },
               )
             : null,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 14,
+        ),
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(

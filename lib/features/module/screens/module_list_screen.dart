@@ -80,15 +80,14 @@ class _ModuleListScreenState extends State<ModuleListScreen> {
       backgroundColor: const Color(0xFFF8FAFC),
       body: Stack(
         children: [
-          // ── Konten utama ──
+          //  Konten utama
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── Search Bar ──
+                //  Search Bar
                 Padding(
-                  padding:
-                      const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                   child: _SearchBar(
                     controller: _searchController,
                     query: _searchQuery,
@@ -97,7 +96,7 @@ class _ModuleListScreenState extends State<ModuleListScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // ── Header "Modul Tersedia" ──
+                //  Header "Modul Tersedia"
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
@@ -112,7 +111,7 @@ class _ModuleListScreenState extends State<ModuleListScreen> {
                 ),
                 const SizedBox(height: 14),
 
-                // ── Daftar Modul ──
+                //  Daftar Modul
                 Expanded(
                   child: _filteredModules.isEmpty
                       ? _EmptySearchState(query: _searchQuery)
@@ -142,15 +141,13 @@ class _ModuleListScreenState extends State<ModuleListScreen> {
             ),
           ),
 
-          // ── Floating Action Button (+) ──
+          //  Floating Action Button (+)
           Positioned(
             right: 20,
             bottom: 120, // jarak aman di atas navbar
             child: _FloatingAddButton(
               onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const SharingHubScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const SharingHubScreen()),
               ),
             ),
           ),
@@ -163,9 +160,9 @@ class _ModuleListScreenState extends State<ModuleListScreen> {
 /// Alias untuk backward compatibility
 typedef ModulScreen = ModuleListScreen;
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Search Bar
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _SearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -207,17 +204,19 @@ class _SearchBar extends StatelessWidget {
           ),
           prefixIcon: const Padding(
             padding: EdgeInsets.only(left: 16, right: 10),
-            child: Icon(
-              LucideIcons.search,
-              size: 18,
-              color: Color(0xFF94A3B8),
-            ),
+            child: Icon(LucideIcons.search, size: 18, color: Color(0xFF94A3B8)),
           ),
-          prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 0,
+            minHeight: 0,
+          ),
           suffixIcon: query.isNotEmpty
               ? IconButton(
-                  icon: const Icon(LucideIcons.x,
-                      size: 16, color: Color(0xFF94A3B8)),
+                  icon: const Icon(
+                    LucideIcons.x,
+                    size: 16,
+                    color: Color(0xFF94A3B8),
+                  ),
                   onPressed: () {
                     controller.clear();
                     onChanged('');
@@ -225,17 +224,19 @@ class _SearchBar extends StatelessWidget {
                 )
               : null,
           border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
         ),
       ),
     );
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Modul Card — title, deskripsi, badge row (level, subject, soal, diskusi)
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _ModulCard extends StatelessWidget {
   final ModuleModel module;
@@ -265,7 +266,7 @@ class _ModulCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Judul ──
+            //  Judul
             Text(
               module.title,
               style: const TextStyle(
@@ -277,7 +278,7 @@ class _ModulCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
 
-            // ── Deskripsi singkat ──
+            //  Deskripsi singkat
             Text(
               module.description,
               maxLines: 1,
@@ -290,7 +291,7 @@ class _ModulCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // ── Badge Row: Level, Subject, Soal, Diskusi ──
+            //  Badge Row: Level, Subject, Soal, Diskusi
             Wrap(
               spacing: 6,
               runSpacing: 6,
@@ -308,7 +309,7 @@ class _ModulCard extends StatelessWidget {
   }
 }
 
-// ── Badge pill ──
+//  Badge pill
 class _Badge extends StatelessWidget {
   final String label;
 
@@ -335,9 +336,9 @@ class _Badge extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Empty state saat search tidak menemukan hasil
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _EmptySearchState extends StatelessWidget {
   final String query;
@@ -350,11 +351,7 @@ class _EmptySearchState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            LucideIcons.bookOpen,
-            size: 48,
-            color: Color(0xFFCBD5E1),
-          ),
+          const Icon(LucideIcons.bookOpen, size: 48, color: Color(0xFFCBD5E1)),
           const SizedBox(height: 16),
           Text(
             'Tidak ditemukan hasil\nuntuk "$query"',
@@ -371,9 +368,9 @@ class _EmptySearchState extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Floating Action Button (+)
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _FloatingAddButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -398,11 +395,7 @@ class _FloatingAddButton extends StatelessWidget {
             ),
           ],
         ),
-        child: const Icon(
-          LucideIcons.plus,
-          size: 26,
-          color: Colors.white,
-        ),
+        child: const Icon(LucideIcons.plus, size: 26, color: Colors.white),
       ),
     );
   }

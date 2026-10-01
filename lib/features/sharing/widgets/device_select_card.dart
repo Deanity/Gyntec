@@ -56,7 +56,7 @@ class DeviceSelectCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // ── Avatar perangkat ──
+            //  Avatar perangkat
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: 44,
@@ -75,7 +75,7 @@ class DeviceSelectCard extends StatelessWidget {
             ),
             const SizedBox(width: 14),
 
-            // ── Nama perangkat ──
+            //  Nama perangkat
             Expanded(
               child: Text(
                 device.name,
@@ -88,7 +88,7 @@ class DeviceSelectCard extends StatelessWidget {
               ),
             ),
 
-            // ── Checkbox ──
+            //  Checkbox
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               width: 24,

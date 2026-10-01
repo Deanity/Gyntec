@@ -51,11 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
     if (mounted) setState(() => _isOffline = !online);
 
     // Subscribe stream perubahan
-    _connectivitySub = ConnectivityService.instance.onStatusChanged.listen(
-      (isOnline) {
-        if (mounted) setState(() => _isOffline = !isOnline);
-      },
-    );
+    _connectivitySub = ConnectivityService.instance.onStatusChanged.listen((
+      isOnline,
+    ) {
+      if (mounted) setState(() => _isOffline = !isOnline);
+    });
 
     // Polling fallback setiap 4 detik
     _pollTimer = Timer.periodic(const Duration(seconds: 4), (_) async {
@@ -78,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _user = UserModel.fromJson(json['user'] as Map<String, dynamic>);
       _banner = OfflineBannerModel.fromJson(
-          json['offlineBanner'] as Map<String, dynamic>);
+        json['offlineBanner'] as Map<String, dynamic>,
+      );
       _sessions = (json['recentSessions'] as List)
           .map((e) => SessionModel.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -92,7 +93,13 @@ class _HomeScreenState extends State<HomeScreen> {
   String _currentDateTime() {
     final now = DateTime.now();
     const days = [
-      'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'
+      'Senin',
+      'Selasa',
+      'Rabu',
+      'Kamis',
+      'Jumat',
+      'Sabtu',
+      'Minggu',
     ];
     final day = days[now.weekday - 1];
     final hour = now.hour.toString().padLeft(2, '0');
@@ -103,27 +110,25 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: Stack(
         children: [
-          // ── IndexedStack: render semua tab, tampilkan yang aktif ──
+          //  IndexedStack: render semua tab, tampilkan yang aktif
           IndexedStack(
             index: _navIndex,
             children: [
-              // ── Tab 0: Beranda ──
+              //  Tab 0: Beranda
               SafeArea(
                 child: RefreshIndicator(
                   onRefresh: _refreshConnectivity,
                   color: const Color(0xFF0066FF),
                   child: CustomScrollView(
                     slivers: [
-                      // ── Header: salam & tanggal ──
+                      //  Header: salam & tanggal
                       SliverToBoxAdapter(
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
@@ -149,21 +154,24 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const SizedBox(height: 20),
 
-                              // ── Banner offline ──
+                              //  Banner offline
                               AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 300),
                                 transitionBuilder: (child, animation) =>
                                     SizeTransition(
-                                  sizeFactor: animation,
-                                  axisAlignment: -1,
-                                  child: FadeTransition(
-                                      opacity: animation, child: child),
-                                ),
+                                      sizeFactor: animation,
+                                      axisAlignment: -1,
+                                      child: FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      ),
+                                    ),
                                 child: _isOffline
                                     ? Padding(
                                         key: const ValueKey('offline-banner'),
-                                        padding:
-                                            const EdgeInsets.only(bottom: 20),
+                                        padding: const EdgeInsets.only(
+                                          bottom: 20,
+                                        ),
                                         child: OfflineBannerCard(
                                           title: _banner!.title,
                                           description: _banner!.description,
@@ -171,10 +179,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       )
                                     : const SizedBox.shrink(
-                                        key: ValueKey('no-banner')),
+                                        key: ValueKey('no-banner'),
+                                      ),
                               ),
 
-                              // ── Sesi Belajar Terakhir header ──
+                              //  Sesi Belajar Terakhir header
                               SectionHeader(
                                 title: 'Sesi Belajar Terakhir',
                                 onActionTap: () {},
@@ -185,14 +194,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
-                      // ── Horizontal scroll: SessionCard ──
+                      //  Horizontal scroll: SessionCard
                       SliverToBoxAdapter(
                         child: SizedBox(
                           height: 170,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             itemCount: _sessions.length,
                             separatorBuilder: (a, b) =>
                                 const SizedBox(width: 12),
@@ -204,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
-                      // ── Modul Pembelajaran header ──
+                      //  Modul Pembelajaran header
                       SliverToBoxAdapter(
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(20, 28, 20, 14),
@@ -215,10 +223,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
 
-                      // ── Vertical list: ModuleListItem ──
+                      //  Vertical list: ModuleListItem
                       SliverPadding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         sliver: SliverList.separated(
                           itemCount: _modules.length,
                           separatorBuilder: (a, b) =>
@@ -241,18 +248,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              // ── Tab 1: Modul ──
+              //  Tab 1: Modul
               const ModulScreen(),
 
-              // ── Tab 2: Sesi Belajar (placeholder) ──
+              //  Tab 2: Sesi Belajar (placeholder)
               const _PlaceholderTab(label: 'Sesi Belajar'),
 
-              // ── Tab 3: Murid (placeholder) ──
+              //  Tab 3: Murid (placeholder)
               const _PlaceholderTab(label: 'Murid'),
             ],
           ),
 
-          // ── Floating Pill NavBar ──
+          //  Floating Pill NavBar
           Positioned(
             left: 0,
             right: 0,

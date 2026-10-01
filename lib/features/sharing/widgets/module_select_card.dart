@@ -49,7 +49,7 @@ class ModuleSelectCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // ── Info modul (kiri, mengisi sisa ruang) ──
+            //  Info modul (kiri, mengisi sisa ruang)
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,7 +101,7 @@ class ModuleSelectCard extends StatelessWidget {
             ),
             const SizedBox(width: 14),
 
-            // ── Checkbox (kanan, center vertikal) ──
+            //  Checkbox (kanan, center vertikal)
             _Checkbox(isSelected: isSelected),
           ],
         ),
@@ -110,7 +110,7 @@ class ModuleSelectCard extends StatelessWidget {
   }
 }
 
-// ── Badge pill kecil ──
+//  Badge pill kecil
 class _Badge extends StatelessWidget {
   final String label;
   final bool isCardSelected;
@@ -137,7 +137,7 @@ class _Badge extends StatelessWidget {
   }
 }
 
-// ── Animated checkbox ──
+//  Animated checkbox
 class _Checkbox extends StatelessWidget {
   final bool isSelected;
   const _Checkbox({required this.isSelected});
@@ -152,9 +152,7 @@ class _Checkbox extends StatelessWidget {
         color: isSelected ? const Color(0xFF0066FF) : Colors.transparent,
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
-          color: isSelected
-              ? const Color(0xFF0066FF)
-              : const Color(0xFF334155),
+          color: isSelected ? const Color(0xFF0066FF) : const Color(0xFF334155),
           width: 2.0,
         ),
       ),

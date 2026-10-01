@@ -39,7 +39,7 @@ class ParticipantCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // ── Avatar Inisial ──
+          //  Avatar Inisial
           CircleAvatar(
             radius: 20,
             backgroundColor: const Color(0xFFEFF6FF),
@@ -54,7 +54,7 @@ class ParticipantCard extends StatelessWidget {
           ),
           const SizedBox(width: 12),
 
-          // ── Nama Peserta ──
+          //  Nama Peserta
           Expanded(
             child: Text(
               student.name,
@@ -68,7 +68,7 @@ class ParticipantCard extends StatelessWidget {
             ),
           ),
 
-          // ── Tombol Hapus ──
+          //  Tombol Hapus
           IconButton(
             icon: const Icon(LucideIcons.x, size: 18, color: Color(0xFF94A3B8)),
             splashRadius: 18,

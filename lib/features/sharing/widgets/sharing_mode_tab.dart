@@ -68,7 +68,7 @@ class SharingModeTab extends StatelessWidget {
   }
 }
 
-// ── Item individual tiap tab ──
+//  Item individual tiap tab
 class _TabItem extends StatelessWidget {
   final String label;
   final bool isActive;

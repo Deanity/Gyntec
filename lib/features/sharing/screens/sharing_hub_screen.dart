@@ -9,10 +9,10 @@ import 'select_module_to_send_screen.dart';
 
 /// Tahapan alur penerimaan modul pada SharingHubScreen
 enum ReceiveStage {
-  scanning,        // Mencari perangkat (scaning.png)
+  scanning, // Mencari perangkat (scaning.png)
   requestReceived, // Menerima permintaan kiriman file (recive module.png)
-  inProgress,      // Proses penerimaan file berlangsung (recive-on-progess.png)
-  done,            // Penerimaan file selesai (recive-done.png)
+  inProgress, // Proses penerimaan file berlangsung (recive-on-progess.png)
+  done, // Penerimaan file selesai (recive-done.png)
 }
 
 /// Screen "Berbagi Module" / Sharing Hub
@@ -140,7 +140,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
       backgroundColor: const Color(0xFFF8FAFC),
       body: Stack(
         children: [
-          // ── Background soft blue gradient di atas ──
+          //  Background soft blue gradient di atas
           Positioned(
             top: 0,
             left: 0,
@@ -151,16 +151,13 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFFE8F1FF),
-                    Color(0x00E8F1FF),
-                  ],
+                  colors: [Color(0xFFE8F1FF), Color(0x00E8F1FF)],
                 ),
               ),
             ),
           ),
 
-          // ── Konten Scrollable ──
+          //  Konten Scrollable
           SafeArea(
             child: Column(
               children: [
@@ -189,7 +186,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // ── Bagian Radar & Status ──
+                        //  Bagian Radar & Status
                         Center(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 350),
@@ -198,7 +195,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
                         ),
                         const SizedBox(height: 28),
 
-                        // ── Section: Module yang dibagikan ──
+                        //  Section: Module yang dibagikan
                         if (_stage != ReceiveStage.scanning &&
                             _incomingModules.isNotEmpty) ...[
                           const Text(
@@ -233,7 +230,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
             ),
           ),
 
-          // ── Floating Bottom Controls ──
+          //  Floating Bottom Controls
           Positioned(
             left: 0,
             right: 0,
@@ -245,7 +242,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
     );
   }
 
-  // ── Header status dinamis sesuai stage ──
+  //  Header status dinamis sesuai stage
   Widget _buildHeaderForStage() {
     switch (_stage) {
       case ReceiveStage.scanning:
@@ -278,10 +275,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
             const Text(
               'Pastikan Wi-Fi & Bluetooth aktif pada perangkat tujuan',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xFF64748B),
-              ),
+              style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
             ),
           ],
         );
@@ -316,10 +310,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
             const Text(
               'Perangkat ini ingin mengirimkan 3 module pembelajaran',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xFF64748B),
-              ),
+              style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
             ),
           ],
         );
@@ -354,10 +345,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
             const Text(
               'Pastikan Wi-Fi & Bluetooth tetap aktif selama pengiriman',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xFF64748B),
-              ),
+              style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
             ),
             const SizedBox(height: 18),
 
@@ -375,8 +363,9 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
                 child: LinearProgressIndicator(
                   value: _receiveProgress,
                   backgroundColor: const Color(0xFFF1F5F9),
-                  valueColor:
-                      const AlwaysStoppedAnimation<Color>(Color(0xFF0066FF)),
+                  valueColor: const AlwaysStoppedAnimation<Color>(
+                    Color(0xFF0066FF),
+                  ),
                 ),
               ),
             ),
@@ -392,11 +381,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
               ringCount: 3,
               size: 210,
               centerSize: 68,
-              child: const Icon(
-                Icons.check,
-                size: 34,
-                color: Colors.white,
-              ),
+              child: const Icon(Icons.check, size: 34, color: Colors.white),
             ),
             const SizedBox(height: 24),
             const Text(
@@ -413,17 +398,14 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
             const Text(
               'Module pembelajaran berhasil diterima',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                color: Color(0xFF64748B),
-              ),
+              style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
             ),
           ],
         );
     }
   }
 
-  // ── Floating Bottom Controls ──
+  //  Floating Bottom Controls
   Widget _buildBottomControls() {
     return SafeArea(
       top: false,
@@ -465,10 +447,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
             if (_stage == ReceiveStage.inProgress)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: _FullButton(
-                  label: 'Batal',
-                  onPressed: _cancelReceiving,
-                ),
+                child: _FullButton(label: 'Batal', onPressed: _cancelReceiving),
               ),
 
             // Tombol "Kembali" saat penerimaan selesai (recive-done.png)
@@ -489,18 +468,15 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Full-width Rounded Button Reusable
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _FullButton extends StatelessWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const _FullButton({
-    required this.label,
-    required this.onPressed,
-  });
+  const _FullButton({required this.label, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -539,9 +515,9 @@ class _FullButton extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Top Bar — "< Berbagi Module"
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _TopBar extends StatelessWidget {
   final VoidCallback onBack;

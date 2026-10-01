@@ -15,8 +15,10 @@ class _LoginScreenState extends State<LoginScreen> {
   /// Passkey yang valid — ubah sesuai kebutuhan production
   static const String _validPasskey = '123456';
 
-  final List<TextEditingController> _controllers =
-      List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
   bool _isLoading = false;
 
@@ -36,8 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  String get _enteredPasskey =>
-      _controllers.map((c) => c.text).join();
+  String get _enteredPasskey => _controllers.map((c) => c.text).join();
 
   bool get _isComplete => _enteredPasskey.length == 6;
 
@@ -79,9 +80,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleForgotPasskey() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Lupa Passkey tapped')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Lupa Passkey tapped')));
   }
 
   @override
@@ -93,17 +94,13 @@ class _LoginScreenState extends State<LoginScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment(0.0, -0.5),
-            colors: [
-              Color(0xFFEAF2FE),
-              Colors.white,
-            ],
+            colors: [Color(0xFFEAF2FE), Colors.white],
           ),
         ),
         child: SafeArea(
           child: DismissKeyboard(
             child: CustomScrollView(
-              keyboardDismissBehavior:
-                  ScrollViewKeyboardDismissBehavior.onDrag,
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               slivers: [
                 SliverFillRemaining(
                   hasScrollBody: false,
@@ -116,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // ── Ilustrasi ──
+                        //  Ilustrasi
                         const Center(
                           child: SvgPicture(
                             SvgAssetLoader('assets/oc-thinking.svg'),
@@ -126,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 20),
 
-                        // ── Judul ──
+                        //  Judul
                         const Text(
                           'Selamat datang kembali',
                           style: TextStyle(
@@ -147,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 32),
 
-                        // ── Form Passkey ──
+                        //  Form Passkey
                         _PasskeyForm(
                           controllers: _controllers,
                           focusNodes: _focusNodes,
@@ -169,9 +166,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Widget form passkey terpisah agar rebuild lebih efisien
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _PasskeyForm extends StatelessWidget {
   final List<TextEditingController> controllers;
@@ -224,10 +221,7 @@ class _PasskeyForm extends StatelessWidget {
         // Hint text
         const Text(
           'Masukkan 6 digit passkey Anda',
-          style: TextStyle(
-            fontSize: 12,
-            color: Color(0xFF94A3B8),
-          ),
+          style: TextStyle(fontSize: 12, color: Color(0xFF94A3B8)),
         ),
         const SizedBox(height: 12),
 
@@ -265,9 +259,9 @@ class _PasskeyForm extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Satu digit circle field
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _PasskeyDigitField extends StatefulWidget {
   final TextEditingController controller;
@@ -342,8 +336,8 @@ class _PasskeyDigitFieldState extends State<_PasskeyDigitField> {
             fillColor: _hasFocus
                 ? const Color(0xFFEFF6FF)
                 : isFilled
-                    ? const Color(0xFFF1F5F9)
-                    : Colors.white,
+                ? const Color(0xFFF1F5F9)
+                : Colors.white,
             contentPadding: EdgeInsets.zero,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50),
@@ -356,10 +350,7 @@ class _PasskeyDigitFieldState extends State<_PasskeyDigitField> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50),
-              borderSide: const BorderSide(
-                color: Color(0xFF0066FF),
-                width: 2,
-              ),
+              borderSide: const BorderSide(color: Color(0xFF0066FF), width: 2),
             ),
           ),
           onChanged: (value) {

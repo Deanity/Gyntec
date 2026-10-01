@@ -16,7 +16,8 @@ class SelectModuleToSendScreen extends StatefulWidget {
   const SelectModuleToSendScreen({super.key});
 
   @override
-  State<SelectModuleToSendScreen> createState() => _SelectModuleToSendScreenState();
+  State<SelectModuleToSendScreen> createState() =>
+      _SelectModuleToSendScreenState();
 }
 
 class _SelectModuleToSendScreenState extends State<SelectModuleToSendScreen> {
@@ -59,14 +60,13 @@ class _SelectModuleToSendScreenState extends State<SelectModuleToSendScreen> {
   void _onKirimPressed() {
     if (!_hasSelection) return;
 
-    final selectedModules =
-        _modules.where((m) => _selectedIds.contains(m.id)).toList();
+    final selectedModules = _modules
+        .where((m) => _selectedIds.contains(m.id))
+        .toList();
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => SendModuleScreen(
-          selectedModules: selectedModules,
-        ),
+        builder: (_) => SendModuleScreen(selectedModules: selectedModules),
       ),
     );
   }
@@ -84,7 +84,7 @@ class _SelectModuleToSendScreenState extends State<SelectModuleToSendScreen> {
       backgroundColor: const Color(0xFFF8FAFC),
       body: Stack(
         children: [
-          // ── Soft background gradient di atas ──
+          //  Soft background gradient di atas
           Positioned(
             top: 0,
             left: 0,
@@ -95,23 +95,20 @@ class _SelectModuleToSendScreenState extends State<SelectModuleToSendScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFFE8F1FF),
-                    Color(0x00E8F1FF),
-                  ],
+                  colors: [Color(0xFFE8F1FF), Color(0x00E8F1FF)],
                 ),
               ),
             ),
           ),
 
-          // ── Konten utama ──
+          //  Konten utama
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Top Bar ──
+              //  Top Bar
               _TopBar(onBack: () => Navigator.of(context).maybePop()),
 
-              // ── Header "Modul Tersedia" ──
+              //  Header "Modul Tersedia"
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 8, 20, 14),
                 child: Text(
@@ -125,7 +122,7 @@ class _SelectModuleToSendScreenState extends State<SelectModuleToSendScreen> {
                 ),
               ),
 
-              // ── Daftar modul ──
+              //  Daftar modul
               Expanded(
                 child: ListView.separated(
                   padding: const EdgeInsets.only(
@@ -148,7 +145,7 @@ class _SelectModuleToSendScreenState extends State<SelectModuleToSendScreen> {
             ],
           ),
 
-          // ── Floating "Kirim Module" button ──
+          //  Floating "Kirim Module" button
           Positioned(
             left: 20,
             right: 20,
@@ -170,9 +167,9 @@ class _SelectModuleToSendScreenState extends State<SelectModuleToSendScreen> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Top Bar — "< Pilih Module"
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _TopBar extends StatelessWidget {
   final VoidCallback onBack;
@@ -212,19 +209,16 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 // Tombol "Kirim Module" — disabled (abu-abu) jika tidak ada yang dipilih,
 // aktif (biru + glow) jika ada minimal 1 modul dipilih.
-// ─────────────────────────────────────────────────────────────────────────────
+// ─
 
 class _KirimButton extends StatelessWidget {
   final bool isEnabled;
   final VoidCallback onPressed;
 
-  const _KirimButton({
-    required this.isEnabled,
-    required this.onPressed,
-  });
+  const _KirimButton({required this.isEnabled, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -256,9 +250,7 @@ class _KirimButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
-                color: isEnabled
-                    ? Colors.white
-                    : const Color(0xFF9CA3AF),
+                color: isEnabled ? Colors.white : const Color(0xFF9CA3AF),
               ),
               child: const Text('Kirim Module'),
             ),

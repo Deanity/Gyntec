@@ -29,7 +29,8 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
   // State untuk Quiz
   int _currentQuestionIndex = 0;
   final Map<int, int> _selectedAnswers = {};
-  final Set<int> _correctGroupIndices = {}; // kelompok yang benar per pertanyaan
+  final Set<int> _correctGroupIndices =
+      {}; // kelompok yang benar per pertanyaan
 
   // Kelompok diskusi
   late List<DiscussionGroupModel> _groups;
@@ -133,9 +134,7 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
   Future<void> _startDiscussionTimer() async {
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (context) => const DiscussionTimerScreen(
-          initialMinutes: 20,
-        ),
+        builder: (context) => const DiscussionTimerScreen(initialMinutes: 20),
       ),
     );
 
@@ -183,24 +182,25 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // ── Konten utama (scrollable) ──
+          //  Konten utama (scrollable)
           Column(
             children: [
-              // ── 1. Top Header dengan Stepper ──
+              //  1. Top Header dengan Stepper
               SessionStepperHeader(
                 currentStep: _currentStep,
                 title: _headerTitle,
                 onBack: _handleBackNavigation,
               ),
 
-              // ── 2. Konten Dinamis Sesuai Step ──
+              //  2. Konten Dinamis Sesuai Step
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.only(
                     left: 20,
                     right: 20,
                     top: 16,
-                    bottom: 136, // ruang agar konten tidak tertutup floating nav
+                    bottom:
+                        136, // ruang agar konten tidak tertutup floating nav
                   ),
                   child: _buildStepContent(),
                 ),
@@ -208,7 +208,7 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
             ],
           ),
 
-          // ── 3. Floating Bottom Navigation (Pill Tabs + Tombol Aksi) ──
+          //  3. Floating Bottom Navigation (Pill Tabs + Tombol Aksi)
           Positioned(
             left: 0,
             right: 0,
@@ -234,9 +234,9 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
     };
   }
 
-  // ───────────────────────────────────────────────────────────────────────────
+  // ─
   // STEP 1: MATERI UMUM
-  // ───────────────────────────────────────────────────────────────────────────
+  // ─
   Widget _buildMateriStep() {
     final List<Widget> blocks = [];
 
@@ -255,9 +255,9 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
     );
   }
 
-  // ───────────────────────────────────────────────────────────────────────────
+  // ─
   // STEP 2: DISKUSI KELOMPOK
-  // ───────────────────────────────────────────────────────────────────────────
+  // ─
   Widget _buildDiskusiStep() {
     final gq = widget.modul.groupQuestion;
 
@@ -298,9 +298,9 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
     );
   }
 
-  // ───────────────────────────────────────────────────────────────────────────
+  // ─
   // STEP 3: QUIZ KELOMPOK
-  // ───────────────────────────────────────────────────────────────────────────
+  // ─
   Widget _buildQuizStep() {
     final quizList = widget.modul.quiz;
     final currentQ = quizList.isNotEmpty
@@ -359,36 +359,31 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
         const SizedBox(height: 4),
         const Text(
           'Silahkan pilih satu atau lebih kelompok yang menjawab dengan benar',
-          style: TextStyle(
-            fontSize: 13,
-            color: Color(0xFF64748B),
-          ),
+          style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
         ),
         const SizedBox(height: 14),
 
         // Daftar Kelompok yang Benar
-        ..._groups.map(
-          (group) {
-            final isSelected = _correctGroupIndices.contains(group.number);
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: QuizGroupSelectCard(
-                groupNumber: group.number,
-                groupName: group.name,
-                isSelected: isSelected,
-                onTap: () {
-                  setState(() {
-                    if (isSelected) {
-                      _correctGroupIndices.remove(group.number);
-                    } else {
-                      _correctGroupIndices.add(group.number);
-                    }
-                  });
-                },
-              ),
-            );
-          },
-        ),
+        ..._groups.map((group) {
+          final isSelected = _correctGroupIndices.contains(group.number);
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: QuizGroupSelectCard(
+              groupNumber: group.number,
+              groupName: group.name,
+              isSelected: isSelected,
+              onTap: () {
+                setState(() {
+                  if (isSelected) {
+                    _correctGroupIndices.remove(group.number);
+                  } else {
+                    _correctGroupIndices.add(group.number);
+                  }
+                });
+              },
+            ),
+          );
+        }),
         const SizedBox(height: 8),
       ],
     );

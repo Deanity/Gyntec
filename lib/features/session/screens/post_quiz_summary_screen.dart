@@ -57,13 +57,15 @@ class _PostQuizSummaryScreenState extends State<PostQuizSummaryScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // ── Konten utama (scrollable) ──
+            //  Konten utama (scrollable)
             Column(
               children: [
-                // ── Top Navigation Bar ("< Post Quiz") ──
+                //  Top Navigation Bar ("< Post Quiz")
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   child: Row(
                     children: [
                       GestureDetector(
@@ -92,14 +94,15 @@ class _PostQuizSummaryScreenState extends State<PostQuizSummaryScreen> {
                   ),
                 ),
 
-                // ── Scrollable Body Content ──
+                //  Scrollable Body Content
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.only(
                       left: 20,
                       right: 20,
                       top: 8,
-                      bottom: 96, // ruang agar konten tidak tertutup floating button
+                      bottom:
+                          96, // ruang agar konten tidak tertutup floating button
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,8 +145,9 @@ class _PostQuizSummaryScreenState extends State<PostQuizSummaryScreen> {
 
                         // Accordion List Kelompok
                         ...widget.groups.map((group) {
-                          final isExpanded =
-                              _expandedGroupNumbers.contains(group.number);
+                          final isExpanded = _expandedGroupNumbers.contains(
+                            group.number,
+                          );
                           final score = _groupScores[group.number] ?? 1;
 
                           return Padding(
@@ -153,7 +157,7 @@ class _PostQuizSummaryScreenState extends State<PostQuizSummaryScreen> {
                               score: score,
                               isExpanded: isExpanded,
                               onToggle: () =>
-                                   _toggleGroupExpansion(group.number),
+                                  _toggleGroupExpansion(group.number),
                             ),
                           );
                         }),
@@ -217,7 +221,7 @@ class _PostQuizSummaryScreenState extends State<PostQuizSummaryScreen> {
               ],
             ),
 
-            // ── Floating Bottom Action Button ("Kembali ke Beranda") ──
+            //  Floating Bottom Action Button ("Kembali ke Beranda")
             Positioned(
               left: 20,
               right: 20,
@@ -257,10 +261,7 @@ class _PostQuizSummaryScreenState extends State<PostQuizSummaryScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFFF0F7FF),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFF93C5FD),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFF93C5FD), width: 1),
       ),
       child: Text(
         label,
@@ -284,10 +285,7 @@ class _PostQuizSummaryScreenState extends State<PostQuizSummaryScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFFFAFAFA),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: const Color(0xFFE2E8F0),
-          width: 1.2,
-        ),
+        border: Border.all(color: const Color(0xFFE2E8F0), width: 1.2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
