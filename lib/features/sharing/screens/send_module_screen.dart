@@ -1,30 +1,28 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../components/sharing/device_select_card.dart';
-import '../components/sharing/module_preview_card.dart';
-import '../components/sharing/scanning_pulse_animation.dart';
-import '../utils/models.dart';
+import '../widgets/sharing_widgets.dart';
+import '../../../utils/models.dart';
 
-/// Screen alur pemilihan perangkat dan pengiriman modul.
+/// Screen alur pemilihan perangkat dan pengiriman modul (SendModuleScreen).
 ///
 /// Memiliki 3 tahapan visual:
 /// 1. [no_device] : Mencari perangkat (radar scanner) + Preview modul.
 /// 2. [device_found] : Perangkat ditemukan (Rama, iPad Olivia) + Pilihan perangkat + Tombol Kirim.
 /// 3. [sending_in_progress] : Animasi panah upload + Progress bar + List modul + Tombol Batal.
-class KirimModulScreen extends StatefulWidget {
+class SendModuleScreen extends StatefulWidget {
   final List<ModuleModel> selectedModules;
 
-  const KirimModulScreen({
+  const SendModuleScreen({
     super.key,
     required this.selectedModules,
   });
 
   @override
-  State<KirimModulScreen> createState() => _KirimModulScreenState();
+  State<SendModuleScreen> createState() => _SendModuleScreenState();
 }
 
-class _KirimModulScreenState extends State<KirimModulScreen> {
+class _SendModuleScreenState extends State<SendModuleScreen> {
   // Daftar perangkat yang terdeteksi
   final List<TargetDeviceModel> _discoveredDevices = [];
   final Set<String> _selectedDeviceIds = {};
@@ -552,3 +550,6 @@ class _TopBar extends StatelessWidget {
     );
   }
 }
+
+/// Backward compatibility alias
+typedef KirimModulScreen = SendModuleScreen;

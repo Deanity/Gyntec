@@ -3,13 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../components/sharing/module_preview_card.dart';
-import '../components/sharing/scanning_pulse_animation.dart';
-import '../components/sharing/sharing_mode_tab.dart';
-import '../utils/models.dart';
-import 'pilih_modul_screen.dart';
+import '../widgets/sharing_widgets.dart';
+import '../../../utils/models.dart';
+import 'select_module_screen.dart';
 
-/// Tahapan alur penerimaan modul pada BerbagiModulScreen
+/// Tahapan alur penerimaan modul pada SharingHubScreen
 enum ReceiveStage {
   scanning,        // Mencari perangkat (scaning.png)
   requestReceived, // Menerima permintaan kiriman file (recive module.png)
@@ -17,19 +15,19 @@ enum ReceiveStage {
   done,            // Penerimaan file selesai (recive-done.png)
 }
 
-/// Screen "Berbagi Module"
+/// Screen "Berbagi Module" / Sharing Hub
 /// Mendukung mode Terima dan Kirim:
 /// - Mode Terima: Otomatis mendeteksi kiriman masuk, menampilkan preview modul yang dibagikan,
 ///   dan memproses penerimaan file hingga selesai sesuai desain mockup.
-/// - Mode Kirim: Menavigasi user ke PilihModulScreen.
-class BerbagiModulScreen extends StatefulWidget {
-  const BerbagiModulScreen({super.key});
+/// - Mode Kirim: Menavigasi user ke SelectModuleScreen.
+class SharingHubScreen extends StatefulWidget {
+  const SharingHubScreen({super.key});
 
   @override
-  State<BerbagiModulScreen> createState() => _BerbagiModulScreenState();
+  State<SharingHubScreen> createState() => _SharingHubScreenState();
 }
 
-class _BerbagiModulScreenState extends State<BerbagiModulScreen> {
+class _SharingHubScreenState extends State<SharingHubScreen> {
   SharingMode _activeMode = SharingMode.terima;
   ReceiveStage _stage = ReceiveStage.scanning;
 
@@ -443,7 +441,7 @@ class _BerbagiModulScreenState extends State<BerbagiModulScreen> {
                   if (mode == SharingMode.kirim) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => const PilihModulScreen(),
+                        builder: (_) => const SelectModuleScreen(),
                       ),
                     );
                   } else {
@@ -581,3 +579,6 @@ class _TopBar extends StatelessWidget {
     );
   }
 }
+
+/// Backward compatibility alias
+typedef BerbagiModulScreen = SharingHubScreen;

@@ -2,23 +2,24 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../components/sharing/module_select_card.dart';
-import '../utils/models.dart';
-import 'kirim_modul_screen.dart';
+import '../widgets/sharing_widgets.dart';
+import '../../../utils/models.dart';
+import 'send_module_screen.dart';
 
-/// Screen "Pilih Module" — muncul ketika user menekan tab "Kirim"
-/// di BerbagiModulScreen, lalu berpindah ke screen ini.
+/// Screen "Pilih Module" / Select Module Screen
+/// Muncul ketika user menekan tab "Kirim" di SharingHubScreen,
+/// lalu berpindah ke screen ini.
 ///
 /// User bisa memilih satu atau lebih modul yang akan dikirim.
 /// Tombol "Kirim Module" aktif (biru) hanya jika minimal 1 modul dipilih.
-class PilihModulScreen extends StatefulWidget {
-  const PilihModulScreen({super.key});
+class SelectModuleScreen extends StatefulWidget {
+  const SelectModuleScreen({super.key});
 
   @override
-  State<PilihModulScreen> createState() => _PilihModulScreenState();
+  State<SelectModuleScreen> createState() => _SelectModuleScreenState();
 }
 
-class _PilihModulScreenState extends State<PilihModulScreen> {
+class _SelectModuleScreenState extends State<SelectModuleScreen> {
   List<ModuleModel> _modules = [];
   final Set<String> _selectedIds = {};
   bool _isLoading = true;
@@ -63,7 +64,7 @@ class _PilihModulScreenState extends State<PilihModulScreen> {
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => KirimModulScreen(
+        builder: (_) => SendModuleScreen(
           selectedModules: selectedModules,
         ),
       ),
@@ -267,3 +268,6 @@ class _KirimButton extends StatelessWidget {
     );
   }
 }
+
+/// Backward compatibility alias
+typedef PilihModulScreen = SelectModuleScreen;

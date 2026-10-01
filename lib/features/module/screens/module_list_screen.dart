@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../utils/models.dart';
-import '../../../mainScreen/berbagi_modul_screen.dart';
+import '../../sharing/screens/sharing_hub_screen.dart';
 import 'module_detail_screen.dart';
 
 /// Screen tab "Modul" — menampilkan daftar semua modul yang tersedia,
@@ -149,7 +149,7 @@ class _ModuleListScreenState extends State<ModuleListScreen> {
             child: _FloatingAddButton(
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => const BerbagiModulScreen(),
+                  builder: (_) => const SharingHubScreen(),
                 ),
               ),
             ),

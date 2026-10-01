@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../utils/models.dart';
+import '../../../utils/models.dart';
 
 /// Card preview modul yang sedang / akan dikirim.
 /// Ditampilkan di bagian "Module yang Dikirim" pada screen pemilihan perangkat

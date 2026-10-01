@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../utils/models.dart';
+import '../../../utils/models.dart';
 
 /// Card modul yang bisa dipilih (selectable) untuk flow pengiriman modul.
 /// Reusable — bisa digunakan di screen mana saja yang butuh multi-select modul.
