@@ -350,21 +350,24 @@ class _KirimModulScreenState extends State<KirimModulScreen> {
             color: Color(0xFF64748B),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 18),
 
-        // Progress Bar
-        Container(
-          width: 250,
-          height: 6,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF1F5F9),
-            borderRadius: BorderRadius.circular(50),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: LinearProgressIndicator(
-            value: _sendProgress,
-            backgroundColor: const Color(0xFFF1F5F9),
-            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0066FF)),
+        // Progress Bar (full width matching design)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Container(
+            width: double.infinity,
+            height: 6,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: LinearProgressIndicator(
+              value: _sendProgress,
+              backgroundColor: const Color(0xFFF1F5F9),
+              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF0066FF)),
+            ),
           ),
         ),
       ],
