@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../components/sharing/scanning_pulse_animation.dart';
 import '../components/sharing/scanning_status_view.dart';
 import '../components/sharing/sharing_mode_tab.dart';
+import 'pilih_modul_screen.dart';
 
 /// Screen "Berbagi Module" — tampil setelah user menekan FAB (+) di ModulScreen.
 ///
@@ -76,7 +77,17 @@ class _BerbagiModulScreenState extends State<BerbagiModulScreen> {
           // ── Bottom Tab (Terima / Kirim) ──
           SharingModeTab(
             activeMode: _activeMode,
-            onModeChanged: (mode) => setState(() => _activeMode = mode),
+            onModeChanged: (mode) {
+              if (mode == SharingMode.kirim) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const PilihModulScreen(),
+                  ),
+                );
+              } else {
+                setState(() => _activeMode = mode);
+              }
+            },
           ),
         ],
       ),
