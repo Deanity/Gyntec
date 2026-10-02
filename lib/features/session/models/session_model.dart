@@ -26,4 +26,14 @@ class SessionModel {
         subject: json['subject'] as String,
         durationMinutes: json['durationMinutes'] as int,
       );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'date': date,
+        'level': level,
+        'title': title,
+        'studentCount': studentCount,
+        'subject': subject,
+        'durationMinutes': durationMinutes,
+      };
 }

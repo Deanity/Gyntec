@@ -7,6 +7,7 @@ import '../../../utils/models.dart';
 import '../widgets/home_widgets.dart';
 import '../../module/screens/module_detail_screen.dart';
 import '../../module/screens/module_list_screen.dart';
+import '../../student/screens/student_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -254,8 +255,8 @@ class _HomeScreenState extends State<HomeScreen> {
               //  Tab 2: Sesi Belajar (placeholder)
               const _PlaceholderTab(label: 'Sesi Belajar'),
 
-              //  Tab 3: Murid (placeholder)
-              const _PlaceholderTab(label: 'Murid'),
+              //  Tab 3: Murid
+              const StudentScreen(),
             ],
           ),
 

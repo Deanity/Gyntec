@@ -179,17 +179,37 @@
     ]
   },
   "students": [
-    { "id": "std_1", "name": "Reza Oktovian" },
-    { "id": "std_2", "name": "Reza Ismail" },
-    { "id": "std_3", "name": "Reza Supri" },
-    { "id": "std_4", "name": "Reza Kecap" },
-    { "id": "std_5", "name": "Dian Prasetya" },
-    { "id": "std_6", "name": "Fajar Nugroho" },
-    { "id": "std_7", "name": "Siti Amalia" },
-    { "id": "std_8", "name": "Andi Saputra" },
-    { "id": "std_9", "name": "Lina Marlina" },
-    { "id": "std_10", "name": "Rizky Hidayat" },
-    { "id": "std_11", "name": "Putri Wulandari" },
-    { "id": "std_12", "name": "Budi Santoso" }
+    {
+      "id": "std_1", "name": "Anis Suseva", "sessionCount": 12,
+      "sessions": [
+        { "id": "s1", "date": "Senin, 16/12/2022", "level": "SMA", "title": "Ekosistem Hutan & Hewan", "studentCount": 8, "subject": "IPA", "durationMinutes": 45 },
+        { "id": "s2", "date": "Senin, 09/12/2022", "level": "SMP", "title": "Sistem Pencernaan Manusia", "studentCount": 12, "subject": "IPA", "durationMinutes": 60 },
+        { "id": "s3", "date": "Rabu, 04/12/2022", "level": "SMK", "title": "Elektronika Dasar", "studentCount": 20, "subject": "TKJ", "durationMinutes": 90 }
+      ]
+    },
+    {
+      "id": "std_2", "name": "Bayu Yuda", "sessionCount": 12,
+      "sessions": [
+        { "id": "s1", "date": "Senin, 16/12/2022", "level": "SMA", "title": "Ekosistem Hutan & Hewan", "studentCount": 8, "subject": "IPA", "durationMinutes": 45 },
+        { "id": "s2", "date": "Senin, 09/12/2022", "level": "SMP", "title": "Sistem Pencernaan Manusia", "studentCount": 12, "subject": "IPA", "durationMinutes": 60 },
+        { "id": "s3", "date": "Rabu, 04/12/2022", "level": "SMK", "title": "Elektronika Dasar", "studentCount": 20, "subject": "TKJ", "durationMinutes": 90 }
+      ]
+    },
+    {
+      "id": "std_3", "name": "Candra Mahesa", "sessionCount": 12,
+      "sessions": [
+        { "id": "s1", "date": "Senin, 16/12/2022", "level": "SMA", "title": "Ekosistem Hutan & Hewan", "studentCount": 8, "subject": "IPA", "durationMinutes": 45 },
+        { "id": "s2", "date": "Senin, 09/12/2022", "level": "SMP", "title": "Sistem Pencernaan Manusia", "studentCount": 12, "subject": "IPA", "durationMinutes": 60 },
+        { "id": "s4", "date": "Senin, 25/11/2022", "level": "SMA", "title": "Anggota Tubuh Manusia", "studentCount": 10, "subject": "IPA", "durationMinutes": 45 }
+      ]
+    },
+    {
+      "id": "std_4", "name": "Deandra Wijaya", "sessionCount": 12,
+      "sessions": [
+        { "id": "s1", "date": "Senin, 16/12/2022", "level": "SMA", "title": "Ekosistem Hutan & Hewan", "studentCount": 8, "subject": "IPA", "durationMinutes": 45 },
+        { "id": "s3", "date": "Rabu, 04/12/2022", "level": "SMK", "title": "Elektronika Dasar", "studentCount": 20, "subject": "TKJ", "durationMinutes": 90 },
+        { "id": "s4", "date": "Senin, 25/11/2022", "level": "SMA", "title": "Anggota Tubuh Manusia", "studentCount": 10, "subject": "IPA", "durationMinutes": 45 }
+      ]
+    }
   ]
 }
