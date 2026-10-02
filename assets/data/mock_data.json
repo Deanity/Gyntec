@@ -37,6 +37,110 @@
       "durationMinutes": 90
     }
   ],
+  "sessionHistory": [
+    {
+      "id": "sh1",
+      "date": "Senin, 16/12/2022",
+      "level": "SMA",
+      "title": "Ekosistem Hutan & Hewan",
+      "studentCount": 8,
+      "subject": "IPA",
+      "durationMinutes": 45,
+      "totalQuestions": 30,
+      "discussionCount": 1,
+      "groups": [
+        {
+          "name": "Kelompok Rajawali",
+          "totalPoints": 3,
+          "members": ["Reza Oktovian", "Reza Ismail", "Reza Supri", "Reza Kecap"]
+        },
+        {
+          "name": "Kelompok Garuda",
+          "totalPoints": 2,
+          "members": ["Anis Suseva", "Bayu Yuda"]
+        },
+        {
+          "name": "Kelompok Merpati",
+          "totalPoints": 1,
+          "members": ["Candra Mahesa", "Deandra Wijaya"]
+        }
+      ],
+      "members": ["Reza Kecap", "Reza Arap", "Ryan Pekalongan", "Anis Suseva", "Bayu Yuda", "Candra Mahesa", "Deandra Wijaya", "Reza Oktovian"]
+    },
+    {
+      "id": "sh2",
+      "date": "Senin, 09/12/2022",
+      "level": "SMP",
+      "title": "Sistem Pencernaan Manusia",
+      "studentCount": 12,
+      "subject": "IPA",
+      "durationMinutes": 60,
+      "totalQuestions": 25,
+      "discussionCount": 1,
+      "groups": [
+        {
+          "name": "Kelompok Elang",
+          "totalPoints": 4,
+          "members": ["Anis Suseva", "Bayu Yuda", "Candra Mahesa"]
+        },
+        {
+          "name": "Kelompok Harimau",
+          "totalPoints": 2,
+          "members": ["Deandra Wijaya", "Reza Oktovian"]
+        }
+      ],
+      "members": ["Anis Suseva", "Bayu Yuda", "Candra Mahesa", "Deandra Wijaya", "Reza Oktovian", "Reza Ismail"]
+    },
+    {
+      "id": "sh3",
+      "date": "Rabu, 04/12/2022",
+      "level": "SMK",
+      "title": "Elektronika Dasar",
+      "studentCount": 20,
+      "subject": "TKJ",
+      "durationMinutes": 90,
+      "totalQuestions": 20,
+      "discussionCount": 2,
+      "groups": [
+        {
+          "name": "Kelompok Singa",
+          "totalPoints": 5,
+          "members": ["Reza Supri", "Reza Kecap", "Anis Suseva"]
+        },
+        {
+          "name": "Kelompok Macan",
+          "totalPoints": 3,
+          "members": ["Bayu Yuda", "Candra Mahesa", "Deandra Wijaya"]
+        }
+      ],
+      "members": ["Reza Supri", "Reza Kecap", "Anis Suseva", "Bayu Yuda", "Candra Mahesa", "Deandra Wijaya"]
+    },
+    {
+      "id": "sh4",
+      "date": "Senin, 25/11/2022",
+      "level": "SMA",
+      "title": "Anggota Tubuh Manusia",
+      "studentCount": 10,
+      "subject": "IPA",
+      "durationMinutes": 45,
+      "totalQuestions": 30,
+      "discussionCount": 1,
+      "groups": [
+        {
+          "name": "Kelompok Kancil",
+          "totalPoints": 4,
+          "members": ["Reza Oktovian", "Reza Ismail", "Anis Suseva"]
+        },
+        {
+          "name": "Kelompok Rusa",
+          "totalPoints": 2,
+          "members": ["Bayu Yuda", "Deandra Wijaya"]
+        }
+      ],
+      "members": ["Reza Oktovian", "Reza Ismail", "Anis Suseva", "Bayu Yuda", "Deandra Wijaya", "Candra Mahesa"]
+    }
+  ],
+
   "modules": [
     {
       "id": "m1",

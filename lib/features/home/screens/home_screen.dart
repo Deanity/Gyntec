@@ -8,6 +8,7 @@ import '../widgets/home_widgets.dart';
 import '../../module/screens/module_detail_screen.dart';
 import '../../module/screens/module_list_screen.dart';
 import '../../student/screens/student_screen.dart';
+import '../../session/screens/session_history_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -252,8 +253,8 @@ class _HomeScreenState extends State<HomeScreen> {
               //  Tab 1: Modul
               const ModulScreen(),
 
-              //  Tab 2: Sesi Belajar (placeholder)
-              const _PlaceholderTab(label: 'Sesi Belajar'),
+              //  Tab 2: Sesi Belajar
+              const SessionHistoryScreen(),
 
               //  Tab 3: Murid
               const StudentScreen(),
@@ -276,22 +277,3 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-/// Placeholder sederhana untuk tab yang belum diimplementasi
-class _PlaceholderTab extends StatelessWidget {
-  final String label;
-  const _PlaceholderTab({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 16,
-          color: Color(0xFF94A3B8),
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}
