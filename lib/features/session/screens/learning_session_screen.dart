@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/core.dart';
 import '../../module/widgets/module_widgets.dart';
 import '../widgets/session_widgets.dart';
 import '../../../utils/models.dart';
@@ -202,7 +203,15 @@ class _LearningSessionScreenState extends State<LearningSessionScreen> {
                     bottom:
                         136, // ruang agar konten tidak tertutup floating nav
                   ),
-                  child: _buildStepContent(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const AppOfflineBanner(
+                        padding: EdgeInsets.only(bottom: 16),
+                      ),
+                      _buildStepContent(),
+                    ],
+                  ),
                 ),
               ),
             ],

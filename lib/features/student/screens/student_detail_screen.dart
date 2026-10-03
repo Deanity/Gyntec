@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/widgets/level_badge.dart';
+import '../../../core/core.dart';
 import '../../session/models/student_model.dart';
 import '../../session/models/session_model.dart';
 
@@ -94,6 +93,14 @@ class StudentDetailScreen extends StatelessWidget {
                   const SizedBox(height: 28),
                 ],
               ),
+            ),
+          ),
+
+          // Offline Banner
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: AppOfflineBanner(padding: EdgeInsets.zero),
             ),
           ),
 

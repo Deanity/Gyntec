@@ -27,49 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ModuleModel> _modules = [];
   bool _isLoading = true;
 
-  // Konektivitas jaringan
-  bool _isOffline = false;
-  StreamSubscription<bool>? _connectivitySub;
-  Timer? _pollTimer;
-
   @override
   void initState() {
     super.initState();
     _loadData();
-    _initConnectivity();
-  }
-
-  @override
-  void dispose() {
-    _connectivitySub?.cancel();
-    _pollTimer?.cancel();
-    super.dispose();
-  }
-
-  /// Cek status awal, subscribe stream, dan mulai polling fallback tiap 4 detik.
-  /// Polling diperlukan karena beberapa HP Android tidak fire stream dengan reliable.
-  Future<void> _initConnectivity() async {
-    final online = await ConnectivityService.instance.isOnline();
-    if (mounted) setState(() => _isOffline = !online);
-
-    // Subscribe stream perubahan
-    _connectivitySub = ConnectivityService.instance.onStatusChanged.listen((
-      isOnline,
-    ) {
-      if (mounted) setState(() => _isOffline = !isOnline);
-    });
-
-    // Polling fallback setiap 4 detik
-    _pollTimer = Timer.periodic(const Duration(seconds: 4), (_) async {
-      final online = await ConnectivityService.instance.isOnline();
-      if (mounted) setState(() => _isOffline = !online);
-    });
   }
 
   /// Dipanggil saat user pull-to-refresh — cek koneksi secara manual.
   Future<void> _refreshConnectivity() async {
-    final online = await ConnectivityService.instance.isOnline();
-    if (mounted) setState(() => _isOffline = !online);
+    await ConnectivityService.instance.isOnline();
   }
 
   /// Membaca dan mem-parse data.json dari assets.
@@ -157,32 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(height: 20),
 
                               //  Banner offline
-                              AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
-                                transitionBuilder: (child, animation) =>
-                                    SizeTransition(
-                                      sizeFactor: animation,
-                                      axisAlignment: -1,
-                                      child: FadeTransition(
-                                        opacity: animation,
-                                        child: child,
-                                      ),
-                                    ),
-                                child: _isOffline
-                                    ? Padding(
-                                        key: const ValueKey('offline-banner'),
-                                        padding: const EdgeInsets.only(
-                                          bottom: 20,
-                                        ),
-                                        child: OfflineBannerCard(
-                                          title: _banner!.title,
-                                          description: _banner!.description,
-                                          savedModules: _banner!.savedModules,
-                                        ),
-                                      )
-                                    : const SizedBox.shrink(
-                                        key: ValueKey('no-banner'),
-                                      ),
+                              AppOfflineBanner(
+                                title: _banner?.title,
+                                description: _banner?.description,
+                                savedModules: _banner?.savedModules,
                               ),
 
                               //  Sesi Belajar Terakhir header

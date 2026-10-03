@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/widgets/level_badge.dart';
+import '../../../core/core.dart';
 import '../models/session_history_model.dart';
 import 'session_history_detail_screen.dart';
 
@@ -53,15 +52,22 @@ class _SessionHistoryScreenState extends State<SessionHistoryScreen> {
           // Header
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-              child: Text(
-                'Sesi Belajar Terakhir',
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                  letterSpacing: -0.3,
-                ),
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Sesi Belajar Terakhir',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  AppOfflineBanner(padding: EdgeInsets.zero),
+                ],
               ),
             ),
           ),

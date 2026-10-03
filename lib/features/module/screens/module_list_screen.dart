@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import '../../../core/core.dart';
 import '../../../utils/models.dart';
 import '../../sharing/screens/sharing_hub_screen.dart';
 import 'module_detail_screen.dart';
@@ -94,7 +95,11 @@ class _ModuleListScreenState extends State<ModuleListScreen> {
                     onChanged: _onSearchChanged,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
+                  child: AppOfflineBanner(padding: EdgeInsets.zero),
+                ),
+                const SizedBox(height: 20),
 
                 //  Header "Modul Tersedia"
                 Padding(

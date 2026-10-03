@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/widgets/level_badge.dart';
+import '../../../core/core.dart';
 import '../models/session_history_model.dart';
 
 /// Halaman detail riwayat sesi belajar.
@@ -112,7 +111,15 @@ class _SessionHistoryDetailScreenState
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 28)),
+          // ── Offline Banner ──────────────────────────────────────────
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: AppOfflineBanner(padding: EdgeInsets.zero),
+            ),
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
           // ── Section Kelompok ──────────────────────────────────────────
           SliverToBoxAdapter(

@@ -142,7 +142,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 1.3,
                           ),
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 16),
+                        const AppOfflineBanner(
+                          padding: EdgeInsets.zero,
+                        ),
+                        const SizedBox(height: 16),
 
                         //  Form Passkey
                         _PasskeyForm(

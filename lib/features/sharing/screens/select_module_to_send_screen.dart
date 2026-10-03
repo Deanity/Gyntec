@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import '../../../core/core.dart';
 import '../widgets/sharing_widgets.dart';
 import '../../../utils/models.dart';
 import 'send_module_screen.dart';
@@ -107,6 +108,11 @@ class _SelectModuleToSendScreenState extends State<SelectModuleToSendScreen> {
             children: [
               //  Top Bar
               _TopBar(onBack: () => Navigator.of(context).maybePop()),
+
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: AppOfflineBanner(padding: EdgeInsets.zero),
+              ),
 
               //  Header "Modul Tersedia"
               const Padding(

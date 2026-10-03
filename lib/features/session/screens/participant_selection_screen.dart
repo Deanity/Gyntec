@@ -243,6 +243,8 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 14),
+                            const AppOfflineBanner(padding: EdgeInsets.zero),
                           ],
                         ),
                       ),

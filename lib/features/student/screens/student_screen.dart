@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'student_detail_screen.dart';
 import 'add_student_screen.dart';
-import '../../../core/constants/app_colors.dart';
+import '../../../core/core.dart';
 import '../../session/models/student_model.dart';
 import '../widgets/student_list_item.dart';
 
@@ -86,6 +86,14 @@ class _StudentScreenState extends State<StudentScreen> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                   child: _SearchBar(controller: _searchController),
+                ),
+              ),
+
+              // Offline banner
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
+                  child: AppOfflineBanner(padding: EdgeInsets.zero),
                 ),
               ),
 

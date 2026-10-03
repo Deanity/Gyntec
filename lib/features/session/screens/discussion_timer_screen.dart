@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../../core/core.dart';
 
 /// Fullscreen timer untuk sesi diskusi kelompok:
 /// - Start state (running): Menampilkan countdown (default 20:00) dan tombol putih "Selesai"
@@ -119,6 +120,14 @@ class _DiscussionTimerScreenState extends State<DiscussionTimerScreen> {
         body: SafeArea(
           child: Stack(
             children: [
+              // Offline banner di bagian atas timer jika offline
+              const Positioned(
+                top: 12,
+                left: 20,
+                right: 20,
+                child: AppOfflineBanner(padding: EdgeInsets.zero),
+              ),
+
               // Konten Tengah: Timer dan Tombol Selesai / 5+ Menit
               Center(
                 child: Padding(

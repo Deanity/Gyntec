@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import '../services/connectivity_service.dart';
 
 /// Banner yang tampil saat aplikasi berjalan dalam mode luring (offline).
 /// Menampilkan ikon, judul, deskripsi, dan jumlah modul tersimpan.
@@ -10,9 +11,10 @@ class OfflineBannerCard extends StatelessWidget {
 
   const OfflineBannerCard({
     super.key,
-    required this.title,
-    required this.description,
-    required this.savedModules,
+    this.title = 'Anda sedang dalam mode luring',
+    this.description =
+        'Data Anda tersimpan secara lokal. Bagikan modul kepada tutor di sekitar Anda melalui Bluetooth.',
+    this.savedModules = 8,
   });
 
   @override
@@ -84,6 +86,55 @@ class OfflineBannerCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Widget banner offline adaptif yang otomatis mendengarkan [ConnectivityService].
+/// Tampil dengan animasi halus (SizeTransition + FadeTransition) saat perangkat offline,
+/// dan otomatis menghilang saat perangkat online.
+class AppOfflineBanner extends StatelessWidget {
+  final String? title;
+  final String? description;
+  final int? savedModules;
+  final EdgeInsetsGeometry padding;
+
+  const AppOfflineBanner({
+    super.key,
+    this.title,
+    this.description,
+    this.savedModules,
+    this.padding = const EdgeInsets.only(bottom: 20),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: ConnectivityService.instance.isOfflineNotifier,
+      builder: (context, isOffline, _) {
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (child, animation) => SizeTransition(
+            sizeFactor: animation,
+            axisAlignment: -1,
+            child: FadeTransition(opacity: animation, child: child),
+          ),
+          child: isOffline
+              ? Padding(
+                  key: const ValueKey('app-offline-banner-visible'),
+                  padding: padding,
+                  child: OfflineBannerCard(
+                    title: title ?? 'Anda sedang dalam mode luring',
+                    description: description ??
+                        'Data Anda tersimpan secara lokal. Bagikan modul kepada tutor di sekitar Anda melalui Bluetooth.',
+                    savedModules: savedModules ?? 8,
+                  ),
+                )
+              : const SizedBox.shrink(
+                  key: ValueKey('app-offline-banner-hidden'),
+                ),
+        );
+      },
     );
   }
 }

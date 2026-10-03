@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import '../../../core/constants/app_colors.dart';
+import '../../../core/core.dart';
 import '../../session/models/student_model.dart';
 
 /// Screen tambah peserta baru.
@@ -140,6 +140,11 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                   ),
                 ],
               ),
+            ),
+
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 12, 20, 0),
+              child: AppOfflineBanner(padding: EdgeInsets.zero),
             ),
 
             // ── Spacer (area atas yang kosong & gelap) ─────────────────────

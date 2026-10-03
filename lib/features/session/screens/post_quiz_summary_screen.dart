@@ -130,7 +130,9 @@ class _PostQuizSummaryScreenState extends State<PostQuizSummaryScreen> {
                             _buildBadge('${modul.discussionCount} Diskusi'),
                           ],
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
+                        const AppOfflineBanner(padding: EdgeInsets.zero),
+                        const SizedBox(height: 20),
 
                         // Section: Kelompok
                         const Text(

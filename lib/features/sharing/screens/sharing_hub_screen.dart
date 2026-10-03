@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import '../../../core/core.dart';
 import '../widgets/sharing_widgets.dart';
 import '../../../utils/models.dart';
 import 'select_module_to_send_screen.dart';
@@ -186,6 +187,10 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const AppOfflineBanner(
+                          padding: EdgeInsets.only(bottom: 16),
+                        ),
+
                         //  Bagian Radar & Status
                         Center(
                           child: AnimatedSwitcher(

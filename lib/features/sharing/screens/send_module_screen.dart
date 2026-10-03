@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import '../../../core/core.dart';
 import '../widgets/sharing_widgets.dart';
 import '../../../utils/models.dart';
 
@@ -180,6 +181,10 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const AppOfflineBanner(
+                          padding: EdgeInsets.only(bottom: 16),
+                        ),
+
                         //  Bagian Atas: Animasi Radar & Status
                         Center(
                           child: AnimatedSwitcher(
