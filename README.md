@@ -1,75 +1,90 @@
-# Gyntec
+<p align="center">
+  <img src="assets/showcase/image.png" alt="Gyntec Apps" width="100%" />
+</p>
 
-Gyntec adalah aplikasi mobile berbasis Flutter yang dirancang untuk memfasilitasi proses pembelajaran interaktif di lingkungan pendidikan. Aplikasi ini memungkinkan seorang pengajar untuk mengelola sesi belajar secara terstruktur, mulai dari penyampaian materi, diskusi kelompok, hingga evaluasi melalui kuis — semuanya dalam satu alur yang terpadu.
+<h1 align="center">Gyntec</h1>
 
-## Gambaran Umum
+<p align="center">
+  Aplikasi pendamping pengajar untuk sesi belajar interaktif di kelas.<br />
+  Materi, diskusi kelompok, dan kuis dalam satu alur yang terpadu.
+</p>
 
-Aplikasi ini dibangun dengan pendekatan mobile-first untuk mendukung kegiatan belajar mengajar secara langsung di kelas. Pengajar berperan sebagai operator utama yang menjalankan sesi, sementara peserta didik mengikuti alur pembelajaran yang dipandu melalui layar.
+<p align="center">
+  <img src="https://img.shields.io/badge/Flutter-3.41.6-02569B?style=flat-square" alt="Flutter" />
+  <img src="https://img.shields.io/badge/Dart-3.11.4-0175C2?style=flat-square" alt="Dart" />
+  <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-3DDC84?style=flat-square" alt="Platform" />
+  <img src="https://img.shields.io/badge/Versi-1.0.0-111111?style=flat-square" alt="Versi" />
+</p>
 
-Fitur offline detection memastikan pengajar selalu mengetahui status koneksi jaringan perangkat, sehingga pengelolaan sesi tetap dapat berjalan dengan baik di lingkungan dengan koneksi terbatas.
+## Tentang Gyntec
+
+Gyntec adalah aplikasi mobile berbasis Flutter yang dirancang untuk memfasilitasi proses pembelajaran interaktif di lingkungan pendidikan. Pengajar berperan sebagai operator utama yang menjalankan sesi, sementara peserta didik mengikuti alur pembelajaran yang dipandu langsung melalui layar.
+
+Aplikasi ini dibangun dengan pendekatan mobile-first dan offline-friendly. Data modul tersimpan secara lokal sehingga sesi tetap dapat berjalan di lingkungan dengan koneksi terbatas, sementara status jaringan selalu ditampilkan agar pengajar mengetahui kondisi perangkat setiap saat.
 
 ## Fitur Utama
 
-**Manajemen Modul**
-Pengajar dapat melihat daftar modul pembelajaran yang tersedia beserta detail kontennya, termasuk materi teks, pertanyaan diskusi kelompok, dan soal kuis.
+### Manajemen Modul
+Pengajar dapat menelusuri daftar modul pembelajaran beserta detail kontennya, mulai dari materi teks dan gambar, pertanyaan diskusi kelompok, hingga pratinjau soal kuis.
 
-**Manajemen Peserta**
-Sebelum memulai sesi, pengajar menambahkan peserta yang akan mengikuti pembelajaran. Peserta terbagi ke dalam kelompok secara otomatis oleh sistem saat sesi diskusi dimulai.
+### Manajemen Peserta
+Data siswa dapat ditambahkan, dilihat, dan dikelola melalui halaman khusus. Sebelum sesi dimulai, pengajar memilih peserta yang hadir, lalu sistem membagi mereka ke dalam kelompok secara otomatis.
 
-**Alur Sesi Pembelajaran (3 Tahap)**
+### Sesi Pembelajaran Tiga Tahap
 
-Tahap pertama adalah penyampaian materi, di mana pengajar mempresentasikan konten modul kepada peserta. Tahap kedua adalah diskusi kelompok yang dilengkapi dengan timer countdown. Saat timer berjalan, peserta berdiskusi dalam kelompok masing-masing. Setelah waktu habis, sistem secara otomatis melanjutkan ke tahap ketiga yaitu kuis interaktif. Pada tahap kuis, pengajar memandu peserta menjawab setiap soal dan menandai kelompok yang memberikan jawaban benar.
+| Tahap | Keterangan |
+|:--|:--|
+| 1. Materi | Pengajar mempresentasikan konten modul kepada peserta. |
+| 2. Diskusi | Peserta berdiskusi dalam kelompok dengan timer countdown layar penuh. Setelah waktu habis, sesi otomatis berlanjut ke tahap kuis. |
+| 3. Kuis | Soal ditampilkan satu per satu. Pengajar menandai kelompok yang menjawab benar, lalu menyelesaikan kuis melalui modal konfirmasi. |
 
-**Kuis Interaktif**
-Soal kuis ditampilkan satu per satu dengan navigasi Sebelumnya dan Selanjutnya. Setiap soal memiliki pilihan jawaban yang dapat dipilih, serta panel pemilihan kelompok yang menjawab dengan benar. Saat semua soal telah dijawab, pengajar dapat menyelesaikan kuis melalui konfirmasi modal.
+### Rekap dan Riwayat Sesi
+Setelah sesi selesai, ditampilkan rekap berisi informasi modul, perolehan poin setiap kelompok, dan daftar anggota masing-masing kelompok. Seluruh sesi yang telah berjalan tersimpan di halaman riwayat dan dapat dibuka kembali secara detail.
 
-**Rekap Pasca Kuis**
-Setelah sesi selesai, ditampilkan halaman rekap yang merangkum informasi modul, perolehan poin setiap kelompok, dan daftar anggota masing-masing kelompok.
+### Berbagi Modul
+Modul dapat dikirim dan diterima antar perangkat pengajar di sekitar melalui fitur berbagi, lengkap dengan tampilan pemindaian perangkat dan pratinjau modul sebelum dikirim.
 
-**Deteksi Status Jaringan**
-Banner offline ditampilkan secara otomatis di halaman utama dan halaman modul ketika perangkat tidak memiliki koneksi internet. Status diperbarui secara real-time melalui kombinasi stream event dan polling setiap 4 detik. Pengguna juga dapat menyegarkan status koneksi secara manual dengan menarik layar ke bawah (pull-to-refresh).
+### Deteksi Status Jaringan
+Banner offline muncul otomatis ketika perangkat tidak terhubung ke internet. Status diperbarui secara real-time melalui kombinasi stream event dan polling setiap 4 detik, serta dapat disegarkan manual dengan pull-to-refresh.
 
 ## Teknologi
 
 | Komponen | Keterangan |
-|---|---|
+|:--|:--|
 | Framework | Flutter 3.41.6 |
 | Bahasa | Dart 3.11.4 |
-| State Management | Stateful Widget (lokal, tanpa library eksternal) |
+| State Management | StatefulWidget (lokal, tanpa library eksternal) |
 | Ikon | lucide_icons_flutter 3.1.20 |
 | SVG | flutter_svg 2.3.0 |
 | Konektivitas | connectivity_plus 7.3.1 |
-| Data | JSON lokal via rootBundle (lib/utils/data.json) |
+| Sumber Data | JSON lokal via rootBundle (`assets/data/mock_data.json`) |
 
 ## Struktur Proyek
 
+Proyek menggunakan arsitektur berbasis fitur (feature-first). Setiap fitur memiliki folder `models`, `screens`, dan `widgets` masing-masing, sementara komponen yang dipakai bersama ditempatkan di `core`.
+
 ```
 gyntec/
-  lib/
-    main.dart                            Titik masuk aplikasi
-    mainScreen/
-      login_screen.dart                  Halaman login
-      home_screen.dart                   Halaman utama dengan daftar modul dan sesi terakhir
-      modul_materi_screen.dart           Detail modul (tab Materi, Diskusi, Kuis)
-      participant_screen.dart            Manajemen peserta sebelum sesi dimulai
-      session_learning_screen.dart       Alur sesi 3 tahap (Materi, Diskusi, Kuis)
-      discussion_timer_screen.dart       Layar timer diskusi fullscreen
-      post_quiz_screen.dart              Rekap hasil sesi
-    components/
-      common/                            Komponen umum (button, input, navbar, dll)
-      home/                              Komponen halaman utama
-      materi/                            Komponen konten materi dan kuis preview
-      peserta/                           Komponen manajemen peserta
-      session/                           Komponen alur sesi aktif
-    utils/
-      data.json                          Data modul, peserta, dan soal kuis
-      models.dart                        Definisi model data
-      connectivity_service.dart          Service deteksi status jaringan
-  test/
-    widget_test.dart                     Smoke test aplikasi
-    session_flow_test.dart               Widget test alur sesi pembelajaran
   assets/
-    MateriImage/                         Gambar pendukung konten materi
+    data/                  Data modul, peserta, dan soal kuis (mock_data.json)
+    MateriImage/           Gambar pendukung konten materi
+    showcase/              Gambar showcase aplikasi
+  lib/
+    main.dart              Titik masuk aplikasi
+    core/
+      constants/           Palet warna aplikasi
+      services/            Service deteksi status jaringan
+      utils/               Utilitas umum (keyboard, dll)
+      widgets/             Komponen bersama (button, input, top bar, nav bar, banner offline)
+    features/
+      auth/                Login dan model pengguna
+      home/                Halaman utama, sesi terakhir, dan daftar modul
+      module/              Daftar modul dan detail modul (Materi, Diskusi, Kuis)
+      student/             Daftar, detail, dan penambahan siswa
+      session/             Pemilihan peserta, sesi belajar, timer diskusi, rekap, dan riwayat
+      sharing/             Hub berbagi, pemilihan modul, dan pengiriman ke perangkat lain
+    utils/
+      models.dart          Definisi model data umum
 ```
 
 ## Alur Navigasi
@@ -77,31 +92,50 @@ gyntec/
 ```
 LoginScreen
   HomeScreen
-    ModulMateriScreen
-      ParticipantScreen
-        SessionLearningScreen
-          DiscussionTimerScreen (push/pop)
-          QuizFinishModal (dialog)
-          PostQuizScreen
-            HomeScreen (pop until first)
+    ModuleListScreen
+      ModuleDetailScreen
+        ParticipantSelectionScreen
+          LearningSessionScreen
+            DiscussionTimerScreen     (push / pop)
+            QuizFinishModal           (dialog)
+            PostQuizSummaryScreen
+              HomeScreen              (pop until first)
+    StudentScreen
+      StudentDetailScreen
+      AddStudentScreen
+    SessionHistoryScreen
+      SessionHistoryDetailScreen
+    SharingHubScreen
+      SelectModuleToSendScreen
+        SendModuleScreen
 ```
 
-## Cara Menjalankan
+## Memulai
 
-Pastikan Flutter SDK sudah terpasang pada sistem. Kemudian jalankan perintah berikut secara berurutan.
+### Prasyarat
+
+Pastikan Flutter SDK versi 3.41 atau lebih baru sudah terpasang. Verifikasi dengan perintah berikut.
 
 ```bash
+flutter doctor
+```
+
+### Instalasi dan Menjalankan
+
+```bash
+git clone https://github.com/Deanity/Gyntec.git
+cd Gyntec
 flutter pub get
 flutter run
 ```
 
-Untuk menjalankan seluruh pengujian:
+### Pengujian
 
 ```bash
 flutter test
 ```
 
-Untuk membangun APK rilis:
+### Build APK Rilis
 
 ```bash
 flutter build apk --release
@@ -111,10 +145,26 @@ File APK akan tersedia di `build/app/outputs/flutter-apk/app-release.apk`.
 
 ## Pengujian di Perangkat Fisik
 
-Aktifkan USB Debugging pada perangkat Android melalui menu Developer Options, sambungkan perangkat ke komputer via kabel USB, lalu jalankan `flutter run`. Flutter akan mendeteksi perangkat secara otomatis dan melakukan instalasi langsung.
+1. Aktifkan **USB Debugging** melalui menu Developer Options pada perangkat Android.
+2. Sambungkan perangkat ke komputer menggunakan kabel USB.
+3. Jalankan `flutter run`. Flutter akan mendeteksi perangkat dan memasang aplikasi secara otomatis.
 
-Untuk menguji fitur offline badge, aktifkan mode pesawat pada perangkat. Badge akan muncul dalam waktu maksimal 4 detik. Tarik layar ke bawah untuk memperbarui status koneksi secara instan.
+Untuk menguji banner offline, aktifkan mode pesawat pada perangkat. Banner akan muncul dalam waktu maksimal 4 detik. Tarik layar ke bawah untuk memperbarui status koneksi secara instan.
 
-## Kontribusi
+## Tentang Proyek
 
-Repositori ini bersifat privat dan dikembangkan untuk kebutuhan internal. Untuk pertanyaan atau pengembangan lebih lanjut, hubungi tim pengembang melalui saluran yang telah ditentukan.
+Gyntec dikembangkan sebagai karya untuk mengikuti kompetisi. Proyek ini lahir dari kebutuhan nyata di ruang kelas, yaitu bagaimana pengajar dapat mengelola sesi belajar interaktif secara terstruktur, tetap berjalan dalam kondisi koneksi terbatas, dan mendorong keterlibatan aktif peserta didik melalui diskusi kelompok dan kuis.
+
+Seluruh data yang digunakan dalam aplikasi ini merupakan data contoh (mock data) untuk keperluan demonstrasi.
+
+## Tim Pengembang
+
+| Nama | Peran |
+|:--|:--|
+| I Gede Dhiyo Lawe Wikantara | UI/UX & Project Manager |
+| Dendra De Tama  | Flutter Developer |
+
+
+## Lisensi
+
+Hak cipta dimiliki oleh tim pengembang. Proyek ini dibuat untuk keperluan kompetisi dan tidak diperuntukkan bagi penggunaan komersial tanpa izin.
