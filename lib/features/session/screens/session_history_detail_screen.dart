@@ -28,10 +28,7 @@ class _SessionHistoryDetailScreenState
   void initState() {
     super.initState();
     // Buka kelompok pertama by default
-    _expanded = List.generate(
-      widget.session.groups.length,
-      (i) => i == 0,
-    );
+    _expanded = List.generate(widget.session.groups.length, (i) => i == 0);
   }
 
   void _toggleGroup(int index) {
@@ -46,7 +43,7 @@ class _SessionHistoryDetailScreenState
       backgroundColor: AppColors.background,
       body: CustomScrollView(
         slivers: [
-          // ── App Bar ────────────────────────────────────────────────────
+          //  App Bar
           SliverToBoxAdapter(
             child: SafeArea(
               child: Padding(
@@ -75,7 +72,7 @@ class _SessionHistoryDetailScreenState
             ),
           ),
 
-          // ── Judul sesi ────────────────────────────────────────────────
+          //  Judul sesi
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
@@ -92,7 +89,7 @@ class _SessionHistoryDetailScreenState
             ),
           ),
 
-          // ── Badge row: level, mapel, soal, diskusi ────────────────────
+          //  Badge row: level, mapel, soal, diskusi
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
@@ -103,15 +100,13 @@ class _SessionHistoryDetailScreenState
                   LevelBadge(level: session.level),
                   _InfoBadge(label: session.subject),
                   _InfoBadge(label: '${session.totalQuestions} Soal'),
-                  _InfoBadge(
-                    label: '${session.discussionCount} Diskusi',
-                  ),
+                  _InfoBadge(label: '${session.discussionCount} Diskusi'),
                 ],
               ),
             ),
           ),
 
-          // ── Offline Banner ──────────────────────────────────────────
+          //  Offline Banner
           const SliverToBoxAdapter(
             child: Padding(
               padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
@@ -121,7 +116,7 @@ class _SessionHistoryDetailScreenState
 
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
-          // ── Section Kelompok ──────────────────────────────────────────
+          //  Section Kelompok
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -157,7 +152,7 @@ class _SessionHistoryDetailScreenState
 
           const SliverToBoxAdapter(child: SizedBox(height: 28)),
 
-          // ── Section Anggota ───────────────────────────────────────────
+          //  Section Anggota ─
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

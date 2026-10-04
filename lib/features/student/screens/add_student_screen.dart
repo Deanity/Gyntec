@@ -55,8 +55,9 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
     final trimmed = _query.trim();
     if (trimmed.isEmpty) return null;
     // sudah ada di existing → pakai _matchedStudent
-    final existsInAll = widget.existingStudents
-        .any((s) => s.name.toLowerCase().contains(trimmed.toLowerCase()));
+    final existsInAll = widget.existingStudents.any(
+      (s) => s.name.toLowerCase().contains(trimmed.toLowerCase()),
+    );
     if (existsInAll) return null;
     // sudah ada di added list
     if (_addedNames.any((n) => n.toLowerCase() == trimmed.toLowerCase())) {
@@ -65,8 +66,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
     return trimmed;
   }
 
-  String? get _suggestionName =>
-      _matchedStudent?.name ?? _freeQueryName;
+  String? get _suggestionName => _matchedStudent?.name ?? _freeQueryName;
 
   @override
   void initState() {
@@ -117,7 +117,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── AppBar ─────────────────────────────────────────────────────
+            //  AppBar ─
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 14, 20, 0),
               child: Row(
@@ -147,10 +147,10 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
               child: AppOfflineBanner(padding: EdgeInsets.zero),
             ),
 
-            // ── Spacer (area atas yang kosong & gelap) ─────────────────────
+            //  Spacer (area atas yang kosong & gelap) ─
             const Spacer(),
 
-            // ── Card "Tambah Peserta" — pinned di atas search bar ──────────
+            //  Card "Tambah Peserta" — pinned di atas search bar
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: _TambahCard(
@@ -163,7 +163,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
 
             const SizedBox(height: 16),
 
-            // ── Search bar + tombol Selesai ────────────────────────────────
+            //  Search bar + tombol Selesai
             AnimatedPadding(
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeOut,
@@ -205,8 +205,9 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                           color: AppColors.textPlaceholder,
                         ),
                         border: InputBorder.none,
-                        contentPadding:
-                            const EdgeInsets.symmetric(vertical: 15),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                        ),
                       ),
                       textInputAction: TextInputAction.done,
                       onSubmitted: (val) {
