@@ -9,7 +9,7 @@ import '../../../utils/models.dart';
 ///
 /// Memiliki 3 tahapan visual:
 /// 1. [no_device] : Mencari perangkat (radar scanner) + Preview modul.
-/// 2. [device_found] : Perangkat ditemukan (Rama, iPad Olivia) + Pilihan perangkat + Tombol Kirim.
+/// 2. [device_found] : Perangkat ditemukan + Pilihan perangkat + Tombol Kirim.
 /// 3. [sending_in_progress] : Animasi panah upload + Progress bar + List modul + Tombol Batal.
 class SendModuleScreen extends StatefulWidget {
   final List<ModuleModel> selectedModules;
@@ -21,59 +21,67 @@ class SendModuleScreen extends StatefulWidget {
 }
 
 class _SendModuleScreenState extends State<SendModuleScreen> {
-  // Daftar perangkat yang terdeteksi
   final List<TargetDeviceModel> _discoveredDevices = [];
-  final Set<String> _selectedDeviceIds = {};
+  String? _selectedDeviceId;
 
-  // Status proses pengiriman
   bool _isSending = false;
   bool _isSuccess = false;
   double _sendProgress = 0.0;
-  Timer? _progressTimer;
-  Timer? _discoveryTimer;
+
+  StreamSubscription<List<TargetDeviceModel>>? _devicesSub;
+  StreamSubscription<double>? _progressSub;
 
   @override
   void initState() {
     super.initState();
-    _startSimulatedDeviceDiscovery();
+    _initNearbyDiscovery();
   }
 
   @override
   void dispose() {
-    _discoveryTimer?.cancel();
-    _progressTimer?.cancel();
+    _devicesSub?.cancel();
+    _progressSub?.cancel();
+    NearbySharingService.instance.stop();
     super.dispose();
   }
 
-  /// Simulasi penemuan perangkat setelah 1.8 detik
-  void _startSimulatedDeviceDiscovery() {
-    _discoveryTimer = Timer(const Duration(milliseconds: 1800), () {
+  Future<void> _initNearbyDiscovery() async {
+    final service = NearbySharingService.instance;
+    await service.startDiscovery();
+
+    _devicesSub = service.devices.listen((devices) {
       if (mounted) {
         setState(() {
-          _discoveredDevices.addAll([
-            const TargetDeviceModel(id: 'dev_1', name: 'Rama (SM-1980)'),
-            const TargetDeviceModel(id: 'dev_2', name: 'iPad Olivia'),
-          ]);
-          // Default pilih perangkat pertama sesuai mockup
-          _selectedDeviceIds.add('dev_1');
+          _discoveredDevices.clear();
+          _discoveredDevices.addAll(devices);
+          if (_selectedDeviceId == null && devices.isNotEmpty) {
+            _selectedDeviceId = devices.first.id;
+          }
+        });
+      }
+    });
+
+    _progressSub = service.progress.listen((prog) {
+      if (mounted) {
+        setState(() {
+          _sendProgress = prog;
         });
       }
     });
   }
 
-  void _toggleDevice(String id) {
+  void _selectDevice(String id) {
     setState(() {
-      if (_selectedDeviceIds.contains(id)) {
-        _selectedDeviceIds.remove(id);
-      } else {
-        _selectedDeviceIds.add(id);
-      }
+      _selectedDeviceId = id;
     });
   }
 
-  /// Memulai pengiriman modul ke perangkat terpilih
-  void _startSending() {
-    if (_selectedDeviceIds.isEmpty) return;
+  Future<void> _startSending() async {
+    if (_selectedDeviceId == null) return;
+    final target = _discoveredDevices.firstWhere(
+      (d) => d.id == _selectedDeviceId,
+      orElse: () => TargetDeviceModel(id: _selectedDeviceId!, name: 'Perangkat'),
+    );
 
     setState(() {
       _isSending = true;
@@ -81,51 +89,52 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
       _sendProgress = 0.0;
     });
 
-    // Simulasi progress pengiriman dari 0% ke 100%
-    const tickInterval = Duration(milliseconds: 60);
-    _progressTimer = Timer.periodic(tickInterval, (timer) {
-      if (!mounted) {
-        timer.cancel();
-        return;
-      }
+    final result = await NearbySharingService.instance.send(
+      target,
+      widget.selectedModules,
+    );
+
+    if (!mounted) return;
+
+    if (result.success) {
       setState(() {
-        _sendProgress += 0.015;
-        if (_sendProgress >= 1.0) {
-          _sendProgress = 1.0;
-          timer.cancel();
-          _onSendingComplete();
-        }
+        _isSending = false;
+        _isSuccess = true;
+        _sendProgress = 1.0;
       });
-    });
+    } else {
+      setState(() {
+        _isSending = false;
+        _isSuccess = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result.errorMessage ?? 'Gagal mengirim module'),
+          backgroundColor: const Color(0xFFEF4444),
+        ),
+      );
+      // Restart discovery
+      NearbySharingService.instance.startDiscovery();
+    }
   }
 
   void _cancelSending() {
-    _progressTimer?.cancel();
+    NearbySharingService.instance.stop();
     setState(() {
       _isSending = false;
       _isSuccess = false;
       _sendProgress = 0.0;
     });
-  }
-
-  void _onSendingComplete() {
-    setState(() {
-      _isSending = false;
-      _isSuccess = true;
-    });
+    _initNearbyDiscovery();
   }
 
   String _getSendingTargetTitle() {
     final count = widget.selectedModules.length;
-    final selectedDevices = _discoveredDevices
-        .where((d) => _selectedDeviceIds.contains(d.id))
-        .map((d) => d.name)
-        .toList();
-
-    final targetName = selectedDevices.isNotEmpty
-        ? selectedDevices.first
-        : 'Perangkat';
-
+    final selectedDevice = _discoveredDevices.cast<TargetDeviceModel?>().firstWhere(
+          (d) => d?.id == _selectedDeviceId,
+          orElse: () => null,
+        );
+    final targetName = selectedDevice?.name ?? 'Perangkat';
     return 'Mengirim $count Module ke $targetName';
   }
 
@@ -135,7 +144,6 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
       backgroundColor: const Color(0xFFF8FAFC),
       body: Stack(
         children: [
-          //  Background soft blue gradient di atas
           Positioned(
             top: 0,
             left: 0,
@@ -151,12 +159,9 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
               ),
             ),
           ),
-
-          //  Konten Scrollable
           SafeArea(
             child: Column(
               children: [
-                // Top Bar ("< Berbagi Module")
                 _TopBar(
                   onBack: () {
                     if (_isSending) {
@@ -165,18 +170,18 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
                     } else if (_isSuccess) {
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     } else {
+                      NearbySharingService.instance.stop();
                       Navigator.of(context).maybePop();
                     }
                   },
                 ),
-
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.only(
                       left: 20,
                       right: 20,
                       top: 10,
-                      bottom: 110, // ruang floating action button
+                      bottom: 110,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,21 +189,17 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
                         const AppOfflineBanner(
                           padding: EdgeInsets.only(bottom: 16),
                         ),
-
-                        //  Bagian Atas: Animasi Radar & Status
                         Center(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 350),
                             child: _isSuccess
                                 ? _buildSuccessHeader()
                                 : _isSending
-                                ? _buildSendingHeader()
-                                : _buildScanningHeader(),
+                                    ? _buildSendingHeader()
+                                    : _buildScanningHeader(),
                           ),
                         ),
                         const SizedBox(height: 28),
-
-                        //  Pilihan Perangkat Penerima (hanya saat mode pemilihan & ada device)
                         if (!_isSending &&
                             !_isSuccess &&
                             _discoveredDevices.isNotEmpty) ...[
@@ -217,17 +218,13 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
                               padding: const EdgeInsets.only(bottom: 10),
                               child: DeviceSelectCard(
                                 device: device,
-                                isSelected: _selectedDeviceIds.contains(
-                                  device.id,
-                                ),
-                                onTap: () => _toggleDevice(device.id),
+                                isSelected: _selectedDeviceId == device.id,
+                                onTap: () => _selectDevice(device.id),
                               ),
                             ),
                           ),
                           const SizedBox(height: 16),
                         ],
-
-                        //  Bagian: Module yang Dikirim
                         const Text(
                           'Module yang Dikirim',
                           style: TextStyle(
@@ -238,8 +235,6 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
                           ),
                         ),
                         const SizedBox(height: 12),
-
-                        // List Preview Card Modul
                         ...widget.selectedModules.map(
                           (modul) => Padding(
                             padding: const EdgeInsets.only(bottom: 12),
@@ -253,8 +248,6 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
               ],
             ),
           ),
-
-          //  Floating Action Button di bawah
           Positioned(
             left: 20,
             right: 20,
@@ -272,20 +265,19 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
     );
   }
 
-  //  Header saat mencari perangkat
   Widget _buildScanningHeader() {
     return Column(
       key: const ValueKey('scanning_header'),
-      children: [
+      children: const [
         ScanningPulseAnimation(
-          color: const Color(0xFF0066FF),
+          color: Color(0xFF0066FF),
           ringCount: 3,
           size: 210,
           centerSize: 68,
-          child: const Icon(LucideIcons.search, size: 28, color: Colors.white),
+          child: Icon(LucideIcons.search, size: 28, color: Colors.white),
         ),
-        const SizedBox(height: 24),
-        const Text(
+        SizedBox(height: 24),
+        Text(
           'Mencari penerima terdekat...',
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -295,9 +287,9 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
             letterSpacing: -0.2,
           ),
         ),
-        const SizedBox(height: 6),
-        const Text(
-          'Pilih satu atau beberapa perangkat tujuan di bawah',
+        SizedBox(height: 6),
+        Text(
+          'Pastikan perangkat penerima membuka menu Terima di Berbagi Module',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
         ),
@@ -305,17 +297,16 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
     );
   }
 
-  //  Header saat proses pengiriman berlangsung
   Widget _buildSendingHeader() {
     return Column(
       key: const ValueKey('sending_header'),
       children: [
-        ScanningPulseAnimation(
-          color: const Color(0xFF0066FF),
+        const ScanningPulseAnimation(
+          color: Color(0xFF0066FF),
           ringCount: 3,
           size: 210,
           centerSize: 68,
-          child: const Icon(LucideIcons.arrowUp, size: 30, color: Colors.white),
+          child: Icon(LucideIcons.arrowUp, size: 30, color: Colors.white),
         ),
         const SizedBox(height: 24),
         Text(
@@ -335,8 +326,6 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
           style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
         ),
         const SizedBox(height: 18),
-
-        // Progress Bar (full width matching design)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Container(
@@ -360,20 +349,19 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
     );
   }
 
-  //  Header saat pengiriman berhasil (sending-done.png)
   Widget _buildSuccessHeader() {
     return Column(
       key: const ValueKey('success_header'),
-      children: [
+      children: const [
         ScanningPulseAnimation(
-          color: const Color(0xFF0066FF),
+          color: Color(0xFF0066FF),
           ringCount: 3,
           size: 210,
           centerSize: 68,
-          child: const Icon(LucideIcons.check, size: 36, color: Colors.white),
+          child: Icon(LucideIcons.check, size: 36, color: Colors.white),
         ),
-        const SizedBox(height: 24),
-        const Text(
+        SizedBox(height: 24),
+        Text(
           'Pengiriman Module Sukses',
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -383,8 +371,8 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
             letterSpacing: -0.2,
           ),
         ),
-        const SizedBox(height: 6),
-        const Text(
+        SizedBox(height: 6),
+        Text(
           'Module pembelajaran berhasil terkirim ke perangkat tujuan',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
@@ -393,10 +381,8 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
     );
   }
 
-  //  Bottom Action Button
   Widget _buildBottomButton() {
     if (_isSuccess) {
-      // Tombol "Kembali" sesuai sending-done.png
       return _ActionButton(
         label: 'Kembali',
         backgroundColor: const Color(0xFF0066FF),
@@ -408,18 +394,16 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
     }
 
     if (_isSending) {
-      // Tombol "Batal"
       return _ActionButton(
         label: 'Batal',
-        backgroundColor: const Color(0xFF0066FF),
+        backgroundColor: const Color(0xFFEF4444),
         textColor: Colors.white,
         onPressed: _cancelSending,
       );
     }
 
     if (_discoveredDevices.isNotEmpty) {
-      // Tombol "Kirim"
-      final hasSelection = _selectedDeviceIds.isNotEmpty;
+      final hasSelection = _selectedDeviceId != null;
       return _ActionButton(
         label: 'Kirim',
         backgroundColor: hasSelection
@@ -430,14 +414,9 @@ class _SendModuleScreenState extends State<SendModuleScreen> {
       );
     }
 
-    // Saat masih mencari dan belum ada device: tidak ada tombol
     return const SizedBox.shrink();
   }
 }
-
-// ─
-// Komponen Tombol Aksi Reusable
-// ─
 
 class _ActionButton extends StatelessWidget {
   final String label;
@@ -462,11 +441,11 @@ class _ActionButton extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(28),
         boxShadow: isEnabled && backgroundColor == const Color(0xFF0066FF)
-            ? const [
+            ? [
                 BoxShadow(
-                  color: Color(0x330066FF),
+                  color: const Color(0xFF0066FF).withValues(alpha: 0.28),
                   blurRadius: 16,
-                  offset: Offset(0, 6),
+                  offset: const Offset(0, 6),
                 ),
               ]
             : null,
@@ -474,15 +453,16 @@ class _ActionButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onPressed,
           borderRadius: BorderRadius.circular(28),
+          onTap: onPressed,
           child: Center(
             child: Text(
               label,
               style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
                 color: textColor,
+                letterSpacing: -0.2,
               ),
             ),
           ),
@@ -492,31 +472,33 @@ class _ActionButton extends StatelessWidget {
   }
 }
 
-// ─
-// Top Bar — "< Berbagi Module"
-// ─
-
 class _TopBar extends StatelessWidget {
   final VoidCallback onBack;
+
   const _TopBar({required this.onBack});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
         children: [
-          IconButton(
-            onPressed: onBack,
-            icon: const Icon(
-              LucideIcons.chevronLeft,
-              size: 22,
-              color: Color(0xFF0F172A),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: onBack,
+              child: const Padding(
+                padding: EdgeInsets.all(4),
+                child: Icon(
+                  LucideIcons.arrowLeft,
+                  size: 22,
+                  color: Color(0xFF0F172A),
+                ),
+              ),
             ),
-            padding: const EdgeInsets.all(8),
-            constraints: const BoxConstraints(),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 8),
           const Text(
             'Berbagi Module',
             style: TextStyle(
@@ -531,6 +513,3 @@ class _TopBar extends StatelessWidget {
     );
   }
 }
-
-/// Backward compatibility alias
-typedef KirimModulScreen = SendModuleScreen;

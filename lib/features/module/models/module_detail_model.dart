@@ -20,6 +20,13 @@ class MateriBlockModel {
         body: json['body'] as String,
         imageAsset: json['imageAsset'] as String?,
       );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'heading': heading,
+        'body': body,
+        if (imageAsset != null) 'imageAsset': imageAsset,
+      };
 }
 
 class GroupQuestionModel {
@@ -41,6 +48,12 @@ class GroupQuestionModel {
         indicators:
             (json['indicators'] as List).map((e) => e as String).toList(),
       );
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'instructions': instructions,
+        'indicators': indicators,
+      };
 }
 
 class ModuleDetailModel {
@@ -87,6 +100,18 @@ class ModuleDetailModel {
       quiz: quizList,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'level': level,
+        'subject': subject,
+        'totalQuestions': totalQuestions,
+        'discussionCount': discussionCount,
+        'materi': materi.map((e) => e.toJson()).toList(),
+        'groupQuestion': groupQuestion.toJson(),
+        'quiz': quiz.map((e) => e.toJson()).toList(),
+      };
 }
 
 /// Backward compatibility alias

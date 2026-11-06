@@ -42,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadData() async {
     final raw = await rootBundle.loadString('assets/data/mock_data.json');
     final json = jsonDecode(raw) as Map<String, dynamic>;
+    final modules = await ModuleRepository.instance.loadModules();
 
     setState(() {
       _user = UserModel.fromJson(json['user'] as Map<String, dynamic>);
@@ -51,9 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _sessions = (json['recentSessions'] as List)
           .map((e) => SessionModel.fromJson(e as Map<String, dynamic>))
           .toList();
-      _modules = (json['modules'] as List)
-          .map((e) => ModuleModel.fromJson(e as Map<String, dynamic>))
-          .toList();
+      _modules = modules;
       _isLoading = false;
     });
   }
@@ -176,14 +175,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: _modules.length,
                           separatorBuilder: (a, b) =>
                               const SizedBox(height: 10),
-                          itemBuilder: (context, index) => ModuleListItem(
-                            module: _modules[index],
-                            onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const ModulMateriScreen(),
+                          itemBuilder: (context, index) {
+                            final m = _modules[index];
+                            return ModuleListItem(
+                              module: m,
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => ModulMateriScreen(moduleId: m.id),
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
                       ),
 

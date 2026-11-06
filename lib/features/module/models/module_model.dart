@@ -26,4 +26,14 @@ class ModuleModel {
         totalQuestions: json['totalQuestions'] as int? ?? 30,
         discussionCount: json['discussionCount'] as int? ?? 1,
       );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'level': level,
+        'title': title,
+        'description': description,
+        'subject': subject,
+        'totalQuestions': totalQuestions,
+        'discussionCount': discussionCount,
+      };
 }

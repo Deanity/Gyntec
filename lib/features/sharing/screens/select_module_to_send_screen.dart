@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/core.dart';
 import '../widgets/sharing_widgets.dart';
@@ -33,12 +31,7 @@ class _SelectModuleToSendScreenState extends State<SelectModuleToSendScreen> {
   }
 
   Future<void> _loadModules() async {
-    final raw = await rootBundle.loadString('assets/data/mock_data.json');
-    final json = jsonDecode(raw) as Map<String, dynamic>;
-
-    final modules = (json['modules'] as List)
-        .map((e) => ModuleModel.fromJson(e as Map<String, dynamic>))
-        .toList();
+    final modules = await ModuleRepository.instance.loadModules();
 
     setState(() {
       _modules = modules;
