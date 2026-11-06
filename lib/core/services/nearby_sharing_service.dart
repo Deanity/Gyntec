@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../features/module/models/module_model.dart';
 import '../../features/sharing/widgets/device_select_card.dart';
 import 'module_repository.dart';
+import 'notification_service.dart';
 
 enum SharingReadiness {
   ready,
@@ -50,7 +51,9 @@ class NearbySharingService {
   static const Strategy _strategy = Strategy.P2P_POINT_TO_POINT;
 
   final Nearby _nearby = Nearby();
-  String _localDisplayName = 'Gyntec User';
+  static const MethodChannel _deviceChannel = MethodChannel('com.gyntec/device_info');
+  String _localDisplayName = 'Android Device';
+  bool _deviceNameInitialized = false;
 
   // Streams
   final _offersController = StreamController<IncomingOffer>.broadcast();
@@ -76,9 +79,30 @@ class NearbySharingService {
   bool _isAdvertising = false;
   bool _isDiscovering = false;
 
+  Future<void> initDeviceName() async {
+    if (_deviceNameInitialized) return;
+    try {
+      if (Platform.isAndroid) {
+        final name = await _deviceChannel.invokeMethod<String>('getDeviceName');
+        if (name != null && name.trim().isNotEmpty) {
+          _localDisplayName = _sanitizeDisplayName(name.trim());
+          _deviceNameInitialized = true;
+          return;
+        }
+      }
+    } catch (e) {
+      debugPrint('[NearbyService] initDeviceName error: $e');
+    }
+    _deviceNameInitialized = true;
+  }
+
+  String _sanitizeDisplayName(String name) {
+    final clean = name.replaceAll(RegExp(r'[\r\n\t]'), ' ').trim();
+    return clean.length > 32 ? clean.substring(0, 32).trim() : clean;
+  }
+
   void setLocalDisplayName(String name) {
-    final rand = Random().nextInt(9000) + 1000;
-    _localDisplayName = '$name · $rand';
+    _localDisplayName = _sanitizeDisplayName(name);
   }
 
   Future<SharingReadiness> checkReadiness() async {
@@ -105,6 +129,7 @@ class NearbySharingService {
         Permission.bluetoothAdvertise,
         Permission.bluetoothConnect,
         Permission.nearbyWifiDevices,
+        Permission.notification,
       ].request();
 
       final locationOk = statuses[Permission.location]?.isGranted ?? false;
@@ -118,6 +143,7 @@ class NearbySharingService {
   Future<void> startReceiving() async {
     await stop();
     await requestPermissions();
+    await initDeviceName();
     _isAdvertising = true;
 
     try {
@@ -138,6 +164,7 @@ class NearbySharingService {
   Future<void> startDiscovery() async {
     await stop();
     await requestPermissions();
+    await initDeviceName();
     _isDiscovering = true;
     _discoveredDevices.clear();
     _devicesController.add([]);
@@ -341,6 +368,16 @@ class NearbySharingService {
           if (ok) {
             final savedIds = await ModuleRepository.instance.saveReceived(File(destPath));
             _receivedController.add(savedIds);
+
+            // Tampilkan notifikasi sistem Android
+            final senderName = _currentOffer?.senderName ?? 'Perangkat Lain';
+            final firstModule = _currentOffer?.modules.isNotEmpty == true ? _currentOffer!.modules.first : null;
+            await NotificationService.instance.showModuleReceivedNotification(
+              senderName: senderName,
+              moduleCount: savedIds.length,
+              firstModuleTitle: firstModule?.title,
+              firstModuleId: firstModule?.id,
+            );
 
             // Beri tahu pengirim bahwa proses simpan selesai
             final doneMsg = {'type': 'done', 'v': 1, 'savedIds': savedIds};

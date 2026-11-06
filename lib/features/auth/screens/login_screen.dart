@@ -27,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       NearbySharingService.instance.requestPermissions();
+      NearbySharingService.instance.initDeviceName();
     });
   }
 
