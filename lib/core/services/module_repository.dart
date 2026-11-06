@@ -97,14 +97,6 @@ class ModuleRepository {
       }
     }
 
-    // Fallback lama jika ada modulDetail tunggal
-    if (json.containsKey('modulDetail')) {
-      final single = json['modulDetail'] as Map<String, dynamic>;
-      if (single['id'] == id) {
-        return ModuleDetailModel.fromJson(single);
-      }
-    }
-
     throw StateError('Modul dengan ID "$id" tidak ditemukan.');
   }
 
