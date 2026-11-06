@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/core.dart';
 import '../../../utils/models.dart';
@@ -37,12 +35,7 @@ class _ModuleListScreenState extends State<ModuleListScreen> {
   }
 
   Future<void> _loadData() async {
-    final raw = await rootBundle.loadString('assets/data/mock_data.json');
-    final json = jsonDecode(raw) as Map<String, dynamic>;
-
-    final modules = (json['modules'] as List)
-        .map((e) => ModuleModel.fromJson(e as Map<String, dynamic>))
-        .toList();
+    final modules = await ModuleRepository.instance.loadModules();
 
     setState(() {
       _allModules = modules;
@@ -135,7 +128,7 @@ class _ModuleListScreenState extends State<ModuleListScreen> {
                               module: module,
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (_) => const ModuleDetailScreen(),
+                                  builder: (_) => ModuleDetailScreen(moduleId: module.id),
                                 ),
                               ),
                             );

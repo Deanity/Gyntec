@@ -25,6 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NearbySharingService.instance.requestPermissions();
+    });
   }
 
   @override

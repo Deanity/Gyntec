@@ -24,4 +24,13 @@ class QuizQuestionModel {
         options: (json['options'] as List).map((e) => e as String).toList(),
         correctIndex: json['correctIndex'] as int,
       );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'number': number,
+        'totalQuestions': totalQuestions,
+        'question': question,
+        'options': options,
+        'correctIndex': correctIndex,
+      };
 }

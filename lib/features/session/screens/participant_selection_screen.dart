@@ -74,9 +74,7 @@ class _ParticipantSelectionScreenState extends State<ParticipantSelectionScreen>
     if (widget.modul != null) {
       modul = widget.modul!;
     } else {
-      modul = ModulDetailModel.fromJson(
-        json['modulDetail'] as Map<String, dynamic>,
-      );
+      modul = await ModuleRepository.instance.loadDetail('m1');
     }
 
     setState(() {

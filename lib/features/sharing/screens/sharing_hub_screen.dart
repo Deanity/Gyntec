@@ -1,26 +1,18 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import '../../../core/core.dart';
 import '../widgets/sharing_widgets.dart';
 import '../../../utils/models.dart';
 import 'select_module_to_send_screen.dart';
 
-/// Tahapan alur penerimaan modul pada SharingHubScreen
 enum ReceiveStage {
-  scanning, // Mencari perangkat (scaning.png)
-  requestReceived, // Menerima permintaan kiriman file (recive module.png)
-  inProgress, // Proses penerimaan file berlangsung (recive-on-progess.png)
-  done, // Penerimaan file selesai (recive-done.png)
+  scanning,
+  requestReceived,
+  inProgress,
+  done,
 }
 
-/// Screen "Berbagi Module" / Sharing Hub
-/// Mendukung mode Terima dan Kirim:
-/// - Mode Terima: Otomatis mendeteksi kiriman masuk, menampilkan preview modul yang dibagikan,
-///   dan memproses penerimaan file hingga selesai sesuai desain mockup.
-/// - Mode Kirim: Menavigasi user ke SelectModuleScreen.
 class SharingHubScreen extends StatefulWidget {
   const SharingHubScreen({super.key});
 
@@ -29,187 +21,146 @@ class SharingHubScreen extends StatefulWidget {
 }
 
 class _SharingHubScreenState extends State<SharingHubScreen> {
-  SharingMode _activeMode = SharingMode.terima;
+  final SharingMode _activeMode = SharingMode.terima;
   ReceiveStage _stage = ReceiveStage.scanning;
 
-  // Data modul yang diterima dari pengirim
   List<ModuleModel> _incomingModules = [];
-
-  // Timer simulasi incoming request & transfer progress
-  Timer? _incomingSimTimer;
-  Timer? _progressTimer;
+  String _senderName = 'Perangkat Lain';
+  String? _authPin;
   double _receiveProgress = 0.0;
+  int _receivedCount = 0;
+
+  StreamSubscription<IncomingOffer>? _offersSub;
+  StreamSubscription<double>? _progressSub;
+  StreamSubscription<List<String>>? _receivedSub;
+
+  IncomingOffer? _activeOffer;
 
   @override
   void initState() {
     super.initState();
-    _loadIncomingModules();
-    _startSimulatedIncomingRequest();
+    _initNearbyReceiving();
   }
 
   @override
   void dispose() {
-    _incomingSimTimer?.cancel();
-    _progressTimer?.cancel();
+    _offersSub?.cancel();
+    _progressSub?.cancel();
+    _receivedSub?.cancel();
+    NearbySharingService.instance.stop();
     super.dispose();
   }
 
-  Future<void> _loadIncomingModules() async {
-    try {
-      final raw = await rootBundle.loadString('assets/data/mock_data.json');
-      final json = jsonDecode(raw) as Map<String, dynamic>;
-      final modules = (json['modules'] as List)
-          .map((e) => ModuleModel.fromJson(e as Map<String, dynamic>))
-          .take(3)
-          .toList();
+  Future<void> _initNearbyReceiving() async {
+    final service = NearbySharingService.instance;
+    await service.startReceiving();
 
+    _offersSub = service.offers.listen((offer) {
       if (mounted) {
         setState(() {
-          _incomingModules = modules;
-        });
-      }
-    } catch (_) {
-      // Fallback 3 module items
-      if (mounted) {
-        setState(() {
-          _incomingModules = List.generate(
-            3,
-            (i) => const ModuleModel(
-              id: 'm_demo',
-              level: 'SMA',
-              subject: 'IPA',
-              title: 'Anggota Tubuh Manusia',
-              description:
-                  'Pelajari anggota tubuh manusia dan fungsinya melalui m...',
-              totalQuestions: 30,
-              discussionCount: 1,
-            ),
-          );
-        });
-      }
-    }
-  }
-
-  /// Simulasi setelah 2.2 detik ada perangkat "Rama (SM-2BXX)" yang mengirim modul
-  void _startSimulatedIncomingRequest() {
-    _incomingSimTimer = Timer(const Duration(milliseconds: 2200), () {
-      if (mounted && _stage == ReceiveStage.scanning) {
-        setState(() {
+          _activeOffer = offer;
+          _senderName = offer.senderName;
+          _incomingModules = offer.modules;
+          _authPin = offer.authPin;
           _stage = ReceiveStage.requestReceived;
         });
       }
     });
-  }
 
-  /// Memulai proses penerimaan file
-  void _startReceiving() {
-    setState(() {
-      _stage = ReceiveStage.inProgress;
-      _receiveProgress = 0.0;
-    });
-
-    const tickInterval = Duration(milliseconds: 60);
-    _progressTimer = Timer.periodic(tickInterval, (timer) {
-      if (!mounted) {
-        timer.cancel();
-        return;
+    _progressSub = service.progress.listen((prog) {
+      if (mounted) {
+        setState(() {
+          _receiveProgress = prog;
+          if (_stage != ReceiveStage.inProgress && prog < 1.0) {
+            _stage = ReceiveStage.inProgress;
+          }
+        });
       }
-      setState(() {
-        _receiveProgress += 0.015;
-        if (_receiveProgress >= 1.0) {
-          _receiveProgress = 1.0;
-          timer.cancel();
+    });
+
+    _receivedSub = service.received.listen((savedIds) {
+      if (mounted) {
+        setState(() {
+          _receivedCount = savedIds.length;
           _stage = ReceiveStage.done;
-        }
-      });
+          _receiveProgress = 1.0;
+        });
+      }
     });
   }
 
-  void _cancelReceiving() {
-    _progressTimer?.cancel();
+  Future<void> _startReceiving() async {
+    if (_activeOffer != null) {
+      setState(() {
+        _stage = ReceiveStage.inProgress;
+        _receiveProgress = 0.0;
+      });
+      await NearbySharingService.instance.acceptOffer(_activeOffer!);
+    }
+  }
+
+  Future<void> _cancelReceiving() async {
+    if (_activeOffer != null) {
+      await NearbySharingService.instance.rejectOffer(_activeOffer!);
+    }
+    await NearbySharingService.instance.stop();
     setState(() {
       _stage = ReceiveStage.scanning;
       _receiveProgress = 0.0;
+      _incomingModules.clear();
+      _activeOffer = null;
     });
-    // Restart pencarian simulasi
-    _startSimulatedIncomingRequest();
+    await NearbySharingService.instance.startReceiving();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
-          //  Background soft blue gradient di atas
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 250,
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFFE8F1FF), Color(0x00E8F1FF)],
-                ),
-              ),
-            ),
-          ),
-
-          //  Konten Scrollable
           SafeArea(
+            bottom: false,
             child: Column(
               children: [
-                // Top Bar ("< Berbagi Module")
-                _TopBar(
+                AppTopBar(
+                  title: 'Berbagi Module',
                   onBack: () {
-                    if (_stage == ReceiveStage.inProgress) {
-                      _cancelReceiving();
-                    }
-                    if (_stage == ReceiveStage.done) {
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                    } else {
-                      Navigator.of(context).maybePop();
-                    }
+                    NearbySharingService.instance.stop();
+                    Navigator.of(context).maybePop();
                   },
                 ),
-
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                      top: 10,
-                      bottom: 160, // ruang floating tabs & button
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 16,
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const AppOfflineBanner(
-                          padding: EdgeInsets.only(bottom: 16),
+                        const SizedBox(height: 12),
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 350),
+                          switchInCurve: Curves.easeOutCubic,
+                          switchOutCurve: Curves.easeInCubic,
+                          child: _buildHeaderForStage(),
                         ),
-
-                        //  Bagian Radar & Status
-                        Center(
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 350),
-                            child: _buildHeaderForStage(),
-                          ),
-                        ),
-                        const SizedBox(height: 28),
-
-                        //  Section: Module yang dibagikan
-                        if (_stage != ReceiveStage.scanning &&
-                            _incomingModules.isNotEmpty) ...[
-                          const Text(
-                            'Module yang dibagikan',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF0F172A),
-                              letterSpacing: -0.2,
+                        const SizedBox(height: 24),
+                        if (_incomingModules.isNotEmpty &&
+                            (_stage == ReceiveStage.requestReceived ||
+                                _stage == ReceiveStage.inProgress)) ...[
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Module yang Dikirim',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF0F172A),
+                                letterSpacing: -0.2,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -219,10 +170,9 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
                               child: ModulePreviewCard(
                                 module: modul,
                                 subtitle: _stage == ReceiveStage.requestReceived
-                                    ? 'Dibagikan oleh Rama (SM-1980)'
+                                    ? 'Dibagikan oleh $_senderName'
                                     : 'Dokumen pilihan Anda',
-                                showDiscussionBadge:
-                                    _stage == ReceiveStage.requestReceived,
+                                showDiscussionBadge: _stage == ReceiveStage.requestReceived,
                               ),
                             );
                           }),
@@ -234,8 +184,6 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
               ],
             ),
           ),
-
-          //  Floating Bottom Controls
           Positioned(
             left: 0,
             right: 0,
@@ -247,38 +195,33 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
     );
   }
 
-  //  Header status dinamis sesuai stage
   Widget _buildHeaderForStage() {
     switch (_stage) {
       case ReceiveStage.scanning:
         return Column(
           key: const ValueKey('scanning_state'),
-          children: [
+          children: const [
             ScanningPulseAnimation(
-              color: const Color(0xFF0066FF),
+              color: Color(0xFF0066FF),
               ringCount: 3,
               size: 210,
               centerSize: 68,
-              child: const Icon(
-                LucideIcons.search,
-                size: 28,
-                color: Colors.white,
-              ),
+              child: Icon(LucideIcons.search, size: 28, color: Colors.white),
             ),
-            const SizedBox(height: 24),
-            const Text(
+            SizedBox(height: 24),
+            Text(
               'Mencari perangkat terdekat...',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
                 color: Color(0xFF0F172A),
                 letterSpacing: -0.2,
               ),
             ),
-            const SizedBox(height: 6),
-            const Text(
-              'Pastikan Wi-Fi & Bluetooth aktif pada perangkat tujuan',
+            SizedBox(height: 6),
+            Text(
+              'Pastikan Bluetooth & Lokasi aktif di kedua perangkat',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
             ),
@@ -289,22 +232,22 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
         return Column(
           key: const ValueKey('request_received_state'),
           children: [
-            ScanningPulseAnimation(
-              color: const Color(0xFF0066FF),
+            const ScanningPulseAnimation(
+              color: Color(0xFF0066FF),
               ringCount: 3,
               size: 210,
               centerSize: 68,
-              child: const Icon(
+              child: Icon(
                 LucideIcons.tabletSmartphone,
                 size: 28,
                 color: Colors.white,
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Rama (SM-2BXX)',
+            Text(
+              _senderName,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF0F172A),
@@ -312,11 +255,29 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
               ),
             ),
             const SizedBox(height: 6),
-            const Text(
-              'Perangkat ini ingin mengirimkan 3 module pembelajaran',
+            Text(
+              'Perangkat ini ingin mengirimkan ${_incomingModules.length} module pembelajaran',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
+              style: const TextStyle(fontSize: 13, color: Color(0xFF64748B)),
             ),
+            if (_authPin != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF1F5F9),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  'Kode Verifikasi: $_authPin',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF0066FF),
+                  ),
+                ),
+              ),
+            ],
           ],
         );
 
@@ -324,22 +285,22 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
         return Column(
           key: const ValueKey('in_progress_state'),
           children: [
-            ScanningPulseAnimation(
-              color: const Color(0xFF0066FF),
+            const ScanningPulseAnimation(
+              color: Color(0xFF0066FF),
               ringCount: 3,
               size: 210,
               centerSize: 68,
-              child: const Icon(
+              child: Icon(
                 LucideIcons.arrowDown,
                 size: 28,
                 color: Colors.white,
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Menerima 3 Module dari Rama (SM-1980)',
+            Text(
+              'Menerima ${_incomingModules.length} Module dari $_senderName',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Color(0xFF0F172A),
@@ -348,13 +309,11 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
             ),
             const SizedBox(height: 6),
             const Text(
-              'Pastikan Wi-Fi & Bluetooth tetap aktif selama pengiriman',
+              'Jangan tutup aplikasi selama pengiriman file',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
             ),
             const SizedBox(height: 18),
-
-            // Progress Bar (full width matching design)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Container(
@@ -381,18 +340,18 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
         return Column(
           key: const ValueKey('done_state'),
           children: [
-            ScanningPulseAnimation(
-              color: const Color(0xFF0066FF),
+            const ScanningPulseAnimation(
+              color: Color(0xFF0066FF),
               ringCount: 3,
               size: 210,
               centerSize: 68,
-              child: const Icon(LucideIcons.check, size: 34, color: Colors.white),
+              child: Icon(LucideIcons.check, size: 34, color: Colors.white),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Menerima 3 module',
+            Text(
+              'Menerima ${_receivedCount > 0 ? _receivedCount : _incomingModules.length} module',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF0F172A),
@@ -401,7 +360,7 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
             ),
             const SizedBox(height: 6),
             const Text(
-              'Module pembelajaran berhasil diterima',
+              'Module pembelajaran berhasil diterima dan disimpan',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13, color: Color(0xFF64748B)),
             ),
@@ -410,7 +369,6 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
     }
   }
 
-  //  Floating Bottom Controls
   Widget _buildBottomControls() {
     return SafeArea(
       top: false,
@@ -419,147 +377,85 @@ class _SharingHubScreenState extends State<SharingHubScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Tab Terima / Kirim hanya muncul pada stage scanning & requestReceived
-            if (_stage == ReceiveStage.scanning ||
-                _stage == ReceiveStage.requestReceived) ...[
+            if (_stage == ReceiveStage.scanning) ...[
               SharingModeTab(
                 activeMode: _activeMode,
                 onModeChanged: (mode) {
                   if (mode == SharingMode.kirim) {
-                    Navigator.of(context).push(
+                    NearbySharingService.instance.stop();
+                    Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (_) => const SelectModuleToSendScreen(),
                       ),
                     );
-                  } else {
-                    setState(() => _activeMode = mode);
                   }
                 },
               ),
             ],
-
-            // Tombol "Terima File" saat ada request masuk (recive module.png)
-            if (_stage == ReceiveStage.requestReceived)
+            if (_stage == ReceiveStage.requestReceived) ...[
+              SharingModeTab(
+                activeMode: _activeMode,
+                onModeChanged: (mode) {
+                  if (mode == SharingMode.kirim) {
+                    _cancelReceiving();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (_) => const SelectModuleToSendScreen(),
+                      ),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 12),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: _FullButton(
+                child: AppButton(
                   label: 'Terima File',
                   onPressed: _startReceiving,
                 ),
               ),
-
-            // Tombol "Batal" saat proses penerimaan berlangsung (recive-on-progess.png)
-            if (_stage == ReceiveStage.inProgress)
+            ],
+            if (_stage == ReceiveStage.inProgress) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: _FullButton(label: 'Batal', onPressed: _cancelReceiving),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: OutlinedButton(
+                    onPressed: _cancelReceiving,
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Color(0xFFEF4444)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      foregroundColor: const Color(0xFFEF4444),
+                    ),
+                    child: const Text(
+                      'Batal',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-
-            // Tombol "Kembali" saat penerimaan selesai (recive-done.png)
-            if (_stage == ReceiveStage.done)
+            ],
+            if (_stage == ReceiveStage.done) ...[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: _FullButton(
+                child: AppButton(
                   label: 'Kembali',
                   onPressed: () {
+                    NearbySharingService.instance.stop();
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   },
                 ),
               ),
+            ],
           ],
         ),
       ),
     );
   }
 }
-
-// ─
-// Full-width Rounded Button Reusable
-// ─
-
-class _FullButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
-
-  const _FullButton({required this.label, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 52,
-      decoration: BoxDecoration(
-        color: const Color(0xFF0066FF),
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x330066FF),
-            blurRadius: 16,
-            offset: Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(28),
-          child: Center(
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ─
-// Top Bar — "< Berbagi Module"
-// ─
-
-class _TopBar extends StatelessWidget {
-  final VoidCallback onBack;
-
-  const _TopBar({required this.onBack});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: onBack,
-            icon: const Icon(
-              LucideIcons.chevronLeft,
-              size: 22,
-              color: Color(0xFF0F172A),
-            ),
-            padding: const EdgeInsets.all(8),
-            constraints: const BoxConstraints(),
-          ),
-          const SizedBox(width: 4),
-          const Text(
-            'Berbagi Module',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF0F172A),
-              letterSpacing: -0.3,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Backward compatibility alias
-typedef BerbagiModulScreen = SharingHubScreen;

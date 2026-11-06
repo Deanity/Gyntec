@@ -180,6 +180,232 @@
     }
   ],
 
+  "modulDetails": {
+    "m1": {
+      "id": "m1",
+      "title": "Anggota Tubuh Manusia",
+      "level": "SMA",
+      "subject": "IPA",
+      "totalQuestions": 30,
+      "discussionCount": 1,
+      "materi": [
+        {
+          "id": "bag1",
+          "heading": "Bagian 1 : Kenapa ada Organ Tubuh?",
+          "body": "Tubuh manusia tersusun atas berbagai organ yang saling bekerja sama membentuk sistem organ. Setiap organ memiliki struktur khusus untuk menjalankan fungsi spesifik seperti respirasi, pencernaan, dan sirkulasi darah demi menjaga homeostasis tubuh.",
+          "imageAsset": "assets/MateriImage/Materi1.png"
+        },
+        {
+          "id": "bag2",
+          "heading": "Bagian 2 : Koordinasi Sistem Organ",
+          "body": "Sistem saraf dan endokrin mengoordinasikan respon organ terhadap perubahan lingkungan internal maupun eksternal. Keterpaduan kerja organ sangat krusial bagi kelangsungan hidup manusia.",
+          "imageAsset": "assets/MateriImage/Materi2.png"
+        }
+      ],
+      "groupQuestion": {
+        "title": "Apa yang membuat manusia memerlukan organ?",
+        "instructions": [
+          "Diskusikan pertanyaan di atas bersama seluruh anggota kelompok.",
+          "Tuliskan minimal 2–3 alasan mendasar beserta contoh fungsi organ tubuh yang mendukung kelangsungan hidup manusia.",
+          "Rangkum hasil diskusi dalam bentuk poin-poin ringkas pada lembar jawaban dan presentasikan."
+        ],
+        "indicators": [
+          "Peserta didik mampu menjelaskan hubungan antara fungsi organ dengan kelangsungan hidup manusia secara tepat.",
+          "Argumen yang disampaikan runtut, logis, dan didukung dengan contoh organ yang relevan.",
+          "Seluruh anggota kelompok berpartisipasi aktif dalam proses diskusi dan penyusunan jawaban."
+        ]
+      },
+      "quiz": [
+        {
+          "id": "q1",
+          "number": 1,
+          "totalQuestions": 30,
+          "question": "Apa fungsi utama dari sistem muskuloskeletal (rangka dan otot) pada tubuh manusia?",
+          "options": [
+            "Menopang struktur tubuh dan memfasilitasi pergerakan aktif",
+            "Memompa darah dan mengedarkan oksigen ke seluruh sel tubuh",
+            "Mengatur produksi hormon serta metabolisme tubuh",
+            "Menyaring racun dan zat sisa hasil metabolisme dari darah"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "id": "q2",
+          "number": 2,
+          "totalQuestions": 30,
+          "question": "Organ tubuh yang berfungsi sebagai pusat kendali utama sistem saraf dan mengoordinasikan seluruh aktivitas tubuh adalah...",
+          "options": [
+            "Jantung",
+            "Otak",
+            "Paru-paru",
+            "Sumsum tulang belakang"
+          ],
+          "correctIndex": 1
+        },
+        {
+          "id": "q3",
+          "number": 3,
+          "totalQuestions": 30,
+          "question": "Organ pernapasan utama manusia tempat terjadinya pertukaran gas oksigen (O2) dan karbon dioksida (CO2) adalah...",
+          "options": [
+            "Trakea",
+            "Bronkus",
+            "Paru-paru (Alveolus)",
+            "Laring"
+          ],
+          "correctIndex": 2
+        },
+        {
+          "id": "q4",
+          "number": 4,
+          "totalQuestions": 30,
+          "question": "Bagian jantung yang memompa darah beroksigen ke seluruh jaringan tubuh melalui peredaran darah besar adalah...",
+          "options": [
+            "Ventrikel Kiri (Bilik Kiri)",
+            "Atrium Kanan (Serambi Kanan)",
+            "Ventrikel Kanan (Bilik Kanan)",
+            "Atrium Kiri (Serambi Kiri)"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "id": "q5",
+          "number": 5,
+          "totalQuestions": 30,
+          "question": "Organ yang memproduksi enzim pencernaan serta menghasilkan hormon insulin untuk mengatur kadar gula darah adalah...",
+          "options": [
+            "Lambung",
+            "Hati",
+            "Pankreas",
+            "Kandung Empedu"
+          ],
+          "correctIndex": 2
+        }
+      ]
+    },
+    "m2": {
+      "id": "m2",
+      "title": "Sistem Pencernaan Manusia",
+      "level": "SMP",
+      "subject": "IPA",
+      "totalQuestions": 25,
+      "discussionCount": 1,
+      "materi": [
+        {
+          "id": "m2_bag1",
+          "heading": "Bagian 1 : Saluran Pencernaan",
+          "body": "Makanan dicerna secara mekanik dan kimiawi mulai dari mulut, lambung, hingga usus halus tempat sari-sari makanan diserap ke peredaran darah.",
+          "imageAsset": "assets/MateriImage/Materi1.png"
+        }
+      ],
+      "groupQuestion": {
+        "title": "Bagaimana proses penyerapan sari makanan di usus halus?",
+        "instructions": [
+          "Diskusikan peran vili usus dalam memperluas bidang penyerapan nutrisi.",
+          "Jelaskan enzim-enzim pencernaan utama yang berperan."
+        ],
+        "indicators": [
+          "Mampu menjelaskan peran vili usus dan enzim pencernaan."
+        ]
+      },
+      "quiz": [
+        {
+          "id": "m2_q1",
+          "number": 1,
+          "totalQuestions": 25,
+          "question": "Enzim ptialin yang terdapat di dalam air liur berfungsi untuk mencerna...",
+          "options": [
+            "Amilum menjadi maltosa",
+            "Protein menjadi pepton",
+            "Lemak menjadi asam lemak",
+            "Vitamin menjadi mineral"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    "m3": {
+      "id": "m3",
+      "title": "Sistem Peredaran Darah",
+      "level": "SMA",
+      "subject": "IPA",
+      "totalQuestions": 30,
+      "discussionCount": 2,
+      "materi": [
+        {
+          "id": "m3_bag1",
+          "heading": "Bagian 1 : Jantung dan Pembuluh Darah",
+          "body": "Sistem sirkulasi darah manusia merupakan peredaran darah tertutup dan ganda, terdiri dari peredaran darah kecil (ke paru-paru) dan peredaran darah besar (ke seluruh tubuh).",
+          "imageAsset": "assets/MateriImage/Materi2.png"
+        }
+      ],
+      "groupQuestion": {
+        "title": "Apa perbedaan peredaran darah besar dan peredaran darah kecil?",
+        "instructions": [
+          "Bandingkan rute aliran darah dan kandungan oksigen/karbon dioksidanya."
+        ],
+        "indicators": [
+          "Memahami perbedaan sirkulasi pulmonalis dan sistemik."
+        ]
+      },
+      "quiz": [
+        {
+          "id": "m3_q1",
+          "number": 1,
+          "totalQuestions": 30,
+          "question": "Sel darah yang berperan utama dalam pembekuan darah adalah...",
+          "options": [
+            "Eritrosit",
+            "Trombosit",
+            "Leukosit",
+            "Plasma darah"
+          ],
+          "correctIndex": 1
+        }
+      ]
+    },
+    "m4": {
+      "id": "m4",
+      "title": "Sistem Saraf",
+      "level": "SMK",
+      "subject": "TKJ",
+      "totalQuestions": 20,
+      "discussionCount": 1,
+      "materi": [
+        {
+          "id": "m4_bag1",
+          "heading": "Bagian 1 : Struktur Neuron",
+          "body": "Sistem saraf terdiri atas neuron yang menghantarkan impuls listrik melalui dendrit, badan sel, akson, dan sinapsis.",
+          "imageAsset": "assets/MateriImage/Materi1.png"
+        }
+      ],
+      "groupQuestion": {
+        "title": "Bagaimana cara kerja transmisi impuls antar sel saraf?",
+        "instructions": [
+          "Diskusikan peran neurotransmiter di celah sinapsis."
+        ],
+        "indicators": [
+          "Menjelaskan mekanisme penghantaran impuls."
+        ]
+      },
+      "quiz": [
+        {
+          "id": "m4_q1",
+          "number": 1,
+          "totalQuestions": 20,
+          "question": "Bagian neuron yang berfungsi menerima impuls dari sel saraf lain adalah...",
+          "options": [
+            "Akson",
+            "Dendrit",
+            "Nodus Ranvier",
+            "Sel Schwann"
+          ],
+          "correctIndex": 1
+        }
+      ]
+    }
+  },
+
   "modulDetail": {
     "id": "m1",
     "title": "Anggota Tubuh Manusia",

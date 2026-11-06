@@ -8,7 +8,12 @@ import '../widgets/module_widgets.dart';
 import '../../session/screens/participant_selection_screen.dart';
 
 class ModuleDetailScreen extends StatefulWidget {
-  const ModuleDetailScreen({super.key});
+  final String moduleId;
+
+  const ModuleDetailScreen({
+    super.key,
+    this.moduleId = 'm1',
+  });
 
   @override
   State<ModuleDetailScreen> createState() => _ModuleDetailScreenState();
@@ -19,6 +24,7 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
   ModulDetailModel? _modul;
   OfflineBannerModel? _banner;
   bool _isLoading = true;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -32,23 +38,44 @@ class _ModuleDetailScreenState extends State<ModuleDetailScreen> {
   }
 
   Future<void> _loadData() async {
-    final raw = await rootBundle.loadString('assets/data/mock_data.json');
-    final json = jsonDecode(raw) as Map<String, dynamic>;
-    setState(() {
-      _banner = OfflineBannerModel.fromJson(
+    try {
+      final raw = await rootBundle.loadString('assets/data/mock_data.json');
+      final json = jsonDecode(raw) as Map<String, dynamic>;
+      final banner = OfflineBannerModel.fromJson(
         json['offlineBanner'] as Map<String, dynamic>,
       );
-      _modul = ModulDetailModel.fromJson(
-        json['modulDetail'] as Map<String, dynamic>,
-      );
-      _isLoading = false;
-    });
+      final detail = await ModuleRepository.instance.loadDetail(widget.moduleId);
+
+      if (mounted) {
+        setState(() {
+          _banner = banner;
+          _modul = detail;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = e.toString();
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (_errorMessage != null || _modul == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Error')),
+        body: Center(
+          child: Text(_errorMessage ?? 'Modul tidak ditemukan'),
+        ),
+      );
     }
 
     final modul = _modul!;
